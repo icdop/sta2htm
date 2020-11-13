@@ -1,2 +1,1 @@
-# sta
-Static Timing Report Reviewer
+# Static Timing Report Reviewer

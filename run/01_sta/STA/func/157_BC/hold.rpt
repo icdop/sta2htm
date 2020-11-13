@@ -1,0 +1,91 @@
+****************************************
+Report : constraint
+ -all_violators
+ -path slack_only
+Design : top
+****************************************
+
+
+
+   min_delay/hold ('clock_gating_default' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/u_spi/u_spi_txrx/clk_gate_buf_rxd_reg/latch/E -0.00105 (VIOLATED)
+
+   min_delay/hold ('CLK_DI_ISP' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/u_isp_top/u_vsm_ram2a/gen_sram_960x32_u_sram_960x32/A[1] -0.00082 (VIOLATED)
+   u_core/u_isp_top/u_isp_exp_v2_sram_wrapper/gen_rf_128x19_u_rf_128x19/A[2] -0.00076 (VIOLATED)
+   u_core/u_isp_top/u_r_lscram/gen_sram_512x24_u_sram_512x24/A[5] -0.00072 (VIOLATED)
+
+   min_delay/hold ('CLK_MCU' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/u_ful_regd_slice/payload_reg_b_reg_65_/D -0.00147 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_b_reg_14_/D -0.00100 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_b_reg_24_/D -0.00087 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_b_reg_58_/D -0.00061 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_b_reg_41_/D -0.00055 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_a_reg_43_/D -0.00033 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_a_reg_65_/D -0.00024 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_b_reg_47_/D -0.00013 (VIOLATED)
+   u_core/u_rev_regd_slice/payload_reg_reg_36_/D -0.00008 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_a_reg_21_/D -0.00007 (VIOLATED)
+
+   min_delay/hold ('CLK_VAE' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/u_fb_ctrl/gen_sram_8kx64_m8_u_sram_8kx64_m8/D[35] -0.00048 (VIOLATED)
+
+   min_delay/hold ('CLK_VIDEO_DIV2_ISP' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/u_isp_top/u_vsm_ram2a/gen_sram_960x32_u_sram_960x32/A[1] -0.00082 (VIOLATED)
+   u_core/u_isp_top/gen_rf_128x19_u_rf_128x19/A[2] -0.00076 (VIOLATED)
+   u_core/u_isp_top/u_r_lscram/gen_sram_512x24_u_sram_512x24/A[5] -0.00072 (VIOLATED)
+
+   min_delay/hold ('CLK_VIDEO_ISP' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/u_isp_top/u_vsm_ram2a/gen_sram_960x32_u_sram_960x32/A[1] -0.00082 (VIOLATED)
+   u_core/u_isp_top/gen_rf_128x19_u_rf_128x19/A[2] -0.00076 (VIOLATED)
+   u_core/u_isp_top/u_r_lscram/gen_sram_512x24_u_sram_512x24/A[5] -0.00072 (VIOLATED)
+
+   min_delay/hold ('CLK_VIP' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/u_vip/rdDataAfifo/wrDataReg/out_reg_297_/D -0.00050 (VIOLATED)
+
+   min_delay/hold ('CLK_XTAL_MCU' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/u_ful_regd_slice/payload_reg_b_reg_65_/D -0.00148 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_b_reg_14_/D -0.00100 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_b_reg_24_/D -0.00087 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_b_reg_58_/D -0.00061 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_b_reg_41_/D -0.00055 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_a_reg_43_/D -0.00033 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_a_reg_65_/D -0.00024 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_b_reg_47_/D -0.00013 (VIOLATED)
+   u_core/u_rev_regd_slice/payload_reg_reg_36_/D -0.00008 (VIOLATED)
+   u_core/u_ful_regd_slice/payload_reg_a_reg_21_/D -0.00007 (VIOLATED)
+
+
+
+
+
+   clock_gating_hold
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/u_spi/u_spi_txrx/clk_gate_buf_rxd_reg/latch/E -0.00105 (VIOLATED)
+

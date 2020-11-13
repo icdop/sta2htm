@@ -1,0 +1,1 @@
+.sta/Makefile.sta

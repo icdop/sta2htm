@@ -1,0 +1,41 @@
+RPT_DIR   := uniq_end uniq_end_reg2reg
+STA_CHECK := setup hold
+#
+setup = func ac_capture mbist
+hold  = func dc_shift   mbist
+
+help:
+	@echo	"Usage:"
+	@echo	"  make all    # run all check ($(STA_CHECK))"
+	@echo	"  make setup  # explore setup corner STA"
+	@echo	"  make hold   # exploer hold corner STA"
+	@echo
+
+
+all: $(STA_CHECK)
+
+
+$(STA_CHECK): 
+	for p in $(RPT_DIR); do ( \
+	for i in $($@); do ( \
+	mkdir -p $$i; \
+	(cd ..; wc -l GOLDEN-*/$$p/$$i/$@.uniq_end.rpt) | grep -v total |sed -e 's/\/.*$$//' -e 's/GOLDEN\-//' |  awk  '{print $$2,$$1}'  > $$i/$@.$$p.dat; \
+	echo "PREFIX = \"$$i/$@.$$p\"" > $$i/$@.$$p.plt; \
+	cat .trend.$@.plt >> $$i/$@.$$p.plt; \
+	exec gnuplot $$i/$@.$$p.plt ;\
+	); done; \
+	); done;
+
+index:
+	for c in $(STA_CHECK); do ( \
+	  for m in $$c; do ( \
+	     for p in $(RPT_DIR); do ( \
+	       echo "$$m/$$c.$$p.png" \
+	     ); done; \
+	  ); done; \
+	); done;
+
+clean:
+	rm -fr $(setup) $(hold)
+
+
