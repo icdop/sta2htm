@@ -5,33 +5,32 @@
 <code> % vi Makefile </code>
 
 <pre>
-PREV := GOLDEN_0623
-CURR := GOLDEN_0624
-STA  := /projects/xxxx/sta/report
+PREV_RUN := GOLDEN_0623
+CURR_RUN := GOLDEN_0624
+STA_RPT  := /projects/xxxx/sta/report
 </pre>
 
 ## 2) Initialize current working directory environment
-Usage:
-  sta_init <CURR_RUN>
-    --PREV <PREV_DIR>
-    --STA  <STA_RPT>
-    
-<code> % sta_init GOLDEN_0624 --PREV GOLDEN0623 --STA /projects/xxxx/sta/report</code>
+<pre>
+Usage: sta_init [$CURR_RUN]
+    --PREV $PREV_RUN
+    --STA  $STA_RPT
+</pre>
+<code> % sta_init GOLDEN_0624 --PREV GOLDEN_0623 --STA /projects/xxxx/sta/report</code>
 
 <pre>
 # mkdir GOLDEN_0624 
-# cd GOLDEN_0624/
+# cd GOLDEN_0623
 # cp -fr  $ETC_DIR/sta/ .sta
 # ln -s   .sta/Makefile.sta Makefile
 # ln -s   $PREV_RUN PREV
 # ln -s   $STA_RPT  STA
 </pre>
 
-<code> % cd GOLDEN_0624 </code>
 
 ## 3) Modify timing signoff corner definition table
 
-<code> % vi .sta/sta.corner </code>
+<code> % vi GOLDEN_0624/.sta/sta.corner </code>
 
 <pre>
 000_TT_typical_85
@@ -45,7 +44,7 @@ Usage:
 
 ## 4) Modify sta report filtering configuration file
 
-<code> % vi .sta/sta.cfg </code>
+<code> % vi GOLDEN_0624/.sta/sta.cfg </code>
 
 <pre>
 # STA report filename filter : $STA_RPT_PATH/$STA_RPT_FILE
@@ -63,7 +62,8 @@ set STA_CORNER(dc_shift,hold) "000 111 253 349"
 </pre>
 
 ## 5) Extract quality factor from sta timing report
-
+<code> % cd GOLDEN_0624 </code>
+<br>
 <code> % sta_uniq_end -sta_check setup </code>
 
 <pre>
