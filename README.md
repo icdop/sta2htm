@@ -1,17 +1,6 @@
 # Static Timing Report Reviewer
 
-##1) initialize working environment
-
-
-<code> % $STA_HOME/bin/sta_init </code>
-
-<pre>
-# cd rundir/ 
-# cp -fr  $(STA_HOME)/etc/sta/ .sta
-# ln -s   .sta/Makefile.sta Makefile
-</pre>
-
-##2) modify database variables in sta Makefile
+## 1) Specify database dir name and STA report path
 
 <code> % vi Makefile </code>
 
@@ -21,9 +10,21 @@ CURR := GOLDEN_0624
 STA  := /projects/xxxx/FrontendDb/.../stasi/
 </pre>
 
-##3) modify timing signoff corner table
+## 2) Initialize current working directory environment
 
-<code> % vi .sta/sta.corner</code>
+<code> % $(STA_HOME)/bin/sta_init GOLDEN_0624</code>
+<code> % cd GOLDEN_0624 </code>
+
+<pre>
+# mkdir GOLDEN_0624 
+# cd GOLDEN_0624/
+# cp -fr  $(STA_HOME)/etc/sta/ .sta
+# ln -s   .sta/Makefile.sta Makefile
+</pre>
+
+## 3) Modify timing signoff corner definition table
+
+<code> % vi .sta/sta.corner </code>
 
 <pre>
 000_TT_typical_85
@@ -35,15 +36,16 @@ STA  := /projects/xxxx/FrontendDb/.../stasi/
 349_TT_derate_85
 </pre>
 
-##4) modify sta configuration file
+## 4) Modify sta report filtering configuration file
 
 <code> % vi .sta/sta.cfg </code>
+
 <pre>
-# STA report filename filter
+# STA report filename filter : $STA_RPT_PATH/$STA_RPT_FILE
 set STA_RPT_PATH {$sta_mode/$corner_name}
 set STA_RPT_FILE {$sta_check$sta_postfix.rpt*}
 
-# STA mode name
+# STA mode name list
 set STA_MODE_LIST "func dc_shift ac_capture"
 
 # STA scenario table ($sta_mode,$sta_check) => "$sta_corner ...."
@@ -53,7 +55,9 @@ set STA_CORNER(func,hold) "000 111 253 349"
 set STA_CORNER(dc_shift,hold) "000 111 253 349"
 </pre>
 
-##5) extract quality factor from sta timing report
+## 5) Extract quality factor from sta timing report
+
+<code> % sta_uniq_end -sta_check setup </code>
 
 <pre>
 $STA_RPT_PATH/$STA_RPT_FILE (setup.rpt) : PT timing report
