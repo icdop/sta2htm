@@ -5,20 +5,26 @@
 <code> % vi Makefile </code>
 
 <pre>
-ORIG := GOLDEN_0623
+PREV := GOLDEN_0623
 CURR := GOLDEN_0624
-STA  := /projects/xxxx/FrontendDb/.../stasi/
+STA  := /projects/xxxx/sta/report
 </pre>
 
 ## 2) Initialize current working directory environment
-
-<code> % $(STA_HOME)/bin/sta_init GOLDEN_0624</code>
+Usage:
+  sta_init <CURR_RUN>
+    --PREV <PREV_DIR>
+    --STA  <STA_RPT>
+    
+<code> % sta_init GOLDEN_0624 --PREV GOLDEN0623 --STA /projects/xxxx/sta/report</code>
 
 <pre>
 # mkdir GOLDEN_0624 
 # cd GOLDEN_0624/
-# cp -fr  $(STA_HOME)/etc/sta/ .sta
+# cp -fr  $ETC_DIR/sta/ .sta
 # ln -s   .sta/Makefile.sta Makefile
+# ln -s   $PREV_RUN PREV
+# ln -s   $STA_RPT  STA
 </pre>
 
 <code> % cd GOLDEN_0624 </code>
