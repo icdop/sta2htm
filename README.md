@@ -79,3 +79,39 @@ $STA_RPT_PATH/$STA_RPT_FILE (setup.rpt) : PT timing report
 # $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.nvp
 # $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.sum
 </pre>
+
+## 6) Review STA summary report through browser
+
+<pre>
+uniq_end/
+├── func
+│   ├── setup
+│   │   ├── 000_TT.blk.htm
+│   │   ├── 000_TT.clk.htm
+│   │   ├── 157_BC.blk.htm
+│   │   ├── 157_BC.clk.htm
+│   │   ├── 258_WC.blk.htm
+│   │   └── 258_WC.clk.htm
+│   ├── index.htm
+│   ├── setup.blk.htm
+│   ├── setup.clk.htm
+│   ├── setup.htm
+│   └── setup.uniq_end.htm
+├── scan
+│   ├── setup
+│   │   ├── 000_TT.blk.htm
+│   │   ├── 000_TT.clk.htm
+│   │   ├── 157_BC.blk.htm
+│   │   └── 157_BC.clk.htm
+│   ├── index.htm
+│   ├── setup.blk.htm
+│   ├── setup.clk.htm
+│   ├── setup.htm
+│   └── setup.uniq_end.htm
+├── corner.htm
+├── index.htm
+├── mode.htm
+├── setup.diff.htm
+├── setup.full.htm
+└── setup.htm
+</prev>
