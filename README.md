@@ -1,8 +1,13 @@
 # Static Timing Report Reviewer
+## 0) Pre-requirement
+
++ install <code>gnuplot</code> packages.
++ geneate STA reports: <code>$STA_RPT/$sta_mode/$sta_corner/$sta_check/all_violation.rpt</code>
 
 ## 1) Specify database dir name and STA report path
 
-<code> % vi Makefile </code>
++ <code> % cd run/01-sta/ </code>
++ <code> % vi Makefile </code>
 
 <pre>
 PREV_RUN := GOLDEN_0623
@@ -11,12 +16,14 @@ STA_RPT  := /projects/xxxx/sta/report
 </pre>
 
 ## 2) Initialize current working directory environment
+
++ <code> % sta_init GOLDEN_0624 --PREV GOLDEN_0623 --STA /projects/xxxx/sta/report</code>
+
 <pre>
 Usage: sta_init [$CURR_RUN]
     --PREV $PREV_RUN
     --STA  $STA_RPT
 </pre>
-<code> % sta_init GOLDEN_0624 --PREV GOLDEN_0623 --STA /projects/xxxx/sta/report</code>
 
 <pre>
 # mkdir GOLDEN_0624 
@@ -27,10 +34,9 @@ Usage: sta_init [$CURR_RUN]
 # ln -s   $STA_RPT  STA
 </pre>
 
-
 ## 3) Modify timing signoff corner definition table
 
-<code> % vi GOLDEN_0624/.sta/sta.corner </code>
++ <code> % vi GOLDEN_0624/.sta/sta.corner </code>
 
 <pre>
 000_TT_typical_85
@@ -44,7 +50,7 @@ Usage: sta_init [$CURR_RUN]
 
 ## 4) Modify sta report filtering configuration file
 
-<code> % vi GOLDEN_0624/.sta/sta.cfg </code>
++ <code> % vi GOLDEN_0624/.sta/sta.cfg </code>
 
 <pre>
 # STA report filename filter : $STA_RPT_PATH/$STA_RPT_FILE
@@ -62,9 +68,9 @@ set STA_CORNER(dc_shift,hold) "000 111 253 349"
 </pre>
 
 ## 5) Extract quality factor from sta timing report
-<code> % cd GOLDEN_0624 </code>
-<br>
-<code> % sta_uniq_end -sta_check setup </code>
+
++ <code> % cd GOLDEN_0624 </code>
++ <code> % sta_uniq_end -sta_check setup </code>
 
 <pre>
 $STA_RPT_PATH/$STA_RPT_FILE (setup.rpt) : PT timing report
@@ -109,7 +115,7 @@ uniq_end/
 │   ├── setup.htm
 │   └── setup.uniq_end.htm
 ├── corner.htm
-├── index.htm
+├── index.htm                   <-- (Summary Report Home Page)
 ├── mode.htm
 ├── setup.diff.htm
 ├── setup.full.htm
