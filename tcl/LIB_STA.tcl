@@ -232,7 +232,7 @@ proc generate_vio_endpoint {{sta_check ""} } {
     parse_timing_report $sta_mode $sta_check
 
     report_curr_nvp_plot "$sta_mode/$sta_check" $STA_SUM_DIR
-    report_comp_nvp_plot "$sta_mode/$sta_check" $STA_SUM_DIR ORIG/$STA_SUM_DIR diff
+    report_comp_nvp_plot "$sta_mode/$sta_check" $STA_SUM_DIR PREV/$STA_SUM_DIR diff
     report_comp_nvp_plot "$sta_mode/$sta_check" $STA_SUM_DIR uniq_end full
 
   }
@@ -330,7 +330,7 @@ proc report_index_mode {{sta_check_list ""}} {
   report_index_check $sta_mode
   }
   puts $fo "</table>"
-  puts $fo "<pre>\[<a href=../ORIG/$STA_SUM_DIR/mode.htm>Prev</a>\]</pre>"
+  puts $fo "<pre>\[<a href=../PREV/$STA_SUM_DIR/mode.htm>Prev</a>\]</pre>"
   puts $fo "</body>"
   puts $fo "</html>"
   close $fo
@@ -434,8 +434,8 @@ proc report_index_corner {{sta_check_list ""}} {
   puts $fo "</tr>"
   }
   puts $fo "</table>"
-  set prev_version [file tail [file readlink ORIG]]
-  puts $fo "<pre>\[<a href=../ORIG/$STA_SUM_DIR/corner.htm>$prev_version</a>\]</pre>"
+  set prev_version [file tail [file readlink PREV]]
+  puts $fo "<pre>\[<a href=../PREV/$STA_SUM_DIR/corner.htm>$prev_version</a>\]</pre>"
   puts $fo "</body>"
   puts $fo "</html>"
   close $fo

@@ -1,1 +1,1 @@
-set path = (../bin ../../dvc/bin $path)
+set path = (../bin $path)

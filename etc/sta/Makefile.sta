@@ -1,4 +1,6 @@
-BIN := ../../bin
+include Makefile.bin
+
+STABIN := $(STA_HOME)/bin
 PCHECK := setup hold
 PGROUP := 
 
@@ -16,18 +18,18 @@ all:	uniq_end $(PGROUP)
 uniq_end: $(PCHECK) index
 
 index: 
-	$(BIN)/sta_index
+	$(STABIN)/sta_gen_index
 
 $(PCHECK): 
 	mkdir -p uniq_end
-	$(BIN)/sta_uniq_end -sta_check $@ | tee uniq_end/$@.log
+	$(STABIN)/sta_uniq_end -sta_check $@ | tee uniq_end/$@.log
 
 
 $(PGROUP):
 	mkdir -p uniq_end_$@
-	$(BIN)/sta_uniq_end  -sum_dir uniq_end_$@ -rpt_postfix _$@ -sta_check hold | tee uniq_end_$@/hold.log
-	$(BIN)/sta_uniq_end  -sum_dir uniq_end_$@ -rpt_postfix _$@ -sta_check setup | tee uniq_end_$@/setup.log
-	$(BIN)/sta_index -sum_dir uniq_end_$@ -rpt_postfix _$@ 
+	$(STABIN)/sta_uniq_end  -sum_dir uniq_end_$@ -rpt_postfix _$@ -sta_check hold | tee uniq_end_$@/hold.log
+	$(STABIN)/sta_uniq_end  -sum_dir uniq_end_$@ -rpt_postfix _$@ -sta_check setup | tee uniq_end_$@/setup.log
+	$(STABIN)/sta_index -sum_dir uniq_end_$@ -rpt_postfix _$@ 
 
 clean:
 	rm -fr uniq_end
