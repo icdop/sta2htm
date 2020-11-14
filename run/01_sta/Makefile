@@ -1,13 +1,13 @@
-PREV := .
-CURR := GOLDEN-1114
-STA  := ../report
+PREV_RUN := .
+CURR_RUN := GOLDEN-1114
+STA_RPT  := ../report
 
-$(CURR):
-	sta_init $(CURR) --STA $(STA) --PREV $(PREV)
+$(CURR_RUN):
+	sta_init $(CURR_RUN) --PREV $(PREV_RUN) --STA $(STA_RPT)
 
-run: $(CURR)
-	cd $(CURR); make all
+run: $(CURR_RUN)
+	cd $(CURR_RUN); make all
 
 clean:
-	rm -fr $(CURR)
+	rm -fr $(CURR_RUN)
 

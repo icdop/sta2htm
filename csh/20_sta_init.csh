@@ -4,8 +4,8 @@ set prog = $0:t
 if (($1 == "") || ($1 == "-h") || ($1 == "--help")) then
    echo "Usage: $prog [options] <rundir> "
    echo "       options:"
-   echo "         --STA  STA_RPT"
    echo "         --PREV PREV_RUN"
+   echo "         --STA  STA_RPT"
    exit -1
 endif
 echo "======================================================="
@@ -19,23 +19,27 @@ setenv ETC_DIR $STA_HOME/etc
 setenv STA_RPT  "report"
 setenv PREV_RUN "."
 
-if ($1 == "--STA") then
+if ($1 != "") then
+   set CURR_RUN=$1
    shift argv
-   setenv STA_RPT $1
-   shift argv
+   echo "# CURR_RUN = $CURR_RUN"
+else
+   set CURR_RUN="."
 endif
+
 
 if ($1 == "--PREV") then
    shift argv
    setenv PREV_RUN $1
    shift argv
+   echo "# PREV_RUN = $PREV_RUN"
 endif
 
-if ($1 != "") then
-   set CURR_RUN=$1
+if ($1 == "--STA") then
    shift argv
-else
-   set CURR_RUN="."
+   setenv STA_RPT $1
+   shift argv
+   echo "# STA_RPT  = $STA_RPT"
 endif
 
 
