@@ -13,7 +13,6 @@ STA  := /projects/xxxx/FrontendDb/.../stasi/
 ## 2) Initialize current working directory environment
 
 <code> % $(STA_HOME)/bin/sta_init GOLDEN_0624</code>
-<code> % cd GOLDEN_0624 </code>
 
 <pre>
 # mkdir GOLDEN_0624 
@@ -21,6 +20,8 @@ STA  := /projects/xxxx/FrontendDb/.../stasi/
 # cp -fr  $(STA_HOME)/etc/sta/ .sta
 # ln -s   .sta/Makefile.sta Makefile
 </pre>
+
+<code> % cd GOLDEN_0624 </code>
 
 ## 3) Modify timing signoff corner definition table
 
