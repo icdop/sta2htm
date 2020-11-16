@@ -261,7 +261,7 @@ proc generate_vio_endpoint {{sta_check ""} } {
 # <Output>
 #   $STA_SUM_DIR/index.htm
 #
-proc report_index_main {{url "mode.htm"}} {
+proc report_index_main {{url "corner.htm"}} {
   variable STA_SUM_DIR
 
   file mkdir $STA_SUM_DIR
@@ -303,11 +303,11 @@ proc report_index_mode {{sta_check_list ""}} {
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fo "<caption><h3>"
+  puts $fo "<caption><h3 align=\"left\">"
   puts $fo "<a href=..>$env(PWD)</a>"
   puts $fo "/$STA_SUM_DIR/</h3></caption>"
   puts $fo "<tr>"
-  puts $fo "<th><a href=corner.htm>\@Corner</a></th>"
+  puts $fo "<th><a href=index.htm>Mode</a></th>"
   foreach sta_check $STA_CHECK_LIST {
     puts $fo "<th><a href=$sta_check.diff.htm>$sta_check</a></th>"
   }
@@ -330,7 +330,11 @@ proc report_index_mode {{sta_check_list ""}} {
   report_index_check $sta_mode
   }
   puts $fo "</table>"
-  puts $fo "<pre>\[<a href=../PREV/$STA_SUM_DIR/mode.htm>Prev</a>\]</pre>"
+  puts $fo "<pre>"
+  puts $fo "\[<a href=../PREV/$STA_SUM_DIR/mode.htm>@Prev</a>\]"
+  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
+  puts $fo "</pre>"
   puts $fo "</body>"
   puts $fo "</html>"
   close $fo
@@ -364,12 +368,12 @@ proc report_index_corner {{sta_check_list ""}} {
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fo "<caption><h3>"
+  puts $fo "<caption><h3 align=\"left\">"
   puts $fo "<a href=..>$env(PWD)</a>"
   puts $fo "/$STA_SUM_DIR"
   puts $fo "</h3></caption>"
   puts $fo "<tr>"
-  puts $fo "<th><a href=mode.htm>\@Mode</a></th>"
+  puts $fo "<th><a href=index.htm>Corner</a></th>"
   set STA_CORNER_LIST ""
   foreach sta_check $STA_CHECK_LIST {
     foreach sta_mode $STA_MODE_LIST {
@@ -435,7 +439,11 @@ proc report_index_corner {{sta_check_list ""}} {
   }
   puts $fo "</table>"
   set prev_version [file tail [file readlink PREV]]
-  puts $fo "<pre>\[<a href=../PREV/$STA_SUM_DIR/corner.htm>$prev_version</a>\]</pre>"
+  puts $fo "<pre>"
+  puts $fo "\[<a href=../PREV/$STA_SUM_DIR/corner.htm>@$prev_version</a>\]"
+  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
+  puts $fo "</pre>"
   puts $fo "</body>"
   puts $fo "</html>"
   close $fo
@@ -462,7 +470,7 @@ proc report_index_check {{sta_mode "func"}} {
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fo "<caption><h3>$env(PWD)/$STA_SUM_DIR/$sta_mode</h3></caption>"
+  puts $fo "<caption><h3 align=\"left\">$env(PWD)/$STA_SUM_DIR/$sta_mode</h3></caption>"
   puts $fo "<tr>"
   foreach sta_check $STA_CHECK_LIST {
     puts $fo "<th align=center><a href=$sta_check.htm>$sta_check</a></th>"
@@ -523,7 +531,7 @@ proc report_curr_sta_html {{sta_check ""}} {
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fo "<caption><h3>"
+  puts $fo "<caption><h3 align=\"left\">"
   puts $fo "<a href=..>$env(PWD)</a>"
   puts $fo "/"
   puts $fo "<a href=.>$STA_SUM_DIR</a>"
@@ -583,7 +591,7 @@ proc report_comp_sta_html {{sta_check ""} {comp "diff"} } {
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fo "<caption><h3>"
+  puts $fo "<caption><h3 align=\"left\">"
   puts $fo "<a href=..>$env(PWD)</a>"
   puts $fo "/"
   puts $fo "<a href=.>$STA_SUM_DIR</a>"
@@ -737,7 +745,7 @@ proc report_endpoint_html {sta_mode {sta_check ""} {corner_list ""}} {
   puts $fout "</head>"
   puts $fout "<body>"
   puts $fout "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fout "<caption><h3>"
+  puts $fout "<caption><h3 align=\"left\">"
   puts $fout "<a href=$sta_check.htm>"
   puts $fout "$env(PWD)/$STA_SUM_DIR/$sta_mode/$sta_check"
   puts $fout "</a>"

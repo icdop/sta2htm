@@ -12,6 +12,6 @@ source $STA_HOME/tcl/LIB_STA.tcl
 
 ::LIB_STA::report_index_mode
 ::LIB_STA::report_index_corner
-::LIB_STA::report_index_main mode.htm
+::LIB_STA::report_index_main
 
 puts "INFO: sta_index Done..."
