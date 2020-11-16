@@ -73,8 +73,10 @@ report/
 
 9 directories
 </pre>
+
 ### STA Summary HTML Files
-</pre>
+
+<pre>
 GOLDEN-1114/
 └── uniq_end
     ├── corner.htm
