@@ -1,10 +1,12 @@
-# Static Timing Report Reviewer
+# Static Timing Analysis HTML Report Reviewer
 ## 0) Pre-requirement
 
++ install <code>tree</code> packages.
 + install <code>gnuplot</code> packages.
-+ geneate STA reports: <code>$STA_RPT/$sta_mode/$sta_corner/$sta_check/all_violation.rpt</code>
++ geneate STA reports from PrimeTime: 
+  <code>$STA_RPT/$sta_mode/$sta_corner/$sta_check/all_violation.rpt</code>
 
-## 1) Specify database dir name and STA report path
+## 1) Specify HTML report dir name and STA report path
 
 + <code> % cd run/01-sta/ </code>
 + <code> % vi Makefile </code>
@@ -15,7 +17,7 @@ CURR_RUN := GOLDEN_0624
 STA_RPT  := /projects/xxxx/sta/report
 </pre>
 
-## 2) Initialize current working directory environment
+## 2) Initialize working directory environment
 
 + <code> % sta_init GOLDEN_0624 --PREV GOLDEN_0623 --STA /projects/xxxx/sta/report</code>
 
