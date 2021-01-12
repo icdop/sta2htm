@@ -72,7 +72,7 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
   puts $fhtm "</h3></caption>"
   puts $fhtm "<tr>"
   puts $fhtm "<th><a href=../mode.htm>Mode</a></th>"
-  puts $fhtm "<th><a href=../$sta_mode/>Check</a></th>"
+  puts $fhtm "<th><a href=../$sta_mode/index.htm>Check</a></th>"
   puts $fhtm "<th><a href=../corner.htm>Corner</a></th>"
   puts $fhtm "<th><a href=$sta_check.blk.htm>Block</a></th>"
   puts $fhtm "<th><a href=$sta_check.clk.htm>Clock</a></th>"

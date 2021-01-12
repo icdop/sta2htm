@@ -484,7 +484,7 @@ proc report_index_check {{sta_mode "func"}} {
   puts $fo "<tr>"
   foreach sta_check $STA_CHECK_LIST { 
     puts $fo "<td>"
-    puts $fo "<a href=..>"
+    puts $fo "<a href=$sta_check.htm>"
     puts $fo "<img src=$sta_check.nvp_wns.diff.png width=700>"
     puts $fo "</a>"
     puts $fo "</td>"
