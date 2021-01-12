@@ -1,0 +1,24 @@
+# File : /home/toolsadm/GITHOME/sta2htm/run/01_sta/report/scan/151_ML/hold.rpt
+# Report : constraint -verbose (Line# 2)
+*001:00047 OCC4                           u_core/u_ddr_ctrl_0/stat_reg_5_/CP
+    -64.24 OCC4                           u_ddr_phy/dfi_address[8]
+*002:00089 OCC4                           u_core/u_ddr_ctrl_0/stat_reg_5_/CP
+    -46.85 OCC4                           u_ddr_phy/dfi_address[4]
+*003:00135 OCC4                           u_core/u_ddr_ctrl_0/stat_reg_5_/CP
+    -45.67 OCC4                           u_ddr_phy/dfi_address[1]
+*004:00181 OCC4                           u_core/u_ddr_ctrl_0/BNKI_6_BANK_x_STM/bnx_W8_reg/CP
+    -38.73 OCC4                           u_ddr_phy/dfi_address[22]
+*005:00222 OCC4                           u_core/u_ddr_ctrl_0/stat_reg_5_/CP
+    -37.49 OCC4                           u_ddr_phy/dfi_address[21]
+*006:00266 OCC4                           u_core/u_ddr_ctrl_0/stat_reg_5_/CP
+    -30.31 OCC4                           u_ddr_phy/dfi_cs_n[1]
+*007:00311 OCC4                           u_core/u_ddr_ctrl_0/BNKI_6_BANK_x_STM/bnx_W8_reg/CP
+     -9.16 OCC4                           u_ddr_phy/dfi_address[20]
+*008:00358 OCC4                           u_core/u_ddr_ctrl_0/BNKI_0_BANK_x_STM/bnx_W8_reg/CP
+     -7.42 OCC4                           u_ddr_phy/dfi_cs_n[0]
+*009:00404 OCC4                           u_core/u_ddr_ctrl_0/stat_reg_5_/CP
+     -6.63 OCC4                           u_ddr_phy/dfi_address[23]
+*010:00449 OCC4                           u_core/u_ddr_ctrl_0/stat_reg_5_/CP
+     -6.15 OCC4                           u_ddr_phy/dfi_address[9]
+*011:00497 OCC4                           u_core/u_ddr_ctrl_0/FIFO_LD/twc_reg_0_/CP
+     -5.14 OCC4                           u_ddr_phy/dfi_cke[0]
