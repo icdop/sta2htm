@@ -41,13 +41,12 @@ Usage: sta_init [$CURR_RUN]
 + <code> % vi GOLDEN_0624/.sta/sta.corner </code>
 
 <pre>
-000_TT_typical_85
-111_LT_Cbest
-121_BC_Cbest
-151_ML_Cbest
-213_WCL_Cworst
-253_WC_Cworst
-349_TT_derate_85
+000_TT
+111_LT
+121_BC
+151_ML
+213_WCL
+253_WC
 </pre>
 
 ## 4) Modify sta report filtering configuration file
@@ -63,10 +62,10 @@ set STA_RPT_FILE {$sta_check$sta_postfix.rpt*}
 set STA_MODE_LIST "func dc_shift ac_capture"
 
 # STA scenario table ($sta_mode,$sta_check) => "$sta_corner ...."
-set STA_CORNER(func,setup) "000 111 253 349"
-set STA_CORNER(ac_capture,setup) "000 111 253 349"
-set STA_CORNER(func,hold) "000 111 253 349"
-set STA_CORNER(dc_shift,hold) "000 111 253 349"
+set STA_CORNER(func,setup) "000 121 253"
+set STA_CORNER(scan,setup) "000 121"
+set STA_CORNER(func,hold)  "000 111 121 151 213 253"
+set STA_CORNER(scan,hold)  "000 111 121 151"
 </pre>
 
 ## 5) Extract quality factor from sta timing report
@@ -96,10 +95,10 @@ uniq_end/
 │   ├── setup
 │   │   ├── 000_TT.blk.htm
 │   │   ├── 000_TT.clk.htm
-│   │   ├── 157_BC.blk.htm
-│   │   ├── 157_BC.clk.htm
-│   │   ├── 258_WC.blk.htm
-│   │   └── 258_WC.clk.htm
+│   │   ├── 121_BC.blk.htm
+│   │   ├── 121_BC.clk.htm
+│   │   ├── 253_WC.blk.htm
+│   │   └── 253_WC.clk.htm
 │   ├── index.htm
 │   ├── setup.blk.htm
 │   ├── setup.clk.htm
@@ -109,8 +108,8 @@ uniq_end/
 │   ├── setup
 │   │   ├── 000_TT.blk.htm
 │   │   ├── 000_TT.clk.htm
-│   │   ├── 157_BC.blk.htm
-│   │   └── 157_BC.clk.htm
+│   │   ├── 121_BC.blk.htm
+│   │   └── 121_BC.clk.htm
 │   ├── index.htm
 │   ├── setup.blk.htm
 │   ├── setup.clk.htm
