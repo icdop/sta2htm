@@ -174,6 +174,7 @@ proc extract_group_list {sta_corner} {
 }
 
 proc output_group_table {sta_mode sta_check corner_name} {
+  variable STA_CURR_RUN
   variable STA_SUM_DIR
   variable GROUP_GID
   variable GROUP_WNS
@@ -198,7 +199,7 @@ proc output_group_table {sta_mode sta_check corner_name} {
       puts $fout "<table border=\"1\" id=\"sta_tbl\">"
       puts $fout "<caption><h3 aligh=left>"
       puts $four "<a href=../$sta_check.grp.htm>"
-      puts $fout "$STA_SUM_DIR/$sta_mode/$sta_check/$corner_name"
+      puts $fout "$STA_CURR_RUN/$STA_SUM_DIR/$sta_mode/$sta_check/$corner_name"
       puts $fout "</a></h3></caption>"
       puts $fout "<TR>"
       puts $fout "<TH><pre>$corner_name</TH>" 

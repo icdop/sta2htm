@@ -14,5 +14,6 @@ source $STA_HOME/tcl/LIB_STA.tcl
 ::LIB_STA::read_corner_list
 ::LIB_STA::report_uniq_end
 ::LIB_STA::report_block_end
+::LIB_STA::report_index_main
 
 puts "INFO: sta_uniq_end Done..."

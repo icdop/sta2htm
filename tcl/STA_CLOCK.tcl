@@ -102,6 +102,7 @@ proc sort_slack_by_clock {corner slack sclock eclock {report ""} } {
 # CLOCK_WNS($sclock,$eclock,$sta_corner) : $wns
 #
 proc report_clock_table {sta_mode {sta_check ""}  } {
+  variable STA_CURR_RUN
   variable STA_SUM_DIR
   variable STA_CHECK
   variable STA_CORNER
@@ -177,6 +178,7 @@ proc extract_clock_list {sta_corner} {
 }
 
 proc output_clock_table {sta_mode sta_check corner_name} {
+  variable STA_CURR_RUN
   variable STA_SUM_DIR
   variable CLOCK_NUM
   variable CLOCK_GID
@@ -201,7 +203,7 @@ proc output_clock_table {sta_mode sta_check corner_name} {
       puts $fout "<table border=\"1\" id=\"sta_tbl\">"
       puts $fout "<caption><h3 align=left>"
       puts $fout "<a href=../$sta_check.clk.htm>" 
-      puts $fout "$STA_SUM_DIR/$sta_mode/$sta_check/$corner_name"
+      puts $fout "$STA_CURR_RUN/$STA_SUM_DIR/$sta_mode/$sta_check/$corner_name"
       puts $fout "</a></h3></caption>"
       puts $fout "<TR>"
       puts $fout "<TH align=left><pre>#$CLOCK_NUM Clocks</a></TH>" 

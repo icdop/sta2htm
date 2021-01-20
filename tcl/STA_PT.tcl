@@ -30,15 +30,19 @@ namespace eval LIB_STA {
 # $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.vio
 #
 # VIO_LIST
+# MET_LIST
+# WAV_LIST
+#
 # GROUP_NVP
 # GROUP_GID
 #
 proc parse_timing_report {sta_mode {sta_check ""} } {
-  global   env
+  variable STA_CURR_RUN
   variable STA_SUM_DIR
   variable STA_RPT_ROOT
   variable STA_RPT_PATH
   variable STA_RPT_FILE
+  variable STA_DATA
   variable STA_CHECK
   variable STA_CORNER
   variable STA_POSTFIX
@@ -57,40 +61,17 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
   file delete -force $STA_SUM_DIR/$sta_mode/$sta_check
   file mkdir $STA_SUM_DIR/$sta_mode/$sta_check
 
-  set fhtm [open "$STA_SUM_DIR/$sta_mode/$sta_check.htm" w]
-  puts $fhtm "<html>"
-  puts $fhtm "<head>"
-  puts $fhtm $::LIB_HTML::TABLE_CSS(sta_tbl)
-  puts $fhtm "</head>"
-  puts $fhtm "<body>"
-  puts $fhtm "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fhtm "<caption><h3>"
-  puts $fhtm "$env(PWD)/$STA_SUM_DIR/$sta_mode/$sta_check"
-  puts $fhtm "<a href=../mode.htm>"
-  puts $fhtm "<img src=$sta_check.nvp_wns.png>"
-  puts $fhtm "</a>"
-  puts $fhtm "</h3></caption>"
-  puts $fhtm "<tr>"
-  puts $fhtm "<th><a href=../mode.htm>Mode</a></th>"
-  puts $fhtm "<th><a href=../$sta_mode/index.htm>Check</a></th>"
-  puts $fhtm "<th><a href=../corner.htm>Corner</a></th>"
-  puts $fhtm "<th><a href=$sta_check.blk.htm>Block</a></th>"
-  puts $fhtm "<th><a href=$sta_check.clk.htm>Clock</a></th>"
-  puts $fhtm "<th><a href=$sta_check.uniq_end.wns>WNS</a></th>"
-  puts $fhtm "<th><a href=$sta_check.uniq_end.nvp>NVP</a></th>"
-  puts $fhtm "<th><a href=$sta_check.uniq_end.htm>Report</a></th>"
-  puts $fhtm "<th><a href=$env(PWD)/$STA_RPT_ROOT/$sta_mode/>Path</a></th>"
-  puts $fhtm "</tr>"
-  puts $fhtm ""
 
   set fdat [open "$STA_SUM_DIR/$sta_mode/$sta_check.nvp_wns.dat" w]
-  puts $fdat "# [file tail $env(PWD)]/$STA_SUM_DIR"
+  puts $fdat "# $STA_CURR_RUN/$STA_SUM_DIR"
   puts $fdat [format "#%-4s %10s %10s" ID NVP WNS]
   puts $fdat [format "#%4s %10s %10s" "----" "----------" "----------"]
 
   if {$STA_POSTFIX==""} { set STA_POSTFIX {""}}
   set FID 0
-  set WNS 0
+  set NVP 0
+  set WNS 0.0
+  set TNS 0.0
   set GID 0
   set BID 0
   array unset GROUP_GID
@@ -104,8 +85,9 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
   reset_waive_list
   read_waive_list all
   read_waive_list $sta_corner
-  set wns 0
   set nvp -
+  set wns 0.0
+  set tns 0.0
 
   catch {exec rm -fr $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.*}
   foreach sta_postfix $STA_POSTFIX { 
@@ -119,7 +101,8 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
     set bid 0
     set gid 0
     set cid 0
-    set wns 0
+    set wns 0.0
+    set tns 0.0
     set nvp 0
     set nmp 0
     set nwp 0
@@ -133,9 +116,6 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
 #       set corner_name [file  tail $corner_path]
 #    }
     puts "($FID) $sta_corner\t$corner_name\t$fname"
-    puts $fhtm "<tr>"
-    puts $fhtm "<td>$sta_mode</td>"
-    puts $fhtm "<td>$sta_check</td>"
     if [regsub {\.gz$} $fname "" n] {
        exec gunzip -c $fname > $STA_SUM_DIR/$sta_mode/$sta_check/.unzip.rpt
        set fin [open $STA_SUM_DIR/$sta_mode/$sta_check/.unzip.rpt r]
@@ -152,6 +132,8 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
     set eclock  "-" 
     set egroup  "**default**"
     set cnt_group  0
+    set WAV_LIST ""
+    set MET_LIST ""
     set VIO_LIST ""
     set slack_offset 0
 
@@ -174,6 +156,7 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
           if {$rpt_check==$sta_check} {
              incr nspt
              set slack [format "%.2f" [expr ($slack+$slack_offset)*1000]]
+             set tns   [format "%.2f" [expr ($tns+$slack)]]
              puts $fout [format "%10.2f %-30s %s" $slack $egroup $epoint]
              if {$slack<$wns} { set wns $slack }
 
@@ -254,6 +237,7 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
         }
       }
       puts "\t:   WNS = $wns"
+      puts "\t:   TNS = $tns"
       puts "\t:   NVP = $nvp"
       puts "\t:   NMP = $nmp"
       puts "\t:   NWP = $nwp"
@@ -271,6 +255,7 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
                 puts -nonewline stderr "\t:   Path# $nspt , Line# $line_cnt\r"
              }
              set slack [format "%.2f" [expr ($slack+$slack_offset)*1000]]
+             set tns   [format "%.2f" [expr ($tns+$slack)]]
              puts $fout [format "*%03d:%05d %-30s %s" $nspt $line_cnt $sclock $spoint]
              puts $fout [format "%10.2f %-30s %s" $slack $eclock $epoint]
              if {$slack<$wns} { set wns $slack }
@@ -295,7 +280,7 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
 		sort_slack_by_block $sta_corner $slack $spoint $epoint 
              }
           }
-        } elseif {[regexp {^\s+Startpoint\:\s+(\S+)} $line whole spoint]} {
+        } elseif {[regexp {^\s+Startpoint\:\s+(\S+)} $line whole sinst]} {
           set sclock "-"
           set eclock "-"
           set egroup "**default**"
@@ -305,7 +290,7 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
           set sclock_delay 0
           set eclock_delay 0
           set clock_recon 0
-        } elseif {[regexp {^\s+Endpoint\:\s+(\S+)} $line whole epoint]} {
+        } elseif {[regexp {^\s+Endpoint\:\s+(\S+)} $line whole einst]} {
           set path_point "e"
         } elseif {[regexp {^\s+Path Group\:\s+(\S+)} $line whole egroup]} {
         } elseif {[regexp {^\s+Path Type\:\s+(\S+)} $line whole ptype]} {
@@ -329,14 +314,14 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
           set clock_recon $idelay 
         } elseif {[regexp {^\s+clock\s+(\S+)} $line clk_name]} {
         } elseif {[regexp {^\s+data arrival time\s+} $line]} {
+          set epoint $instpin
           set inst_matching 0
         } elseif {$inst_matching} {
           if {[regexp {^\s+(\S+)\s+(\S+)\s+(\S+)} $line whole instpin cell idelay]} {
              set instname [file dirname $instpin]
-             if {$instname == $spoint} {
+             if {$instname == $sinst} {
                 set spoint $instpin
-                #puts "S: $spoint"
-             } elseif {$instname == $epoint} {
+             } elseif {$instname == $einst} {
                 set epoint $instpin
              }
           }
@@ -358,6 +343,7 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
       }
       puts "\t:   Path# $nspt , Line# $line_cnt"
       puts "\t:   WNS = $wns"
+      puts "\t:   TNS = $tns"
       puts "\t:   NVP = $nvp"
       puts "\t:   NMP = $nmp"
       puts "\t:   NWP = $nwp"
@@ -375,6 +361,7 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
                 puts -nonewline stderr "\t:   Path# $nspt , Line# $line_cnt\r"
              }
              set slack [format "%.2f" [expr ($slack+$slack_offset)*1000]]
+             set tns   [format "%.2f" [expr ($tns+$slack)]]
              set clock_skew [format "%.2f" [expr  ($sclock_delay-$eclock_delay-$clock_recon)*1000]]
              puts $fout [format "*%03d:%05d %-30s %s" $nspt $line_cnt $sclock $spoint]
              puts $fout [format "%10.2f %-30s %s" $slack $eclock $epoint]
@@ -465,6 +452,7 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
       }
       puts "\t:   Path# $nspt , Line# $line_cnt"
       puts "\t:   WNS = $wns"
+      puts "\t:   TNS = $tns"
       puts "\t:   NVP = $nvp"
       puts "\t:   NMP = $nmp"
       puts "\t:   NWP = $nwp"
@@ -479,23 +467,8 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
     set bid [output_block_table $sta_mode $sta_check $corner_name]
     set cid [output_clock_table $sta_mode $sta_check $corner_name]
 
-    if {$wns<$WNS} { set WNS $wns}
-    if {$nvp>0} {
-    puts $fhtm "<td align=left><a href=$sta_check/$corner_name.vio>$corner_name</a></td>"
-    puts $fhtm "<td align=right><a href=$sta_check/$corner_name.blk.htm> $bid </a></td>"
-    puts $fhtm "<td align=right><a href=$sta_check/$corner_name.clk.htm> $cid </a></td>"
-    puts $fhtm "<td align=right><a href=$sta_check/$corner_name.wns> $wns </a></td>"
-    puts $fhtm "<td align=right><a href=$sta_check/$corner_name.nvp> $nvp </a></td>"
-    } else {
-    puts $fhtm "<td align=left>$corner_name</td>"
-    puts $fhtm "<td align=right> $bid </td>"
-    puts $fhtm "<td align=right> $cid </td>"
-    puts $fhtm "<td align=right> $wns </td>"
-    puts $fhtm "<td align=right> $nvp </td>"
-    }
-    puts $fhtm "<td><a href=\"$env(PWD)/$fname\">[file tail $fname]</a></td>"
-    puts $fhtm "<td><a href=\"[file dirname $env(PWD)/$fname]\">[file dirname $fname]</a></td>"
-    puts $fhtm "</tr>"
+    
+    lappend STA_DATA($sta_mode,$sta_check,$sta_corner) [list $corner_name $fname $nwp $nvp $wns $tns $cid $bid]
 
     report_slack_summary $sta_mode $sta_check/$corner_name
   }
@@ -511,30 +484,6 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
   }
   # foreach sta_corner
   close $fdat
-
-  set NVP "NVP"
-  puts $fhtm "<tr>"
-  puts $fhtm "<th><a href=.>$sta_mode</a></th>"
-  puts $fhtm "<th><a href=../$sta_check.diff.htm>$sta_check</a></th>"
-  puts $fhtm "<th><a href=../corner.htm>Merged $FID files</a></th>"
-  puts $fhtm "<th><a href=$sta_check.blk.htm>Block</a></th>"
-  puts $fhtm "<th><a href=$sta_check.clk.htm>Clock</a></th>"
-#  puts $fhtm "<th><a href=$sta_check.uniq_end.blk.htm>Uniqe</a></th>"
-#  puts $fhtm "<th><a href=$sta_check.uniq_end.clk.htm>Uniqe</a></th>"
-  puts $fhtm "<th align=right><a href=$sta_check.uniq_end.wns>[format "%.2f" $WNS]</a></th>"
-  puts $fhtm "<th align=right><a href=$sta_check.uniq_end.nvp>$NVP</a></th>"
-  puts $fhtm "<th>"
-  puts $fhtm "<a href=$sta_check.uniq_end.rpt>Unique</a>"
-  puts $fhtm "<a href=$sta_check.waive_end.rpt>Waived</a>"
-  puts $fhtm "</th>"
-  puts $fhtm "<th></th>"
-  puts $fhtm "</tr>"
-  puts $fhtm "</table>"
-  puts $fhtm "</body>"
-  puts $fhtm "</html>"
-  close $fhtm
-
-}
 }
 
-
+}

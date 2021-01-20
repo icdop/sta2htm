@@ -8,7 +8,6 @@ $(CURR_RUN):
 run: $(CURR_RUN)
 	(cd $(CURR_RUN); make all )| tee run.log
 	make htm | tee tree.log
-	make diff | tee diff.log
 
 htm:
 	tree -P *.htm $(CURR_RUN) 

@@ -11,13 +11,13 @@ Design : top
 
    Endpoint                                                  Slack
    -----------------------------------------------------------------
-   u_core/u_vip/trf_64x64_u_trf_64x64/AA[3]               -0.00526 (VIOLATED)
+   u_core/u_vip/gen_trf_64x64_u_trf_64x64/AA[3]           -0.00526 (VIOLATED)
 
    min_delay/hold ('CLK_VIP_DIV2' group)
 
    Endpoint                                                  Slack
    -----------------------------------------------------------------
-   u_core/u_vip/trf_1kx64_m8_u_trf_1kx64_m8/D[63]         -0.00061 (VIOLATED)
+   u_core/u_vip/gen_trf_1kx64_m8_u_trf_1kx64_m8/D[63]     -0.00061 (VIOLATED)
 
 
 

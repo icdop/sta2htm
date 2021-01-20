@@ -10,8 +10,9 @@ source $STA_HOME/tcl/LIB_STA.tcl
 ::LIB_STA::read_config
 ::LIB_STA::read_corner_list
 
-::LIB_STA::report_index_mode
-::LIB_STA::report_index_corner
 ::LIB_STA::report_index_main
+::LIB_STA::report_index_mode
+::LIB_STA::report_index_check
+::LIB_STA::report_index_corner
 
 puts "INFO: sta_index Done..."

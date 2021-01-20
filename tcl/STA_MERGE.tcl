@@ -1,6 +1,6 @@
-# of All Mode and All corners!/usr/bin/tclsh
+#!/usr/bin/tclsh
 #
-# Parse Timing Report File
+# Uniquify Timing Violation Point
 #
 # By Albert Li 
 # 2020/07/02
@@ -9,7 +9,7 @@
 # package require LIB_PLOT
 # package require LIB_HTML
 
-puts "INFO: Loading 'LIB_STA.tcl'..."
+puts "INFO: Loading 'STA_MERGE.tcl'..."
 namespace eval LIB_STA {
 variable VIO_FILE  
 variable VIO_LIST  ""
@@ -23,10 +23,12 @@ variable VIO_WNS
 # $STA_SUM_DIR/$sta_mode/$sta_check/*.vio
 #
 # <Output>
+#
+# <Return>
 # VIO_LIST : {{$egroup,$instpin} $wns $wcorner}
 # VIO_WNS($egroup,$instpin,sta_corner) : $wns
 #
-proc merge_vio_endpoint {sta_mode {sta_check ""}  } {
+proc merge_vio_endpoint {sta_mode {sta_check ""} {corner_list ""}} {
   variable STA_SUM_DIR
   variable STA_CHECK
   variable STA_CORNER
@@ -40,8 +42,9 @@ proc merge_vio_endpoint {sta_mode {sta_check ""}  } {
      return 
   }
   puts "INFO($sta_mode): Merging slack files of multiple corners ..."
-  array unset SLACK 
-  if ![catch {glob $STA_SUM_DIR/$sta_mode/$sta_check/*.vio} files] {
+  array unset SLACK
+  foreach corner_mask $corner_list {
+  if ![catch {glob $STA_SUM_DIR/$sta_mode/$sta_check/$corner_mask*.vio} files] {
     foreach fname $files {
       set fin [open $fname r]
       regsub {\.vio$} [file tail $fname] "" corner_name
@@ -74,6 +77,8 @@ proc merge_vio_endpoint {sta_mode {sta_check ""}  } {
       close $fin
     }
   }
+  }
+  
   set VIO_LIST ""
   foreach key [array name cc] {
       lappend VIO_LIST [list [split $key ","] $VIO_WNS($key,$cc($key)) $cc($key)]
