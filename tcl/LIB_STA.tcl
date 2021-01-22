@@ -15,7 +15,6 @@ namespace eval LIB_STA {
 global env
 
 variable STA_CURR_RUN	"."
-variable STA_PREV_RUN   "PREV"
 variable STA_CFG_DIR    ".sta"
 variable STA_SUM_DIR    "uniq_end"
 variable STA_RPT_ROOT    "STA"
@@ -60,7 +59,8 @@ proc init {} {
   uplevel 1 source $STA_HOME/tcl/STA_CLOCK.tcl
   uplevel 1 source $STA_HOME/tcl/STA_BLOCK.tcl
   uplevel 1 source $STA_HOME/tcl/STA_GROUP.tcl
-#  uplevel 1 source $STA_HOME/tcl/STA_CHART.tcl
+  uplevel 1 source $STA_HOME/tcl/STA_CHART.tcl
+  uplevel 1 source $STA_HOME/tcl/STA_COMP.tcl
   
   set STA_CURR_RUN [file tail $env(PWD)]
 }
@@ -233,7 +233,6 @@ proc report_uniq_end {{sta_check ""} } {
 #
 proc generate_vio_endpoint {{sta_check ""} } {
   global env
-  variable STA_PREV_RUN
   variable STA_SUM_DIR
   variable STA_MODE_LIST
   variable STA_CHECK
@@ -251,12 +250,8 @@ proc generate_vio_endpoint {{sta_check ""} } {
     parse_timing_report $sta_mode $sta_check
 #    create_check_chart $sta_mode $sta_check
 
-    create_comp_nvp_plot "$sta_mode/$sta_check" $STA_SUM_DIR $STA_PREV_RUN/$STA_SUM_DIR diff
-    create_comp_nvp_plot "$sta_mode/$sta_check" $STA_SUM_DIR uniq_end full
   }
   report_curr_sta_html $sta_check
-  report_comp_sta_html $sta_check "diff"
-  report_comp_sta_html $sta_check "full"
 }
 
 # <Title> parse_timing_report
@@ -281,7 +276,6 @@ proc generate_vio_endpoint {{sta_check ""} } {
 #
 proc report_index_main {} {
   variable STA_CURR_RUN
-  variable STA_PREV_RUN
   variable STA_SUM_DIR
   variable STA_MODE_LIST
   variable STA_CHECK_LIST
@@ -298,7 +292,6 @@ proc report_index_main {} {
   puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
   puts $fo "\[<a href=check.htm>\@Check</a>\]"
   puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
-  puts $fo "\[<a href=../$STA_PREV_RUN/$STA_SUM_DIR/index.htm>\@Prev</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -386,7 +379,6 @@ proc report_index_main {} {
 #
 proc report_index_mode {{sta_check_list ""}} {
   variable STA_CURR_RUN
-  variable STA_PREV_RUN
   variable STA_SUM_DIR
   variable STA_MODE_LIST
   variable STA_CHECK_LIST
@@ -447,7 +439,6 @@ proc report_index_mode {{sta_check_list ""}} {
 #
 proc report_index_corner {{sta_check_list ""}} {
   variable STA_CURR_RUN
-  variable STA_PREV_RUN
   variable STA_SUM_DIR
   variable STA_MODE_LIST
   variable STA_CHECK_LIST
@@ -457,7 +448,6 @@ proc report_index_corner {{sta_check_list ""}} {
   variable VIO_FILE
 
   if {$sta_check_list!=""} { set $STA_CHECK_LIST $sta_check_list}
-  set prev_version [file tail [file readlink $STA_PREV_RUN]]
  
   file mkdir $STA_SUM_DIR
   puts "INFO: Generating Corner Index HTML Files ..."
@@ -808,6 +798,7 @@ proc report_curr_sta_html {{sta_check ""}} {
   variable STA_CURR_RUN
   variable STA_SUM_DIR
   variable STA_MODE_LIST
+  variable STA_CHECK_LIST
   variable STA_CHECK
   variable STA_CORNER
   variable STA_POSTFIX
@@ -822,17 +813,13 @@ proc report_curr_sta_html {{sta_check ""}} {
   puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
   puts $fo "\[<a href=check.htm>\@Check</a>\]"
   puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
-  puts $fo "\[<a href=$sta_check.diff.htm>\@Prev</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
   puts $fo "<caption><h3 align=\"left\">"
-  puts $fo "<a href=..>$STA_CURR_RUN</a>"
-  puts $fo "/"
-  puts $fo "<a href=.>$STA_SUM_DIR</a>"
-  puts $fo "(<a href=$sta_check.htm>$sta_check</a>)"
-  if {$STA_POSTFIX != ""} {
-  puts $fo " @<a href=$sta_check.full.htm>full</a>"
+  puts $fo "$STA_CURR_RUN/$STA_SUM_DIR "
+  foreach check $STA_CHECK_LIST {
+    puts $fo "(<a href=$check.htm>$check</a>)"
   }
   puts $fo "</h3></caption>"
   foreach sta_mode $STA_MODE_LIST {
@@ -843,11 +830,11 @@ proc report_curr_sta_html {{sta_check ""}} {
     puts $fo "<tr>"
     puts $fo "<td>"
     puts $fo "<a href=$sta_mode/$sta_check.htm>"
-    puts $fo "<img src=$sta_mode/$sta_check.nvp_wns.png>"
+    puts $fo "<img src=$sta_mode/$sta_check.nvp_wns.png width=600>"
     puts $fo "</a>"
     puts $fo "</td>"
     puts $fo "<td>"
-    puts $fo "<iframe src=\"$sta_mode/$sta_check.nvp_wns.dat\" height=\"400\" width=\"250\"></iframe>"
+    puts $fo "<iframe src=\"$sta_mode/$sta_check.nvp_wns.dat\" height=\"250\" width=\"250\"></iframe>"
     puts $fo "</td>"
     puts $fo "</tr>"
     }
@@ -859,66 +846,6 @@ proc report_curr_sta_html {{sta_check ""}} {
 }
 
 
-#
-# <Title>
-# Report STA Summary Page of STA_CHECK with diff
-#
-# <Input>
-#
-# <Output>
-# $STA_SUM_DIR/$sta_check.$comp.htm
-#
-proc report_comp_sta_html {{sta_check ""} {comp "diff"} } {
-  variable STA_CURR_RUN
-  variable STA_SUM_DIR
-  variable STA_MODE_LIST
-  variable STA_CHECK
-  variable STA_CORNER
-  
-  if {$sta_check==""} { set sta_check $STA_CHECK}
-
- 
-  set fo [open "$STA_SUM_DIR/$sta_check.$comp.htm" "w"]
-  puts $fo "<html>"
-  puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
-  puts $fo "<head>"
-  puts $fo "\[<a href=index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
-  puts $fo "\[<a href=$sta_check.htm>\@Prev</a>\]"
-  puts $fo "</head>"
-  puts $fo "<body>"
-  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fo "<caption><h3 align=\"left\">"
-  puts $fo "<a href=..>$STA_CURR_RUN</a>"
-  puts $fo "/"
-  puts $fo "<a href=.>$STA_SUM_DIR</a>"
-  puts $fo "</a>"
-  puts $fo "(<a href=$sta_check.htm>$sta_check</a>)"
-  puts $fo "<h3></caption>"
-  foreach sta_mode $STA_MODE_LIST {
-    if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
-    puts $fo "<tr>"
-    puts $fo "<th colspan=2><h3><a href=$sta_mode/$sta_check.htm>$sta_mode/$sta_check</a></h3></th>"
-    puts $fo "</tr>"
-    puts $fo "<tr>"
-    puts $fo "<td>"
-    puts $fo "<a href=\"$sta_check.htm\">"
-    puts $fo "<img src=$sta_mode/$sta_check.nvp_wns.$comp.png>"
-    puts $fo "</a>"
-    puts $fo "</td>"
-    puts $fo "<td>"
-    puts $fo "<iframe src=\"$sta_mode/$sta_check.nvp_wns.$comp.rpt\" height=\"400\" width=\"500\"></iframe>"
-    puts $fo "</td>"
-    puts $fo "</tr>"
-    }
-  }
-  puts $fo "</table>"
-  puts $fo "</body>"
-  puts $fo "</html>"
-  close $fo
-}
 
 # <Title>
 #   Generate Violation Endpint Text Report
@@ -1388,46 +1315,6 @@ proc create_curr_nvp_plot {path odir} {
   catch {exec gnuplot $ofile.plt}
 }
 
-proc create_comp_nvp_plot {path odir xdir {comp "diff"}} {
-  set ofile [format "%s/%s.nvp_wns" $odir $path]
-  set odir [file normalize $odir]
-  set oname [format "%s/%s" [file tail [file dirname $odir]] [file tail $odir]]
-  set xfile [format "%s/%s.nvp_wns" $xdir $path]
-  set xdir [file normalize $xdir]
-  set xname [format "%s/%s" [file tail [file dirname $xdir]] [file tail $xdir]]
-
-
-  set ymax [get_nvp_ymax $ofile.dat]
-  set ymax1 [get_nvp_ymax $xfile.dat]
-  if {$ymax1>$ymax} { set ymax $ymax1}
-  set fout [open "$ofile.$comp.plt" w]
-    puts $fout "set title \"$path\""
-    puts $fout "set term png truecolor size 1000,400 medium"
-    puts $fout "set output \"$ofile.$comp.png\""
-    puts $fout "set style data histogram"
-    puts $fout "set style histogram clustered gap 1"
-    puts $fout "set style fill solid 0.4 border"
-    puts $fout "set grid"
-    puts $fout "set size 1,1"
-    puts $fout "set yrange \[0:$ymax\]"
-    puts $fout "set ylabel \"NVP\""
-    puts $fout "set y2label \"WNS (ps)\""
-    puts $fout "set ytics nomirror"
-    puts $fout "set y2tics"
-    puts $fout "plot \"$xfile.dat\" using 2:xticlabels(1) lc 0 axis x1y1  title \"$xname-NVP\", \\"
-#    puts $fout "     \"$xfile.dat\" using 0:2:2 with labels right offset 0,1 notitle, \\"
-    puts $fout "     \"$xfile.dat\" using 3:xticlabels(1) with linespoints lc 0 lw 1 pt 7 ps 1 axis x1y2  title \"$xname-WNS\", \\"
-#    puts $fout "     \"$xfile.dat\" using 0:3:(sprintf(\"(%di)\",\$3)) with labels center offset -0.5,2 axis x1y2 notitle lc 0, \\"
-    puts $fout "     \"$ofile.dat\" using 2:xticlabels(1) lc 1 axis x1y1  title \"$oname-NVP\", \\"
-    puts $fout "     \"$ofile.dat\" using 0:2:2 with labels left offset 0,0 notitle, \\"
-    puts $fout "     \"$ofile.dat\" using 3:xticlabels(1) with linespoints lc 3 lw 2 pt 7 ps 1 axis x1y2  title \"$oname-WNS\", \\"
-    puts $fout "     \"$ofile.dat\" using 0:3:(sprintf(\"(%d)\",\$3)) with labels center offset -0.5,2 axis x1y2 notitle lc 3"
-   close $fout
-  puts "INFO: Generating Violation Diff Chart ($path)..."
-  puts "\t:$ofile.$comp.png"
-  catch {exec gnuplot $ofile.$comp.plt}
-  catch {exec diff -W 60 -y $ofile.dat $xfile.dat > $ofile.$comp.rpt}
-}
 
 }
 

@@ -15,7 +15,6 @@ GOLDEN-1114
     │   │   ├── 258_WC.blk.htm
     │   │   └── 258_WC.clk.htm
     │   ├── hold.blk.htm
-    │   ├── hold.chart.htm
     │   ├── hold.clk.htm
     │   ├── hold.htm
     │   ├── hold.uniq_end.htm
@@ -29,13 +28,10 @@ GOLDEN-1114
     │   │   ├── 258_WC.blk.htm
     │   │   └── 258_WC.clk.htm
     │   ├── setup.blk.htm
-    │   ├── setup.chart.htm
     │   ├── setup.clk.htm
     │   ├── setup.htm
     │   ├── setup.uniq_end.htm
     │   └── setup.waive_end.htm
-    ├── hold.diff.htm
-    ├── hold.full.htm
     ├── hold.htm
     ├── index.htm
     ├── mode.htm
@@ -46,7 +42,6 @@ GOLDEN-1114
     │   │   ├── 151_ML.blk.htm
     │   │   └── 151_ML.clk.htm
     │   ├── hold.blk.htm
-    │   ├── hold.chart.htm
     │   ├── hold.clk.htm
     │   ├── hold.htm
     │   ├── hold.uniq_end.htm
@@ -58,14 +53,11 @@ GOLDEN-1114
     │   │   ├── 157_BC.blk.htm
     │   │   └── 157_BC.clk.htm
     │   ├── setup.blk.htm
-    │   ├── setup.chart.htm
     │   ├── setup.clk.htm
     │   ├── setup.htm
     │   ├── setup.uniq_end.htm
     │   └── setup.waive_end.htm
-    ├── setup.diff.htm
-    ├── setup.full.htm
     └── setup.htm
 
-7 directories, 58 files
+7 directories, 50 files
 make[1]: Leaving directory '/home/toolsadm/GITHOME/sta2htm/run/01_sta'
