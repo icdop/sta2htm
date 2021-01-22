@@ -60,7 +60,7 @@ proc init {} {
   uplevel 1 source $STA_HOME/tcl/STA_CLOCK.tcl
   uplevel 1 source $STA_HOME/tcl/STA_BLOCK.tcl
   uplevel 1 source $STA_HOME/tcl/STA_GROUP.tcl
-  uplevel 1 source $STA_HOME/tcl/STA_CHART.tcl
+#  uplevel 1 source $STA_HOME/tcl/STA_CHART.tcl
   
   set STA_CURR_RUN [file tail $env(PWD)]
 }
@@ -249,7 +249,7 @@ proc generate_vio_endpoint {{sta_check ""} } {
     puts "\nMODE: $sta_mode $sta_check"
 
     parse_timing_report $sta_mode $sta_check
-    create_check_chart $sta_mode $sta_check
+#    create_check_chart $sta_mode $sta_check
 
     create_comp_nvp_plot "$sta_mode/$sta_check" $STA_SUM_DIR $STA_PREV_RUN/$STA_SUM_DIR diff
     create_comp_nvp_plot "$sta_mode/$sta_check" $STA_SUM_DIR uniq_end full
