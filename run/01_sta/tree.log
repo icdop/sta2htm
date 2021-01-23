@@ -46,18 +46,8 @@ GOLDEN-1114
     │   ├── hold.htm
     │   ├── hold.uniq_end.htm
     │   ├── hold.waive_end.htm
-    │   ├── index.htm
-    │   ├── setup
-    │   │   ├── 000_TT.blk.htm
-    │   │   ├── 000_TT.clk.htm
-    │   │   ├── 157_BC.blk.htm
-    │   │   └── 157_BC.clk.htm
-    │   ├── setup.blk.htm
-    │   ├── setup.clk.htm
-    │   ├── setup.htm
-    │   ├── setup.uniq_end.htm
-    │   └── setup.waive_end.htm
+    │   └── index.htm
     └── setup.htm
 
-7 directories, 50 files
+6 directories, 41 files
 make[1]: Leaving directory '/home/toolsadm/GITHOME/sta2htm/run/01_sta'

@@ -58,19 +58,7 @@ INFO: Generating Slack Summary Report..
 	:          4          0          4      -9.43  VCLK_DO
 	:          3          0          3     -97.43  VCLK_FLH
 	:          1          0          1      -8.06  VCLK_MCU08
-
-MODE: scan setup
-INFO: Parsing Timing Report Files (setup)...
-(1) 000	000_TT	STA/scan/000_TT/setup.rpt
-INFO: Generating Slack Summary Report..
-	: ========== ========== ========== ========== ==========================
-	:       REAL     WAIVED        NVP        WNS PathGroup
-	: ========== ========== ========== ========== ==========================
-(2) 157	157_BC	STA/scan/157_BC/setup.rpt
-INFO: Generating Slack Summary Report..
-	: ========== ========== ========== ========== ==========================
-	:       REAL     WAIVED        NVP        WNS PathGroup
-	: ========== ========== ========== ========== ==========================
+INFO: STA_CORNER(scan,setup) is not defined...
 INFO(func): Merging slack files of multiple corners ...
 (000)	: uniq_end/func/setup/000_TT.vio
 (157)	: uniq_end/func/setup/157_BC.vio
@@ -92,21 +80,6 @@ INFO: Generating Slack Summary Report..
 	:          1          0          1      -8.06  VCLK_MCU08
 INFO: Generating Violation Statistics Graph (func/setup)...
 	:uniq_end/func/setup.nvp_wns.png
-INFO(scan): Merging slack files of multiple corners ...
-(000)	: uniq_end/scan/setup/000_TT.vio
-(157)	: uniq_end/scan/setup/157_BC.vio
-INFO(scan): Generating waived endpoint TEXT format report..
-INFO(scan): Generating unique endpoint TEXT format report..
-INFO(scan): Generating unique endpoint HTML format report..
-INFO(scan): Generating waived endpoint HTML format report..
-INFO(scan): 5 Clocks
-INFO(scan): 0 blocks
-INFO: Generating Slack Summary Report..
-	: ========== ========== ========== ========== ==========================
-	:       REAL     WAIVED        NVP        WNS PathGroup
-	: ========== ========== ========== ========== ==========================
-INFO: Generating Violation Statistics Graph (scan/setup)...
-	:uniq_end/scan/setup.nvp_wns.png
 INFO: Generating STA Index HTML Files ...
 INFO: Generating Mode Index HTML Files ...
 INFO: Generating Mode Index Page (func) ...
@@ -119,10 +92,7 @@ uniq_end/func/setup/*.vio
 (000)	: uniq_end/func/setup/000_TT.vio
 (157)	: uniq_end/func/setup/157_BC.vio
 INFO(func): 0 blocks
-INFO(scan): Group slack files of multiple corners ...
-uniq_end/scan/setup/*.vio
-(000)	: uniq_end/scan/setup/000_TT.vio
-(157)	: uniq_end/scan/setup/157_BC.vio
-INFO(scan): 0 blocks
+INFO: STA_CORNER(scan,setup) is not defined...
+INFO: STA_CORNER(scan,setup) is not defined...
 INFO: Generating STA Index HTML Files ...
 INFO: sta_uniq_end Done...
