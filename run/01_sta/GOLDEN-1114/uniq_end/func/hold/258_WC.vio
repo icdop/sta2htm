@@ -1,4 +1,4 @@
-# File : /home/toolsadm/GITHOME/sta2htm/run/01_sta/report/func/258_WC/hold.rpt
+# File : /home/ISSBG/GITHOME/sta/run/01_sta/reports/GOLDEN-1114/func/258_WC/hold.rpt
 # Report : constraint -verbose (Line# 2)
 *001:00050 CLK_DDRC_0                     u_core/u_ddr_ctrl_0/stat_reg_0_/Q
     -50.81 CLK_DDR_PHY_pub_ctl_0          u_ddr_phy/dfi_address[8]

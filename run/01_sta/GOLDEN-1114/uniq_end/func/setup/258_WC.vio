@@ -1,4 +1,4 @@
-# File : /home/toolsadm/GITHOME/sta2htm/run/01_sta/report/func/258_WC/setup.rpt
+# File : /home/ISSBG/GITHOME/sta/run/01_sta/reports/GOLDEN-1114/func/258_WC/setup.rpt
 # Report : constraint -path slack_only (Line# 2)
     -14.99 VCLK_APB                       pad_gpio_pa[7]
    -114.56 VCLK_CAN                       pad_can_txd

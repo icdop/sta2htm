@@ -618,7 +618,6 @@ proc report_index_corner {{sta_check_list ""}} {
 #
 proc report_index_check {{sta_check_list ""}} {
   variable STA_CURR_RUN
-  variable STA_PREV_RUN
   variable STA_SUM_DIR
   variable STA_MODE_LIST
   variable STA_CHECK_LIST

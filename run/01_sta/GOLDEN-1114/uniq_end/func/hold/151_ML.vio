@@ -1,4 +1,4 @@
-# File : /home/toolsadm/GITHOME/sta2htm/run/01_sta/report/func/151_ML/hold.rpt
+# File : /home/ISSBG/GITHOME/sta/run/01_sta/reports/GOLDEN-1114/func/151_ML/hold.rpt
 # Report : constraint -path slack_only (Line# 2)
      -0.90 CLK_DI_ISP                     u_core/u_isp_top/u_vsm_ram2a/gen_sram_960x32_u_sram_960x32/A[1]
      -0.57 CLK_DI_ISP                     u_core/u_isp_top/u_isp_exp_v2_sram_wrapper/gen_rf_128x19_u_rf_128x19/A[2]

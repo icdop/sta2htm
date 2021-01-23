@@ -1,4 +1,4 @@
-# File : /home/toolsadm/GITHOME/sta2htm/run/01_sta/report/func/157_BC/hold.rpt
+# File : /home/ISSBG/GITHOME/sta/run/01_sta/reports/GOLDEN-1114/func/157_BC/hold.rpt
 # Report : constraint -path slack_only (Line# 2)
      -1.05 **clock_gating_default**       u_core/u_spi/u_spi_txrx/clk_gate_buf_rxd_reg/latch/E
      -0.82 CLK_DI_ISP                     u_core/u_isp_top/u_vsm_ram2a/gen_sram_960x32_u_sram_960x32/A[1]

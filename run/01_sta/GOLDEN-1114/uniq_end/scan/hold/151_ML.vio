@@ -1,4 +1,4 @@
-# File : /home/toolsadm/GITHOME/sta2htm/run/01_sta/report/scan/151_ML/hold.rpt
+# File : /home/ISSBG/GITHOME/sta/run/01_sta/reports/GOLDEN-1114/scan/151_ML/hold.rpt
 # Report : constraint -verbose (Line# 2)
 *001:00047 OCC4                           u_core/u_ddr_ctrl_0/stat_reg_5_/Q
     -64.24 OCC4                           u_ddr_phy/dfi_address[8]

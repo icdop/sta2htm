@@ -35,34 +35,36 @@ clean:
 
 ### STA Report File
 <pre>
-report/
-├── func
-│   ├── 000_TT
-│   │   ├── hold.rpt
-│   │   └── setup.rpt
-│   ├── 151_ML
-│   │   └── hold.rpt
-│   ├── 157_BC
-│   │   ├── hold.rpt
-│   │   └── setup.rpt
-│   └── 258_WC
-│       ├── hold.rpt
-│       └── setup.rpt
-└── scan
-    ├── 000_TT
-    │   ├── hold.rpt
-    │   └── setup.rpt
-    ├── 151_ML
-    │   └── hold.rpt
-    └── 157_BC
-        └── setup.rpt
+reports/
+└── GOLDEN-1114
+    ├── func
+    │   ├── 000_TT
+    │   │   ├── hold.rpt
+    │   │   └── setup.rpt
+    │   ├── 151_ML
+    │   │   └── hold.rpt
+    │   ├── 157_BC
+    │   │   ├── hold.rpt
+    │   │   └── setup.rpt
+    │   └── 258_WC
+    │       ├── hold.rpt
+    │       └── setup.rpt
+    └── scan
+        ├── 000_TT
+        │   ├── hold.rpt
+        │   └── setup.rpt
+        ├── 151_ML
+        │   └── hold.rpt
+        └── 157_BC
+            └── setup.rpt
+
+10 directories, 11 files
 </pre>
 
 ### STA Summary Directory
 <pre>
  GOLDEN-1114/
-├── PREV -> .
-├── STA -> ../report
+├── STA -> ../reports/GOLDEN-1114
 └── uniq_end
     ├── func
     │   ├── hold
@@ -79,7 +81,12 @@ report/
 <pre>
 GOLDEN-1114/
 └── uniq_end
+    ├── index.htm
+    ├── mode.htm
+    ├── check.htm
     ├── corner.htm
+    ├── setup.htm
+    ├── hold.htm
     ├── func
     │   ├── hold
     │   │   ├── 000_TT.blk.htm
@@ -106,11 +113,6 @@ GOLDEN-1114/
     │   ├── setup.clk.htm
     │   ├── setup.htm
     │   └── setup.uniq_end.htm
-    ├── hold.diff.htm
-    ├── hold.full.htm
-    ├── hold.htm
-    ├── index.htm
-    ├── mode.htm
     ├── scan
     │   ├── hold
     │   │   ├── 000_TT.blk.htm
@@ -131,9 +133,6 @@ GOLDEN-1114/
     │   ├── setup.clk.htm
     │   ├── setup.htm
     │   └── setup.uniq_end.htm
-    ├── setup.diff.htm
-    ├── setup.full.htm
-    └── setup.htm
+    └── 
 
-7 directories, 49 files
 </pre>
