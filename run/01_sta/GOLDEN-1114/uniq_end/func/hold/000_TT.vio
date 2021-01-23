@@ -1,9 +1,0 @@
-# File : /home/ISSBG/GITHOME/sta/run/01_sta/reports/GOLDEN-1114/func/000_TT/hold.rpt
-# Report : constraint -path slack_only (Line# 2)
-     -5.26 CLK_VIP                        u_core/u_vip/gen_trf_64x64_u_trf_64x64/AA[3]
-     -0.61 CLK_VIP_DIV2                   u_core/u_vip/gen_trf_1kx64_m8_u_trf_1kx64_m8/D[63]
-# Report : constraint -verbose (Line# 25)
-*003:00064 CLK_VIP                        u_core/u_vip/IdxRamWrPtrreg/out_reg_4_/Q
-     -5.26 CLK_VIP                        u_core/u_vip/gen_trf_64x64_u_trf_64x64/AA[3]
-*004:00097 CLK_VIP_DIV2                   u_core/u_vip/wrAfifo/wrDataReg/out_reg_395_/Q
-     -0.61 CLK_VIP_DIV2                   u_core/u_vip/gen_trf_1kx64_m8_u_trf_1kx64_m8/D[63]
