@@ -2,7 +2,7 @@
 #set verbose=1
 set prog = $0:t
 if (($1 == "") || ($1 == "-h") || ($1 == "--help")) then
-   echo "Usage: $prog [options] <rundir> <STA_RPT>[B"
+   echo "Usage: $prog [options] <rundir> <starpt>[B"
    echo "       options:"
    exit -1
 endif
@@ -34,11 +34,12 @@ endif
 
 
 chdir $RUN_DIR
-cp -fr $ETC_DIR/sta .sta
-rm -f Makefile STA
-ln -s .sta/Makefile.sta Makefile
-ln -s $STA_RPT/$RUN_DIR STA
-echo "STA_HOME := $STA_HOME" > Makefile.bin
+rm -f Makefile
+echo "STA_HOME := $STA_HOME" > Makefile
+cat $ETC_DIR/sta/Makefile.sta >> Makefile
+cp -fr $STA_RPT/.sta .sta
+rm -f STA
+ln -s $STA_RPT STA
 
 echo "TIME: @`date +%Y%m%d_%H%M%S` END   $prog"
 echo "======================================================="

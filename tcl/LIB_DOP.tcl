@@ -6,17 +6,18 @@
 # 2020/07/04
 # 
 namespace eval LIB_STA {
-  variable STA_HOME  [file dirname [file dirname [file normalize [info script]]]]
+  global STA2HTM  
+  set STA2HTM [file dirname [file dirname [file normalize [info script]]]]
 
   proc init_path {} {
     global env
-    global STA_HOME
+    global STA2HTM
 
-    set STA_HOME [file dirname [file dirname [file normalize [info script]]]]
+    set STA2HTM [file dirname [file dirname [file normalize [info script]]]]
     puts "###########################################################"
-    puts "# STA LIBRARY ver.2020.07                                 #"
+    puts "# STA2HTM LIBRARY ver.2020.07                             #"
     puts "###########################################################"
-    puts "INFO: STA_HOME = $STA_HOME"
+    puts "INFO: STA2HTM = $STA2HTM"
   }
 
 }

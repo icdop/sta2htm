@@ -42,7 +42,7 @@ proc check_corner_list {corner_list} {
 }
 
 proc read_corner_list {{sta_mode "sta"}} {
-  variable STA_HOME
+  global STA2HTM
   variable CORNER_ID
   variable STA_CFG_DIR
   
@@ -50,8 +50,8 @@ proc read_corner_list {{sta_mode "sta"}} {
      set filename $sta_mode.corner
   } elseif [file exist "$STA_CFG_DIR/$sta_mode.corner"] {
      set filename "$STA_CFG_DIR/$sta_mode.corner"
-  } elseif [file exist "$::LIB_STA::STA_HOME/etc/$sta_mode.corner"] {
-     set filename "$::LIB_STA::STA_HOME/etc/$sta_mode.corner"
+  } elseif [file exist "$STA2HTM/etc/$sta_mode.corner"] {
+     set filename "$STA2HTM/etc/$sta_mode.corner"
   } elseif [file exist $sta_mode] {
      if [file isfile $sta_mode] {
         set filename $sta_mode

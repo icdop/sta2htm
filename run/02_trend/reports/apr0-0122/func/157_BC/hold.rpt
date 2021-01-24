@@ -17,9 +17,9 @@ Design : top
 
    Endpoint                                                  Slack
    -----------------------------------------------------------------
-   u_core/u_isp_top/u_vsm_ram2a/gen_sram_960x32_u_sram_960x32/A[1] -0.00082 (VIOLATED)
-   u_core/u_isp_top/u_isp_exp_v2_sram_wrapper/gen_rf_128x19_u_rf_128x19/A[2] -0.00076 (VIOLATED)
-   u_core/u_isp_top/u_r_lscram/gen_sram_512x24_u_sram_512x24/A[5] -0.00072 (VIOLATED)
+   u_core/u_isp_top/u_vsm_ram2a/sram_960x32_u_sram_960x32/A[1] -0.00082 (VIOLATED)
+   u_core/u_isp_top/u_isp_exp_v2_sram_wrapper/rf_128x19_u_rf_128x19/A[2] -0.00076 (VIOLATED)
+   u_core/u_isp_top/u_r_lscram/sram_512x24_u_sram_512x24/A[5] -0.00072 (VIOLATED)
 
    min_delay/hold ('CLK_MCU' group)
 
@@ -40,23 +40,23 @@ Design : top
 
    Endpoint                                                  Slack
    -----------------------------------------------------------------
-   u_core/u_fb_ctrl/gen_sram_8kx64_m8_u_sram_8kx64_m8/D[35] -0.00048 (VIOLATED)
+   u_core/u_fb_ctrl/sram_8kx64_m8_u_sram_8kx64_m8/D[35] -0.00048 (VIOLATED)
 
    min_delay/hold ('CLK_VIDEO_DIV2_ISP' group)
 
    Endpoint                                                  Slack
    -----------------------------------------------------------------
-   u_core/u_isp_top/u_vsm_ram2a/gen_sram_960x32_u_sram_960x32/A[1] -0.00082 (VIOLATED)
-   u_core/u_isp_top/gen_rf_128x19_u_rf_128x19/A[2] -0.00076 (VIOLATED)
-   u_core/u_isp_top/u_r_lscram/gen_sram_512x24_u_sram_512x24/A[5] -0.00072 (VIOLATED)
+   u_core/u_isp_top/u_vsm_ram2a/sram_960x32_u_sram_960x32/A[1] -0.00082 (VIOLATED)
+   u_core/u_isp_top/rf_128x19_u_rf_128x19/A[2] -0.00076 (VIOLATED)
+   u_core/u_isp_top/u_r_lscram/sram_512x24_u_sram_512x24/A[5] -0.00072 (VIOLATED)
 
    min_delay/hold ('CLK_VIDEO_ISP' group)
 
    Endpoint                                                  Slack
    -----------------------------------------------------------------
-   u_core/u_isp_top/u_vsm_ram2a/gen_sram_960x32_u_sram_960x32/A[1] -0.00082 (VIOLATED)
-   u_core/u_isp_top/gen_rf_128x19_u_rf_128x19/A[2] -0.00076 (VIOLATED)
-   u_core/u_isp_top/u_r_lscram/gen_sram_512x24_u_sram_512x24/A[5] -0.00072 (VIOLATED)
+   u_core/u_isp_top/u_vsm_ram2a/sram_960x32_u_sram_960x32/A[1] -0.00082 (VIOLATED)
+   u_core/u_isp_top/rf_128x19_u_rf_128x19/A[2] -0.00076 (VIOLATED)
+   u_core/u_isp_top/u_r_lscram/sram_512x24_u_sram_512x24/A[5] -0.00072 (VIOLATED)
 
    min_delay/hold ('CLK_VIP' group)
 

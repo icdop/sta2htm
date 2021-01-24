@@ -64,6 +64,7 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
 
   set fdat [open "$STA_SUM_DIR/$sta_mode/$sta_check.nvp_wns.dat" w]
   puts $fdat "# $STA_CURR_RUN/$STA_SUM_DIR"
+  puts $fdat [format "#%4s %10s %10s" "----" "----------" "----------"]
   puts $fdat [format "#%-4s %10s %10s" ID NVP WNS]
   puts $fdat [format "#%4s %10s %10s" "----" "----------" "----------"]
 
