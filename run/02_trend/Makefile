@@ -1,5 +1,6 @@
-STA_RUN := GOLDEN-1114
-STA_RPT := reports
+RPT_DIR := ../reports
+STA_RUN := GOLDEN-0122
+STA_RPT := $(RPT_DIR)/apr0-0122
 
 $(STA_RUN):
 	sta_init_dir $(STA_RUN) $(STA_RPT)
@@ -7,6 +8,9 @@ $(STA_RUN):
 run: $(STA_RUN)
 	(cd $(STA_RUN); make all )| tee run.log
 	make htm | tee tree.log
+
+view:
+	firefox $(STA_RUN)/uniq_end/index.htm &
 
 htm:
 	tree -P *.htm $(STA_RUN) 
