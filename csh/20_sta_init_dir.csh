@@ -9,11 +9,11 @@ endif
 echo "======================================================="
 echo "TIME: @`date +%Y%m%d_%H%M%S` BEGIN $prog $*"
 
-if ($?STA_HOME == 0) then
-   setenv STA_HOME $0:h/..
+if ($?STA2HTM == 0) then
+   setenv STA2HTM $0:h/..
 endif
-setenv CSH_DIR $STA_HOME/csh
-setenv ETC_DIR $STA_HOME/etc
+setenv CSH_DIR $STA2HTM/csh
+setenv ETC_DIR $STA2HTM/etc
 setenv STA_RPT  "report"
 
 if ($1 != "") then
@@ -35,7 +35,7 @@ endif
 
 chdir $RUN_DIR
 rm -f Makefile
-echo "STA_HOME := $STA_HOME" > Makefile
+echo "STA2HTM := $STA2HTM" > Makefile
 cat $ETC_DIR/sta/Makefile.sta >> Makefile
 cp -fr $STA_RPT/.sta .sta
 rm -f STA

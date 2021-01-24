@@ -1,4 +1,3 @@
-
 STA_BIN := $(STA2HTM)/bin
 PCHECK  := setup hold
 PGROUP  := 
