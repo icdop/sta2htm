@@ -9,12 +9,49 @@
 
 ## 1) Specify HTML report dir name and STA report path
 
-+ <code> % cd run/01-sta/ </code>
-+ <code> % vi Makefile </code>
++ <code> % cd 01-sta </code>
+<pre>
+01_sta
+├── Makefile
+├── README.md
+└── reports -> ../reports
+</pre>
+<pre>
+reports
+├── apr0-0122
+├── eco1-0123
+└── eco2-0124
+</pre>
 
++ <code> % vi Makefile </code>
 <pre>
 STA_RUN  := GOLDEN-0122
-STA_RPT  := ../reports/GOLDEN-0122
+STA_RPT  := ../reports/apr0-0122
+</pre>
+
+The followin directory structure is recommeded for MMMC STA reports
+<pre>
+apr0-0122/
+├── func
+│   ├── 000_TT
+│   │   ├── hold.rpt
+│   │   └── setup.rpt
+│   ├── 151_ML
+│   │   └── hold.rpt
+│   ├── 157_BC
+│   │   ├── hold.rpt
+│   │   └── setup.rpt
+│   ├── 231_WCL
+│   │   └── setup.rpt
+│   └── 258_WC
+│       ├── hold.rpt
+│       └── setup.rpt
+└── scan
+    ├── 000_TT
+    │   ├── hold.rpt
+    │   └── setup.rpt
+    └── 157_BC
+        └── hold.rpt
 </pre>
 
 ## 2) Initialize working directory environment
@@ -22,9 +59,10 @@ STA_RPT  := ../reports/GOLDEN-0122
 + <code> % sta_init GOLDEN-0122 ../reports/GOLDEN-0122</code>
 
 <pre>
-Usage: sta_init [$STA_RUN] [$STA_RPT]
+Usage: sta_init_dir [$STA_RUN] [$STA_RPT]
 </pre>
 
+The follow csh commands will be executed by stat_init_dir
 <pre>
 # mkdir GOLDEN-0122
 # cd GOLDEN-0122
@@ -64,14 +102,14 @@ set STA_CORNER(scan,setup) "000 157"
 set STA_CORNER(scan,hold)  "000 157 258"
 </pre>
 
-## 5) Extract quality factor from sta timing report
+## 5) Generate HTML reports from Pretime STA timing reports
 
 + <code> % cd GOLDEN-0122 </code>
 + <code> % sta_rpt_uniq_end -sta_check setup </code>
 + <code> % sta_rpt_uniq_end -sta_check hold </code>
 
 <pre>
-$STA_RPT_PATH/$STA_RPT_FILE (violation.rpt) : PT timing report
+$STA_RPT_PATH/$STA_RPT_FILE (violation.rpt) : Primetime report
 
 # $STA_SUM_DIR/$sta_check.htm
 # $STA_SUM_DIR/$sta_mode/$sta_check.htm
@@ -82,7 +120,7 @@ $STA_RPT_PATH/$STA_RPT_FILE (violation.rpt) : PT timing report
 # $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.sum
 </pre>
 
-## 6) Review STA report index.htm
+## 6) Geneare STA2HM home page index file
 + <code> % sta_gen_index </code>
 
 <pre>
@@ -97,6 +135,7 @@ $STA_RPT_PATH/$STA_RPT_FILE (violation.rpt) : PT timing report
 ## 7) Review STA summary report through browser
 
 + <code> % make view </code>
++ <code> % firefox $(STA_RUN)/index.htm </code>
 
 <pre>
 uniq_end/
