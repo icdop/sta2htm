@@ -35,7 +35,7 @@ Usage: sta_init [$STA_RUN] [$STA_RPT]
 
 ## 3) Modify timing signoff corner definition table
 
-+ <code> % vi GOLDEN-0122/.sta/sta.corner </code>
++ <code> % vi GOLDEN-0122/.sta/sta_corner.csv </code>
 
 <pre>
 000	000_TT
@@ -47,7 +47,7 @@ Usage: sta_init [$STA_RUN] [$STA_RPT]
 
 ## 4) Modify sta report filtering configuration file
 
-+ <code> % vi GOLDEN_0122/.sta/sta.cfg </code>
++ <code> % vi GOLDEN_0122/.sta/sta2htm.cfg </code>
 
 <pre>
 # STA report filename filter : $STA_RPT_PATH/$STA_RPT_FILE

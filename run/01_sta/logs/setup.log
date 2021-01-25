@@ -1,7 +1,7 @@
 ###########################################################
 # STA2HTM LIBRARY ver.2020.07                             #
 ###########################################################
-INFO: STA2HTM = /home/toolsadm/GITHOME/sta2htm
+INFO: STA2HTM = /home/ISSBG/GITHOME/sta
 INFO: Loading 'LIB_HTML.tcl'...
 INFO: Loading 'LIB_STA.tcl'...
 INFO: Loading 'STA_CORNER.tcl'...
@@ -17,8 +17,8 @@ INFO: Loading 'STA_COMP.tcl'...
 STA_CHECK = setup
 -sta_check setup
 STA_CHECK = setup
-INFO: Reading config file '.sta/sta.cfg'...
-INFO: Reading corner table file '.sta/sta.corner'...
+INFO: Reading config file '.sta/sta2htm.cfg'...
+INFO: Reading corner table file '.sta/sta_corner.csv'...
 CORNER:  000 => 000_TT
 CORNER:  151 => 151_ML
 CORNER:  157 => 157_BC
@@ -57,8 +57,8 @@ INFO: Generating Slack Summary Report..
 	:   max_delay/setup ('VCLK_DO' group)
 	:   max_delay/setup ('VCLK_FLH' group)
 	:   max_delay/setup ('VCLK_MCU08' group)
-	:   WNS = -114.99
-	:   TNS = -744.41
+	:   WNS = -114.56
+	:   TNS = -656.93
 	:   NVP = 28
 	:   NMP = 0
 	:   NWP = 0
@@ -66,7 +66,7 @@ INFO: Generating Slack Summary Report..
 	: ========== ========== ========== ========== ==========================
 	:       REAL     WAIVED        NVP        WNS PathGroup
 	: ========== ========== ========== ========== ==========================
-	:         13          0         13    -114.99  VCLK_APB
+	:         13          0         13     -44.00  VCLK_APB
 	:          2          0          2    -114.56  VCLK_CAN
 	:          9          0          9      -9.43  VCLK_DO
 	:          3          0          3     -97.43  VCLK_FLH
@@ -108,7 +108,7 @@ INFO: Generating Slack Summary Report..
 	: ========== ========== ========== ========== ==========================
 	:       REAL     WAIVED        NVP        WNS PathGroup
 	: ========== ========== ========== ========== ==========================
-	:         13          0         13    -114.99  VCLK_APB
+	:         13          0         13     -84.05  VCLK_APB
 	:          2          0          2    -114.56  VCLK_CAN
 	:          9          0          9      -9.43  VCLK_DO
 	:          3          0          3     -97.43  VCLK_FLH
@@ -123,10 +123,10 @@ INFO: Generating Check Index HTML Files ...
 INFO: Generating Corner Index HTML Files ...
 INFO(func): Group slack files of multiple corners ...
 uniq_end/func/setup/*.vio
-(258)	: uniq_end/func/setup/258_WC.vio
-(231)	: uniq_end/func/setup/231_WCL.vio
 (000)	: uniq_end/func/setup/000_TT.vio
 (157)	: uniq_end/func/setup/157_BC.vio
+(231)	: uniq_end/func/setup/231_WCL.vio
+(258)	: uniq_end/func/setup/258_WC.vio
 INFO(func): 0 blocks
 INFO: STA_CORNER(scan,setup) is not defined...
 INFO: STA_CORNER(scan,setup) is not defined...

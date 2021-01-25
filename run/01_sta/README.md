@@ -6,7 +6,7 @@
 
 ### Makefile
 <pre>
-RPT_DIR := ../reports
+RPT_DIR := reports
 STA_RUN := GOLDEN-0122
 STA_RPT := $(RPT_DIR)/apr0-0122
 
@@ -66,8 +66,8 @@ reports/
 
 ### STA Summary Directory
 <pre>
- GOLDEN-1114/
-├── STA -> ../reports/GOLDEN-1114
+ GOLDEN-0122/
+├── STA -> ../reports/GOLDEN-0122
 └── uniq_end
     ├── func
     │   ├── hold
@@ -82,7 +82,7 @@ reports/
 ### STA Summary HTML Files
 
 <pre>
-GOLDEN-1114/
+GOLDEN-0122/
 └── uniq_end
     ├── index.htm
     ├── mode.htm

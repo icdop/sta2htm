@@ -1,4 +1,4 @@
-RPT_DIR := ../reports
+RPT_DIR := reports
 STA_RUN := GOLDEN-0122
 STA_RPT := $(RPT_DIR)/apr0-0122
 

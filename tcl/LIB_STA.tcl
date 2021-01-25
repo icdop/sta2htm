@@ -140,7 +140,7 @@ proc parse_argv { {argv ""} } {
   }
 }
 
-proc read_config {{config "sta.cfg"}} {
+proc read_config {{config "sta2htm.cfg"}} {
   variable STA_CFG_DIR
   variable STA_RPT_ROOT
   variable STA_RPT_PATH
@@ -301,7 +301,7 @@ proc report_index_main {} {
   puts $fo "</h3></caption>"
   puts $fo "<tr>"
   puts $fo "<td colspan=7>"
-  puts $fo "<iframe name=sta_config src='../.sta/sta.cfg' width=100% height=200 scrolling=auto></iframe>"
+  puts $fo "<iframe name=sta_config src='../.sta/sta2htm.cfg' width=100% height=200 scrolling=auto></iframe>"
   puts $fo "</td>"
   foreach sta_mode $STA_MODE_LIST {
     puts $fo "<tr>"

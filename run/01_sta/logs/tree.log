@@ -1,4 +1,4 @@
-make[1]: Entering directory '/home/toolsadm/GITHOME/sta2htm/run/01_sta'
+make[1]: Entering directory '/home/ISSBG/GITHOME/sta/run/01_sta'
 tree -P *.htm GOLDEN-0122 
 GOLDEN-0122
 └── uniq_end
@@ -52,4 +52,4 @@ GOLDEN-0122
     └── setup.htm
 
 6 directories, 43 files
-make[1]: Leaving directory '/home/toolsadm/GITHOME/sta2htm/run/01_sta'
+make[1]: Leaving directory '/home/ISSBG/GITHOME/sta/run/01_sta'

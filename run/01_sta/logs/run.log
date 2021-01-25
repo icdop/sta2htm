@@ -1,10 +1,10 @@
-make[1]: Entering directory '/home/toolsadm/GITHOME/sta2htm/run/01_sta/GOLDEN-0122'
+make[1]: Entering directory '/home/ISSBG/GITHOME/sta/run/01_sta/GOLDEN-0122'
 mkdir -p uniq_end
-/home/toolsadm/GITHOME/sta2htm/bin/sta_rpt_uniq_end -sta_check setup | tee uniq_end/setup.log
+/home/ISSBG/GITHOME/sta/bin/sta_rpt_uniq_end -sta_check setup | tee uniq_end/setup.log
 ###########################################################
 # STA2HTM LIBRARY ver.2020.07                             #
 ###########################################################
-INFO: STA2HTM = /home/toolsadm/GITHOME/sta2htm
+INFO: STA2HTM = /home/ISSBG/GITHOME/sta
 INFO: Loading 'LIB_HTML.tcl'...
 INFO: Loading 'LIB_STA.tcl'...
 INFO: Loading 'STA_CORNER.tcl'...
@@ -20,8 +20,8 @@ INFO: Loading 'STA_COMP.tcl'...
 STA_CHECK = setup
 -sta_check setup
 STA_CHECK = setup
-INFO: Reading config file '.sta/sta.cfg'...
-INFO: Reading corner table file '.sta/sta.corner'...
+INFO: Reading config file '.sta/sta2htm.cfg'...
+INFO: Reading corner table file '.sta/sta_corner.csv'...
 CORNER:  000 => 000_TT
 CORNER:  151 => 151_ML
 CORNER:  157 => 157_BC
@@ -60,8 +60,8 @@ INFO: Generating Slack Summary Report..
 	:   max_delay/setup ('VCLK_DO' group)
 	:   max_delay/setup ('VCLK_FLH' group)
 	:   max_delay/setup ('VCLK_MCU08' group)
-	:   WNS = -114.99
-	:   TNS = -744.41
+	:   WNS = -114.56
+	:   TNS = -656.93
 	:   NVP = 28
 	:   NMP = 0
 	:   NWP = 0
@@ -69,7 +69,7 @@ INFO: Generating Slack Summary Report..
 	: ========== ========== ========== ========== ==========================
 	:       REAL     WAIVED        NVP        WNS PathGroup
 	: ========== ========== ========== ========== ==========================
-	:         13          0         13    -114.99  VCLK_APB
+	:         13          0         13     -44.00  VCLK_APB
 	:          2          0          2    -114.56  VCLK_CAN
 	:          9          0          9      -9.43  VCLK_DO
 	:          3          0          3     -97.43  VCLK_FLH
@@ -111,7 +111,7 @@ INFO: Generating Slack Summary Report..
 	: ========== ========== ========== ========== ==========================
 	:       REAL     WAIVED        NVP        WNS PathGroup
 	: ========== ========== ========== ========== ==========================
-	:         13          0         13    -114.99  VCLK_APB
+	:         13          0         13     -84.05  VCLK_APB
 	:          2          0          2    -114.56  VCLK_CAN
 	:          9          0          9      -9.43  VCLK_DO
 	:          3          0          3     -97.43  VCLK_FLH
@@ -126,21 +126,21 @@ INFO: Generating Check Index HTML Files ...
 INFO: Generating Corner Index HTML Files ...
 INFO(func): Group slack files of multiple corners ...
 uniq_end/func/setup/*.vio
-(258)	: uniq_end/func/setup/258_WC.vio
-(231)	: uniq_end/func/setup/231_WCL.vio
 (000)	: uniq_end/func/setup/000_TT.vio
 (157)	: uniq_end/func/setup/157_BC.vio
+(231)	: uniq_end/func/setup/231_WCL.vio
+(258)	: uniq_end/func/setup/258_WC.vio
 INFO(func): 0 blocks
 INFO: STA_CORNER(scan,setup) is not defined...
 INFO: STA_CORNER(scan,setup) is not defined...
 INFO: Generating STA Index HTML Files ...
 INFO: sta_uniq_end Done...
 mkdir -p uniq_end
-/home/toolsadm/GITHOME/sta2htm/bin/sta_rpt_uniq_end -sta_check hold | tee uniq_end/hold.log
+/home/ISSBG/GITHOME/sta/bin/sta_rpt_uniq_end -sta_check hold | tee uniq_end/hold.log
 ###########################################################
 # STA2HTM LIBRARY ver.2020.07                             #
 ###########################################################
-INFO: STA2HTM = /home/toolsadm/GITHOME/sta2htm
+INFO: STA2HTM = /home/ISSBG/GITHOME/sta
 INFO: Loading 'LIB_HTML.tcl'...
 INFO: Loading 'LIB_STA.tcl'...
 INFO: Loading 'STA_CORNER.tcl'...
@@ -156,8 +156,8 @@ INFO: Loading 'STA_COMP.tcl'...
 STA_CHECK = hold
 -sta_check hold
 STA_CHECK = hold
-INFO: Reading config file '.sta/sta.cfg'...
-INFO: Reading corner table file '.sta/sta.corner'...
+INFO: Reading config file '.sta/sta2htm.cfg'...
+INFO: Reading corner table file '.sta/sta_corner.csv'...
 CORNER:  000 => 000_TT
 CORNER:  151 => 151_ML
 CORNER:  157 => 157_BC
@@ -247,10 +247,18 @@ INFO: Generating Slack Summary Report..
 MODE: scan hold
 INFO: Parsing Timing Report Files (hold)...
 (1) 000	000_TT	STA/scan/000_TT/hold.rpt
+	:   Report : constraint -path slack_only (Line# 2)
+	:   min_delay/hold ('OCC4' group)
+	:   WNS = -125.26
+	:   TNS = -457.41
+	:   NVP = 6
+	:   NMP = 0
+	:   NWP = 0
 INFO: Generating Slack Summary Report..
 	: ========== ========== ========== ========== ==========================
 	:       REAL     WAIVED        NVP        WNS PathGroup
 	: ========== ========== ========== ========== ==========================
+	:          6          0          6    -125.26  OCC4
 (2) 157	157_BC	STA/scan/157_BC/hold.rpt
 	:   Report : constraint -verbose (Line# 2)
 	:   Path# 11 , Line# 501
@@ -304,7 +312,7 @@ INFO: Generating Slack Summary Report..
 	: ========== ========== ========== ========== ==========================
 	:       REAL     WAIVED        NVP        WNS PathGroup
 	: ========== ========== ========== ========== ==========================
-	:         11          0         11     -64.24  OCC4
+	:         15          0         15    -125.26  OCC4
 INFO: Generating Violation Statistics Graph (scan/hold)...
 	:uniq_end/scan/hold.nvp_wns.png
 INFO: Generating STA Index HTML Files ...
@@ -315,10 +323,10 @@ INFO: Generating Check Index HTML Files ...
 INFO: Generating Corner Index HTML Files ...
 INFO(func): Group slack files of multiple corners ...
 uniq_end/func/hold/*.vio
-(258)	: uniq_end/func/hold/258_WC.vio
 (000)	: uniq_end/func/hold/000_TT.vio
 (151)	: uniq_end/func/hold/151_ML.vio
 (157)	: uniq_end/func/hold/157_BC.vio
+(258)	: uniq_end/func/hold/258_WC.vio
 INFO(func): 2 blocks
 INFO(scan): Group slack files of multiple corners ...
 uniq_end/scan/hold/*.vio
@@ -327,11 +335,11 @@ uniq_end/scan/hold/*.vio
 INFO(scan): 2 blocks
 INFO: Generating STA Index HTML Files ...
 INFO: sta_uniq_end Done...
-/home/toolsadm/GITHOME/sta2htm/bin/sta_gen_index
+/home/ISSBG/GITHOME/sta/bin/sta_gen_index
 ###########################################################
 # STA2HTM LIBRARY ver.2020.07                             #
 ###########################################################
-INFO: STA2HTM = /home/toolsadm/GITHOME/sta2htm
+INFO: STA2HTM = /home/ISSBG/GITHOME/sta
 INFO: Loading 'LIB_HTML.tcl'...
 INFO: Loading 'LIB_STA.tcl'...
 INFO: Loading 'STA_CORNER.tcl'...
@@ -345,8 +353,8 @@ INFO: Loading 'STA_CHART.tcl'...
 INFO: Loading 'STA_COMP.tcl'...
 
 
-INFO: Reading config file '.sta/sta.cfg'...
-INFO: Reading corner table file '.sta/sta.corner'...
+INFO: Reading config file '.sta/sta2htm.cfg'...
+INFO: Reading corner table file '.sta/sta_corner.csv'...
 CORNER:  000 => 000_TT
 CORNER:  151 => 151_ML
 CORNER:  157 => 157_BC
@@ -360,4 +368,4 @@ INFO: Generating Mode Index Page (scan) ...
 INFO: Generating Check Index HTML Files ...
 INFO: Generating Corner Index HTML Files ...
 INFO: sta_index Done...
-make[1]: Leaving directory '/home/toolsadm/GITHOME/sta2htm/run/01_sta/GOLDEN-0122'
+make[1]: Leaving directory '/home/ISSBG/GITHOME/sta/run/01_sta/GOLDEN-0122'

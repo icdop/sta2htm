@@ -7,39 +7,36 @@
 ### Makefile
 <pre>
 RPT_DIR := reports
-STA_RUN := GOLDEN-0122
-STA_RPT := $(RPT_DIR)/apr0-0122
+STA_RUN := GOLDEN-0122 GOLDEN-0123 GOLDEN-0124
+GOLDEN-0122 := $(RPT_DIR)/apr0-0122
+GOLDEN-0123 := $(RPT_DIR)/eco1-0123
+GOLDEN-0124 := $(RPT_DIR)/eco2-0124
 
 $(STA_RUN):
-	sta_init_dir $(STA_RUN) $(STA_RPT)
+	sta_init_dir $@ $($@)
+	cd $@; make all | tee run.$@.log
 
 run: $(STA_RUN)
-	(cd $(STA_RUN); make all )| tee run.log
-	make htm | tee tree.log
+	tree -P index.htm $(STA_RUN)| tee run.log
 
 view:
-	firefox $(STA_RUN)/uniq_end/index.htm &
+	firefox index.htm &
 
 htm:
 	tree -P *.htm $(STA_RUN) 
 
 diff:
 	diff run.log logs/run.log 
-	diff tree.log logs/tree.log 
-	diff $(STA_RUN)/uniq_end/setup.log logs/setup.log
-	diff $(STA_RUN)/uniq_end/hold.log logs/hold.log
 
 clean:
 	rm -fr $(STA_RUN) *.log
-
-
 
 </pre>
 
 ### STA Report File
 <pre>
 reports/
-└── GOLDEN-1114
+└── GOLDEN-0122
     ├── func
     │   ├── 000_TT
     │   │   ├── hold.rpt
@@ -66,8 +63,8 @@ reports/
 
 ### STA Summary Directory
 <pre>
- GOLDEN-1114/
-├── STA -> ../reports/GOLDEN-1114
+ GOLDEN-0122/
+├── STA -> ../reports/GOLDEN-0122
 └── uniq_end
     ├── func
     │   ├── hold
@@ -82,7 +79,7 @@ reports/
 ### STA Summary HTML Files
 
 <pre>
-GOLDEN-1114/
+GOLDEN-0122/
 └── uniq_end
     ├── index.htm
     ├── mode.htm
