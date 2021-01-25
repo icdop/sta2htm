@@ -6,29 +6,32 @@
 
 ### Makefile
 <pre>
-PREV_RUN := .
-CURR_RUN := GOLDEN-1114
-STA_RPT  := ../report
+RPT_DIR := ../reports
+STA_RUN := GOLDEN-0122
+STA_RPT := $(RPT_DIR)/apr0-0122
 
-$(CURR_RUN):
-	sta_init $(CURR_RUN) --PREV $(PREV_RUN) --STA $(STA_RPT)
+$(STA_RUN):
+	sta_init_dir $(STA_RUN) $(STA_RPT)
 
-run: $(CURR_RUN)
-	(cd $(CURR_RUN); make all )| tee run.log
+run: $(STA_RUN)
+	(cd $(STA_RUN); make all )| tee run.log
 	make htm | tee tree.log
-	make diff | tee diff.log
+
+view:
+	firefox $(STA_RUN)/uniq_end/index.htm &
 
 htm:
-	tree -P *.htm $(CURR_RUN) 
+	tree -P *.htm $(STA_RUN) 
 
 diff:
 	diff run.log logs/run.log 
 	diff tree.log logs/tree.log 
-	diff $(CURR_RUN)/uniq_end/setup.log logs/setup.log
-	diff $(CURR_RUN)/uniq_end/hold.log logs/hold.log
+	diff $(STA_RUN)/uniq_end/setup.log logs/setup.log
+	diff $(STA_RUN)/uniq_end/hold.log logs/hold.log
 
 clean:
-	rm -fr $(CURR_RUN) run.log tree.log
+	rm -fr $(STA_RUN) *.log
+
 
 
 </pre>
