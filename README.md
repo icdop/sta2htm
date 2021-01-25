@@ -35,7 +35,7 @@ Usage: sta_init [$STA_RUN] [$STA_RPT]
 
 ## 3) Modify timing signoff corner definition table
 
-+ <code> % vi GOLDEN-0122/.sta/sta_corner.csv </code>
++ <code> % vi GOLDEN-0122/.sta/sta2htm.corner </code>
 
 <pre>
 000	000_TT

@@ -41,19 +41,19 @@ proc check_corner_list {corner_list} {
   return $error
 }
 
-proc read_corner_list {{sta_setup "sta_corner.csv"}} {
+proc read_corner_list {{corner_setup "sta2htm.corner"}} {
   global STA2HTM
   variable CORNER_ID
   variable STA_CFG_DIR
   
-  if [file exist $sta_setup] {
-     set filename $sta_setup
-  } elseif [file exist "$STA_CFG_DIR/$sta_setup"] {
-     set filename "$STA_CFG_DIR/$sta_setup"
-  } elseif [file exist "$STA2HTM/etc/$sta_setup"] {
-     set filename "$STA2HTM/etc/$sta_setup"
-  } elseif [file exist $sta_setup.cvs] {
-     set filename $sta_setup.cvs
+  if [file exist $corner_setup] {
+     set filename $corner_setup
+  } elseif [file exist "$STA_CFG_DIR/$corner_setup"] {
+     set filename "$STA_CFG_DIR/$corner_setup"
+  } elseif [file exist "$STA2HTM/etc/$corner_setup"] {
+     set filename "$STA2HTM/etc/$corner_setup"
+  } elseif [file exist $corner_setup.corner] {
+     set filename $corner_setup.corner
   } else {
      return
   }

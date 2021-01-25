@@ -35,8 +35,8 @@ endif
 
 chdir $RUN_DIR
 rm -f Makefile
-echo "STA2HTM := $STA2HTM" > Makefile
-cat $ETC_DIR/sta/Makefile.sta >> Makefile
+#echo "STA2HTM := $STA2HTM" > Makefile
+cat $ETC_DIR/sta/sta2htm.make >> Makefile
 cp -fr $STA_RPT/.sta .sta
 rm -f STA
 ln -s $STA_RPT STA
