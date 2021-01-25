@@ -1,10 +1,11 @@
-# Static Timing Analysis HTML Report Reviewer
+# Static Timing Analysis Report Reviewer
+
 ## 0) Pre-requirement
 
 + install <code>tree</code> packages.
 + install <code>gnuplot</code> packages.
 + geneate STA reports from PrimeTime: 
-  <code>$STA_RPT/$sta_mode/$sta_corner/$sta_check/all_violation.rpt</code>
+  <code>$STA_RPT/$sta_mode/$sta_corner/$sta_check/violation.rpt</code>
 
 ## 1) Specify HTML report dir name and STA report path
 
@@ -12,21 +13,21 @@
 + <code> % vi Makefile </code>
 
 <pre>
-CURR_RUN := GOLDEN_0122
-STA_RPT  := /projects/xxxx/sta/report
+STA_RUN  := GOLDEN-0122
+STA_RPT  := ../reports/GOLDEN-0122
 </pre>
 
 ## 2) Initialize working directory environment
 
-+ <code> % sta_init GOLDEN_0122 /projects/xxxx/sta/report</code>
++ <code> % sta_init GOLDEN-0122 ../reports/GOLDEN-0122</code>
 
 <pre>
-Usage: sta_init [$STA_RUN] [STA_RPT]
+Usage: sta_init [$STA_RUN] [$STA_RPT]
 </pre>
 
 <pre>
-# mkdir GOLDEN_0122
-# cd GOLDEN_0122
+# mkdir GOLDEN-0122
+# cd GOLDEN-0122
 # cp -fr  $(STA_RPT)/.sta .sta
 # cp $(ETC_DIR)/sta/Makefile Makefile
 # ln -s   $(STA_RPT)  STA
@@ -34,7 +35,7 @@ Usage: sta_init [$STA_RUN] [STA_RPT]
 
 ## 3) Modify timing signoff corner definition table
 
-+ <code> % vi GOLDEN_0122/.sta/sta.corner </code>
++ <code> % vi GOLDEN-0122/.sta/sta.corner </code>
 
 <pre>
 000	000_TT
@@ -65,11 +66,12 @@ set STA_CORNER(scan,hold)  "000 157 258"
 
 ## 5) Extract quality factor from sta timing report
 
-+ <code> % cd GOLDEN_0122 </code>
++ <code> % cd GOLDEN-0122 </code>
 + <code> % sta_rpt_uniq_end -sta_check setup </code>
++ <code> % sta_rpt_uniq_end -sta_check hold </code>
 
 <pre>
-$STA_RPT_PATH/$STA_RPT_FILE (setup.rpt) : PT timing report
+$STA_RPT_PATH/$STA_RPT_FILE (violation.rpt) : PT timing report
 
 # $STA_SUM_DIR/$sta_check.htm
 # $STA_SUM_DIR/$sta_mode/$sta_check.htm
@@ -80,14 +82,17 @@ $STA_RPT_PATH/$STA_RPT_FILE (setup.rpt) : PT timing report
 # $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.sum
 </pre>
 
-+ <code> % sta_rpt_uniq_end -sta_check hold </code>
-
-<pre>
-...
-</pre>
-
 ## 6) Review STA report index.htm
 + <code> % sta_gen_index </code>
+
+<pre>
+# $STA_SUM_DIR/index.htm
+# $STA_SUM_DIR/$sta_mode/index.htm
+# $STA_SUM_DIR/$sta_mode/mode.htm
+# $STA_SUM_DIR/$sta_mode/check.htm
+# $STA_SUM_DIR/$sta_mode/corner.htm
+...
+</pre>
 
 ## 7) Review STA summary report through browser
 
