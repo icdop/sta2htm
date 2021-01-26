@@ -312,9 +312,9 @@ proc report_index_main {} {
   puts $fo "<head>"
 #  puts $fo "\[<a href=index.htm>\@Index</a>\]"
   puts $fo "\[\@Index\]"
-  puts $fo "\[<a href=:mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=:check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=:corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -402,7 +402,7 @@ proc report_index_main {} {
 # Create index file which contains a table of all combination of modes and checks
 #
 # <Output>
-# $STA_SUM_DIR/:mode.htm
+# $STA_SUM_DIR/mode.htm
 #
 proc report_index_mode {{sta_check_list ""}} {
   variable STA_CURR_RUN
@@ -415,15 +415,15 @@ proc report_index_mode {{sta_check_list ""}} {
 
   file mkdir $STA_SUM_DIR
   puts "INFO: Generating Mode Index HTML Files ..."
-  set fo [open "$STA_SUM_DIR/:mode.htm" "w"]
+  set fo [open "$STA_SUM_DIR/mode.htm" "w"]
   puts $fo "<html>"
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
-#  puts $fo "\[<a href=:mode.htm>\@Mode</a>\]"
+#  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
   puts $fo "\[\@Mode\]"
-  puts $fo "\[<a href=:check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=:corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -481,9 +481,9 @@ proc report_mode_summary {sta_mode} {
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=../index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=../:mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=../:check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=../:corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=../mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=../check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=../corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -535,7 +535,7 @@ proc report_mode_summary {sta_mode} {
 # Create index file which contains a table of all combination of corners and checks
 #
 # <Output>
-# $STA_SUM_DIR/:corner.htm
+# $STA_SUM_DIR/corner.htm
 #
 proc report_index_corner {{sta_check_list ""}} {
   variable STA_CURR_RUN
@@ -551,14 +551,14 @@ proc report_index_corner {{sta_check_list ""}} {
  
   file mkdir $STA_SUM_DIR
   puts "INFO: Generating Corner Index HTML Files ..."
-  set fo [open "$STA_SUM_DIR/:corner.htm" "w"]
+  set fo [open "$STA_SUM_DIR/corner.htm" "w"]
   puts $fo "<html>"
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=:mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=:check.htm>\@Check</a>\]"
-#  puts $fo "\[<a href=:corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=check.htm>\@Check</a>\]"
+#  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
   puts $fo "\[\@Corner\]"
   puts $fo "</head>"
   puts $fo "<body>"
@@ -644,7 +644,7 @@ proc report_index_corner {{sta_check_list ""}} {
 # Create index file which contains a table of all combination of modes and corners
 #
 # <Output>
-# $STA_SUM_DIR/:check.htm
+# $STA_SUM_DIR/check.htm
 #
 proc report_index_check {{sta_check_list ""}} {
   variable STA_CURR_RUN
@@ -657,15 +657,15 @@ proc report_index_check {{sta_check_list ""}} {
 
   file mkdir $STA_SUM_DIR
   puts "INFO: Generating Check Index HTML Files ..."
-  set fo [open "$STA_SUM_DIR/:check.htm" "w"]
+  set fo [open "$STA_SUM_DIR/check.htm" "w"]
   puts $fo "<html>"
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=:mode.htm>\@Mode</a>\]"
-#  puts $fo "\[<a href=:check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
+#  puts $fo "\[<a href=check.htm>\@Check</a>\]"
   puts $fo "\[\@Check\]"
-  puts $fo "\[<a href=:corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -724,9 +724,9 @@ proc report_check_summary {{sta_check ""}} {
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=:mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=:check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=:corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -793,9 +793,9 @@ proc report_sta_check {sta_mode {sta_check ""} } {
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=../index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=../:mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=../:check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=../:corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=../mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=../check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=../corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -805,7 +805,7 @@ proc report_sta_check {sta_mode {sta_check ""} } {
   puts $fo "</h3>"
   puts $fo "</caption>"
   puts $fo "<tr><td colspan=10>"
-  puts $fo "<a href=../:mode.htm>"
+  puts $fo "<a href=../mode.htm>"
   puts $fo "<img src=$sta_check.nvp_wns.png  width=800 height=350>"
   puts $fo "</a>"
   puts $fo "</td>"
@@ -817,7 +817,7 @@ proc report_sta_check {sta_mode {sta_check ""} } {
   puts $fo "<th><a href=$sta_check.uniq_end.rpt target=sta_output>#</a></th>"
   puts $fo "<th><a href=index.htm>Mode</a></th>"
   puts $fo "<th><a href=../$sta_check.htm>Check</a></th>"
-  puts $fo "<th><a href=../:corner.htm>Corner</a></th>"
+  puts $fo "<th><a href=../corner.htm>Corner</a></th>"
   puts $fo "<th><a href=$sta_check.waive_end.rpt target=sta_output>Waive</a></th>"
   puts $fo "<th><a href=$sta_check.uniq_end.rpt target=sta_output>NVP</a></th>"
   puts $fo "<th><a href=$sta_check.uniq_end.wns target=sta_output>WNS</a></th>"
