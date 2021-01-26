@@ -6,9 +6,8 @@ source $STA_HOME/tcl/LIB_HTML.tcl
 source $STA_HOME/tcl/LIB_STA.tcl
 
 ::LIB_STA::parse_argv $argv
-::LIB_STA::parse_argv $argv
 ::LIB_STA::read_config
-::LIB_STA::read_corner_list
+::LIB_STA::read_corner
 ::LIB_STA::report_clock_end
 
 puts "INFO: sta_clock_end Done..."

@@ -5,9 +5,9 @@ PGROUP  :=
 help:
 	@echo	"Usage:"
 	@echo	"  make all    # run all path group : $(PGROUP)"
-	@echo	"  make index  # run uniq_end with all check"
 	@echo	"  make setup  # explore setup corner STA"
 	@echo	"  make hold   # exploer hold corner STA"
+	@echo	"  make index  # run uniq_end with all check"
 	@echo	"  make clean  # clean all previous data"
 	@echo
 

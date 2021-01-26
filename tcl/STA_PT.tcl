@@ -49,8 +49,6 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
   variable VIO_LIST
   variable MET_LIST
   variable WAV_LIST
-  variable GROUP_NVP
-  variable GROUP_GID
   
   if {$sta_check==""} { set sta_check $STA_CHECK}
   if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
@@ -73,11 +71,10 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
   set NVP 0
   set WNS 0.0
   set TNS 0.0
-  set GID 0
-  set BID 0
-  array unset GROUP_GID
-  array unset GROUP_NVP
 
+  reset_block_data
+  reset_clock_data
+  
   foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
   set corner_name [get_corner_name $sta_corner]
   if {[file exist $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.vio]} {

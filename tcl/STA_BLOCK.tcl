@@ -15,6 +15,25 @@ variable BLOCK_NVP
 variable BLOCK_WNS
 variable BLOCK_VIO
 variable BLOCK_NUM
+variable BLOCK_GID
+
+proc reset_block_data {} {
+  variable sBLOCK_LIST 
+  variable eBLOCK_LIST 
+  variable BLOCK_LIST
+  variable BLOCK_NVP
+  variable BLOCK_WNS
+  variable BLOCK_NUM
+  variable BLOCK_GID
+
+  set BLOCK_NUM 0
+  set BLOCK_LIST ""
+  set eBLOCK_LIST ""
+  set sBLOCK_LIST ""
+  array unset BLOCK_NVP
+  array unset BLOCK_WNS
+  array unset BLOCK_GID
+}
 
 proc report_block_end {{sta_check ""}} {
   variable STA_MODE_LIST

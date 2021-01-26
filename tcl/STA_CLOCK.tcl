@@ -12,8 +12,26 @@ variable eCLOCK_LIST
 variable CLOCK_LIST
 variable CLOCK_NVP
 variable CLOCK_WNS
-variable CLOCK_VIO
 variable CLOCK_NUM
+variable CLOCK_GID
+
+proc reset_clock_data {} {
+  variable sCLOCK_LIST 
+  variable eCLOCK_LIST 
+  variable CLOCK_LIST
+  variable CLOCK_NVP
+  variable CLOCK_WNS
+  variable CLOCK_NUM
+  variable CLOCK_GID
+
+  set CLOCK_NUM 0
+  set CLOCK_LIST ""
+  set eCLOCK_LIST ""
+  set sCLOCK_LIST ""
+  array unset CLOCK_NVP
+  array unset CLOCK_WNS
+  array unset CLOCK_GID
+}
 
 proc report_clock_end {{sta_check ""}} {
   variable STA_MODE_LIST

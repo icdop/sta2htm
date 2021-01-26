@@ -41,19 +41,19 @@ proc check_corner_list {corner_list} {
   return $error
 }
 
-proc read_corner_list {{corner_setup "sta2htm.corner"}} {
-  global STA2HTM
-  variable CORNER_ID
+proc read_corner {{corner_setup "sta2htm.corner"}} {
+  variable STA_RPT_ROOT
   variable STA_CFG_DIR
+  variable CORNER_ID
   
   if [file exist $corner_setup] {
      set filename $corner_setup
   } elseif [file exist "$STA_CFG_DIR/$corner_setup"] {
      set filename "$STA_CFG_DIR/$corner_setup"
-  } elseif [file exist "$STA2HTM/etc/$corner_setup"] {
-     set filename "$STA2HTM/etc/$corner_setup"
-  } elseif [file exist $corner_setup.corner] {
-     set filename $corner_setup.corner
+  } elseif [file exist "$STA_CFG_DIR/$corner_setup"] {
+     set filename "$STA_CFG_DIR/$corner_setup"
+  } elseif [file exist "$STA_RPT_ROOT/$STA_CFG_DIR/$corner_setup"] {
+     set filename "$STA_RPT_ROOT/$STA_CFG_DIR/$corner_setup"
   } else {
      return
   }

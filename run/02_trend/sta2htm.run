@@ -1,5 +1,5 @@
 GOLDEN-210122 = reports/apr0-0120 
 GOLDEN-210123 = reports/eco1-0123 
 GOLDEN-210124 = reports/eco2-0124 
-TRIAL-210125  = reports/eco2-0125
+TRYRUN-210125 = reports/eco2-0125
 GOLDEN-210127 = reports/eco3-0127 

@@ -16,6 +16,7 @@ global env
 
 variable STA_CURR_RUN	"."
 variable STA_CFG_DIR    ".sta"
+variable STA_CFG_FILE   "STA/.sta/sta2htm.cfg"
 variable STA_SUM_DIR    "uniq_end"
 variable STA_RPT_ROOT    "STA"
 variable STA_RPT_PATH    {$sta_mode/$corner_name}
@@ -77,7 +78,7 @@ proc parse_argv { {argv ""} } {
   variable STA_CHECK
   variable STA_POSTFIX
 
-  puts $argv
+  puts "INFO: Parsing Arguments.."
   set argc [llength $argv]
   set i 0
   while {$i<$argc} {
@@ -117,7 +118,7 @@ proc parse_argv { {argv ""} } {
          set STA_RPT_PATH [lindex $argv $i]
          puts "STA_RPT_PATH = $STA_RPT_PATH"
       }
-      -rpt_fil {
+      -rpt_file {
          incr i
          set STA_RPT_FILE [lindex $argv $i]
          puts "STA_RPT_FILE = $STA_RPT_FILE"
@@ -130,7 +131,7 @@ proc parse_argv { {argv ""} } {
       }
       -sta_offset {
          incr i
-         read_config [lindex $argv $i]
+         read_offset [lindex $argv $i]
       }
       default {
          lappend STA_MODE_LIST $arg
@@ -141,8 +142,21 @@ proc parse_argv { {argv ""} } {
 }
 
 proc read_config {{config "sta2htm.cfg"}} {
-  variable STA_CFG_DIR
   variable STA_RPT_ROOT
+  variable STA_CFG_DIR
+  variable STA_CFG_FILE
+
+  read_config_file $STA_RPT_ROOT/$STA_CFG_DIR/sta2htm.cfg
+  read_config_file $STA_CFG_DIR/sta2htm.cfg
+  read_config_file $config
+  if [file exist $config] {
+     set STA_CFG_FILE $config
+     puts "INFO: Reading config file '$STA_CFG_FILE'..."
+     source $STA_CFG_FILE
+  }
+}
+
+proc read_config_file {{config "sta2htm.cfg"}} {
   variable STA_RPT_PATH
   variable STA_RPT_FILE
   variable STA_CORNER_LIST
@@ -151,13 +165,19 @@ proc read_config {{config "sta2htm.cfg"}} {
   variable STA_CHECK 
   variable STA_CORNER   
   variable SLACK_OFFSET
-
   if [file exist $config] {
      puts "INFO: Reading config file '$config'..."
      source $config
-  } elseif [file exist $STA_CFG_DIR/$config] { 
-     puts "INFO: Reading config file '$STA_CFG_DIR/$config'..."
-     source $STA_CFG_DIR/$config
+  } else {
+  }
+}
+
+proc read_offset_file {{config "sta2htm.slk"}} {
+  variable SLACK_OFFSET
+  if [file exist $config] {
+     puts "INFO: Reading offset file '$config'..."
+     source $config
+  } else {
   }
 }
 
@@ -170,47 +190,52 @@ proc read_config {{config "sta2htm.cfg"}} {
 # <Output>
 #
 #
-proc report_uniq_end {{sta_check ""} } {
+proc report_uniq_end {{sta_check_list ""} } {
   variable STA_MODE_LIST
+  variable STA_CHECK_LIST
   variable STA_CHECK
   variable STA_CORNER
-  if {$sta_check==""} { set sta_check $STA_CHECK}
-
+  if {$sta_check_list==""} { set sta_check_list $STA_CHECK_LIST}
+  
   set error 0
-  foreach sta_mode $STA_MODE_LIST {
-    if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
-       set cnt [check_corner_list $STA_CORNER($sta_mode,$sta_check)]
-       if {$cnt>0} {
-          set error [expr $error+$cnt]
-          puts "ERROR: STA_CORNER($sta_mode,$sta_check) has undefined corner!"
-       } 
+  foreach sta_check $sta_check_list {
+    foreach sta_mode $STA_MODE_LIST {
+      if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
+         set cnt [check_corner_list $STA_CORNER($sta_mode,$sta_check)]
+         if {$cnt>0} {
+            set error [expr $error+$cnt]
+            puts "ERROR: STA_CORNER($sta_mode,$sta_check) has undefined corner!"
+         } 
+      }
     }
-  }
 
+  }
   if {$error>0} {
      puts "INFO: $error ERRORs found, please check the config file."
      return -1
   }
 
-  generate_vio_endpoint $sta_check 
+  foreach sta_check $sta_check_list {
+    generate_vio_endpoint $sta_check 
 
-  foreach sta_mode $STA_MODE_LIST {
-    if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
-      set corner_list $STA_CORNER($sta_mode,$sta_check)
+    foreach sta_mode $STA_MODE_LIST {
+      if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
+        set corner_list $STA_CORNER($sta_mode,$sta_check)
 
-      merge_vio_endpoint $sta_mode $sta_check $corner_list
+        merge_vio_endpoint $sta_mode $sta_check $corner_list
 
-      report_endpoint_text $sta_mode $sta_check $corner_list
-      report_endpoint_html $sta_mode $sta_check $corner_list
-      report_wavpoint_html $sta_mode $sta_check $corner_list
+        report_endpoint_text $sta_mode $sta_check $corner_list
+        report_endpoint_html $sta_mode $sta_check $corner_list
+        report_wavpoint_html $sta_mode $sta_check $corner_list
 
-      report_index_clock $sta_mode $sta_check $corner_list
-      report_index_block $sta_mode $sta_check $corner_list
+        report_index_clock $sta_mode $sta_check $corner_list
+        report_index_block $sta_mode $sta_check $corner_list
 
-      report_slack_summary $sta_mode $sta_check.uniq_end
+        report_slack_summary $sta_mode $sta_check.uniq_end
 
-      report_sta_check $sta_mode $sta_check
+        report_sta_check $sta_mode $sta_check
 
+      }
     }
   }
   report_index_main
@@ -275,6 +300,7 @@ proc generate_vio_endpoint {{sta_check ""} } {
 #   $STA_SUM_DIR/index.htm
 #
 proc report_index_main {} {
+  variable STA_CFG_FILE
   variable STA_CURR_RUN
   variable STA_SUM_DIR
   variable STA_MODE_LIST
@@ -290,9 +316,9 @@ proc report_index_main {} {
   puts $fo "<head>"
 #  puts $fo "\[<a href=index.htm>\@Index</a>\]"
   puts $fo "\[\@Index\]"
-  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=:mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=:check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=:corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -300,8 +326,8 @@ proc report_index_main {} {
   puts $fo "$STA_CURR_RUN/$STA_SUM_DIR/"
   puts $fo "</h3></caption>"
   puts $fo "<tr>"
-  puts $fo "<td colspan=7>"
-  puts $fo "<iframe name=sta_config src='../.sta/sta2htm.cfg' width=100% height=200 scrolling=auto></iframe>"
+  puts $fo "<td colspan=7>$STA_CURR_RUN/$STA_CFG_FILE<hr>"
+  puts $fo "<iframe name=sta_config src='../$STA_CFG_FILE' width=100% height=200 scrolling=auto></iframe>"
   puts $fo "</td>"
   foreach sta_mode $STA_MODE_LIST {
     puts $fo "<tr>"
@@ -380,7 +406,7 @@ proc report_index_main {} {
 # Create index file which contains a table of all combination of modes and checks
 #
 # <Output>
-# $STA_SUM_DIR/mode.htm
+# $STA_SUM_DIR/:mode.htm
 #
 proc report_index_mode {{sta_check_list ""}} {
   variable STA_CURR_RUN
@@ -393,15 +419,15 @@ proc report_index_mode {{sta_check_list ""}} {
 
   file mkdir $STA_SUM_DIR
   puts "INFO: Generating Mode Index HTML Files ..."
-  set fo [open "$STA_SUM_DIR/mode.htm" "w"]
+  set fo [open "$STA_SUM_DIR/:mode.htm" "w"]
   puts $fo "<html>"
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
-#  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
+#  puts $fo "\[<a href=:mode.htm>\@Mode</a>\]"
   puts $fo "\[\@Mode\]"
-  puts $fo "\[<a href=check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=:check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=:corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -459,9 +485,9 @@ proc report_mode_summary {sta_mode} {
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=../index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=../mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=../check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=../corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=../:mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=../:check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=../:corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -513,7 +539,7 @@ proc report_mode_summary {sta_mode} {
 # Create index file which contains a table of all combination of corners and checks
 #
 # <Output>
-# $STA_SUM_DIR/corner.htm
+# $STA_SUM_DIR/:corner.htm
 #
 proc report_index_corner {{sta_check_list ""}} {
   variable STA_CURR_RUN
@@ -529,14 +555,14 @@ proc report_index_corner {{sta_check_list ""}} {
  
   file mkdir $STA_SUM_DIR
   puts "INFO: Generating Corner Index HTML Files ..."
-  set fo [open "$STA_SUM_DIR/corner.htm" "w"]
+  set fo [open "$STA_SUM_DIR/:corner.htm" "w"]
   puts $fo "<html>"
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=check.htm>\@Check</a>\]"
-#  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=:mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=:check.htm>\@Check</a>\]"
+#  puts $fo "\[<a href=:corner.htm>\@Corner</a>\]"
   puts $fo "\[\@Corner\]"
   puts $fo "</head>"
   puts $fo "<body>"
@@ -622,7 +648,7 @@ proc report_index_corner {{sta_check_list ""}} {
 # Create index file which contains a table of all combination of modes and corners
 #
 # <Output>
-# $STA_SUM_DIR/check.htm
+# $STA_SUM_DIR/:check.htm
 #
 proc report_index_check {{sta_check_list ""}} {
   variable STA_CURR_RUN
@@ -635,15 +661,15 @@ proc report_index_check {{sta_check_list ""}} {
 
   file mkdir $STA_SUM_DIR
   puts "INFO: Generating Check Index HTML Files ..."
-  set fo [open "$STA_SUM_DIR/check.htm" "w"]
+  set fo [open "$STA_SUM_DIR/:check.htm" "w"]
   puts $fo "<html>"
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
-#  puts $fo "\[<a href=check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=:mode.htm>\@Mode</a>\]"
+#  puts $fo "\[<a href=:check.htm>\@Check</a>\]"
   puts $fo "\[\@Check\]"
-  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=:corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -702,9 +728,9 @@ proc report_check_summary {{sta_check ""}} {
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=:mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=:check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=:corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -764,7 +790,6 @@ proc report_sta_check {sta_mode {sta_check ""} } {
      return 
   }
 
-  
   create_curr_nvp_plot "$sta_mode/$sta_check" $STA_SUM_DIR
     
   set fo [open "$STA_SUM_DIR/$sta_mode/$sta_check.htm" w]
@@ -772,9 +797,9 @@ proc report_sta_check {sta_mode {sta_check ""} } {
   puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=../index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=../mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=../check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=../corner.htm>\@Corner</a>\]"
+  puts $fo "\[<a href=../:mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=../:check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=../:corner.htm>\@Corner</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -784,7 +809,7 @@ proc report_sta_check {sta_mode {sta_check ""} } {
   puts $fo "</h3>"
   puts $fo "</caption>"
   puts $fo "<tr><td colspan=10>"
-  puts $fo "<a href=../mode.htm>"
+  puts $fo "<a href=../:mode.htm>"
   puts $fo "<img src=$sta_check.nvp_wns.png  width=800 height=350>"
   puts $fo "</a>"
   puts $fo "</td>"
@@ -796,11 +821,11 @@ proc report_sta_check {sta_mode {sta_check ""} } {
   puts $fo "<th><a href=$sta_check.uniq_end.rpt target=sta_output>#</a></th>"
   puts $fo "<th><a href=index.htm>Mode</a></th>"
   puts $fo "<th><a href=../$sta_check.htm>Check</a></th>"
-  puts $fo "<th><a href=$sta_check.clk.htm target=sta_output>Corner</a></th>"
+  puts $fo "<th><a href=../:corner.htm>Corner</a></th>"
   puts $fo "<th><a href=$sta_check.waive_end.rpt target=sta_output>Waive</a></th>"
-  puts $fo "<th><a href=$sta_check.uniq_end.nvp target=sta_info>NVP</a></th>"
+  puts $fo "<th><a href=$sta_check.uniq_end.rpt target=sta_output>NVP</a></th>"
   puts $fo "<th><a href=$sta_check.uniq_end.wns target=sta_output>WNS</a></th>"
-  puts $fo "<th><a href=$sta_check.uniq_end.rpt target=sta_output>TNS</a></th>"
+  puts $fo "<th><a href=$sta_check.uniq_end.nvp target=sta_output>TNS</a></th>"
   puts $fo "<th><a href=$sta_check.clk.htm target=sta_output>Clock</a></th>"
   puts $fo "<th><a href=$sta_check.blk.htm target=sta_output>Block</a></th>"
   puts $fo "<th><a href=$sta_check.uniq_end.htm>Unique Endpoint</a>"
@@ -837,9 +862,9 @@ proc report_sta_check {sta_mode {sta_check ""} } {
         puts $fo "<td align=center> . </td>"
         }
         if {$nvp>0} {
-        puts $fo "<td align=right><a href=$sta_check/$corner.nvp target=sta_info> $nvp </a></td>"
+        puts $fo "<td align=right><a href=$sta_check/$corner.vio target=sta_output> $nvp </a></td>"
         puts $fo "<td align=right><a href=$sta_check/$corner.wns target=sta_output> $wns </a></td>"
-        puts $fo "<td align=right><a href=$sta_check/$corner.vio target=sta_output>$tns</a></td>"
+        puts $fo "<td align=right><a href=$sta_check/$corner.nvp target=sta_output>$tns</a></td>"
         puts $fo "<td align=center><a href=$sta_check/$corner.clk.htm target=sta_output> $cid </a></td>"
         puts $fo "<td align=center><a href=$sta_check/$corner.blk.htm target=sta_output> $bid </a></td>"
         } else {
@@ -1248,7 +1273,7 @@ proc report_slack_summary {sta_mode {fname "uniq_end"}} {
   set V 0
   set W 0
   set flog [open $STA_SUM_DIR/$sta_mode/$fname.wns w]
-  puts $flog [format "# Mode : %s" $sta_mode]
+  puts $flog [format "# Mode : %s" $sta_mode/$fname]
   puts $flog [format "#%10s %10s %10s %10s %s"  "==========" "==========" "==========" "==========" "=========================="]
   puts $flog [format "#%10s %10s %10s %10s %s" "REAL" "WAIVED" "NVP" "WNS" "PathGroup"]
   puts $flog [format "#%10s %10s %10s %10s %s"  "==========" "==========" "==========" "==========" "=========================="]
@@ -1275,6 +1300,7 @@ proc report_slack_summary {sta_mode {fname "uniq_end"}} {
   close $flog
 
   set flog [open $STA_SUM_DIR/$sta_mode/$fname.nvp w]
+  puts $flog [format "# $sta_mode/$fname"]
   puts $flog [format "#==================================="]
   puts $flog [format "# %6s | %10s %10s" "Slack" "Accum" "NVP"]
   puts $flog [format "#==================================="]
@@ -1289,6 +1315,7 @@ proc report_slack_summary {sta_mode {fname "uniq_end"}} {
   close $flog
 
   set flog [open $STA_SUM_DIR/$sta_mode/$fname.sum w]
+  puts $flog [format "# $sta_mode/$fname"]
   puts $flog [format "#======================================================"]
   puts $flog [format "# %6s - %6s | : %10s %10s %10s" "Max" "Min" "REAL" "NVP" "Accmu"]
   puts $flog [format "#======================================================"]

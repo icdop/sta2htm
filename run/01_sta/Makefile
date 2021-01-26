@@ -1,12 +1,12 @@
-RPT_DIR := reports
+STA_DIR := reports
 STA_RUN := GOLDEN-0122
-STA_RPT := $(RPT_DIR)/apr0-0122
+STA_RPT := apr0-0122
 
 $(STA_RUN):
-	sta_init_dir $(STA_RUN) $(STA_RPT)
+	sta_init_dir $(STA_RUN) $(STA_DIR)/$(STA_RPT)
 
 run: $(STA_RUN)
-	(cd $(STA_RUN); make all )| tee run.log
+	(cd $(STA_RUN); sta_rpt_uniq_end )| tee run.log
 	make htm | tee tree.log
 
 view:
