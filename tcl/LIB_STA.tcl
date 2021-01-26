@@ -16,7 +16,7 @@ global env
 
 variable STA_CURR_RUN	"."
 variable STA_CFG_DIR    ".sta"
-variable STA_CFG_FILE   "STA/.sta/sta2htm.cfg"
+variable STA_CFG_FILE   ".sta/sta2htm.cfg"
 variable STA_SUM_DIR    "uniq_end"
 variable STA_RPT_ROOT    "STA"
 variable STA_RPT_PATH    {$sta_mode/$corner_name}
@@ -149,11 +149,6 @@ proc read_config {{config "sta2htm.cfg"}} {
   read_config_file $STA_RPT_ROOT/$STA_CFG_DIR/sta2htm.cfg
   read_config_file $STA_CFG_DIR/sta2htm.cfg
   read_config_file $config
-  if [file exist $config] {
-     set STA_CFG_FILE $config
-     puts "INFO: Reading config file '$STA_CFG_FILE'..."
-     source $STA_CFG_FILE
-  }
 }
 
 proc read_config_file {{config "sta2htm.cfg"}} {
@@ -166,6 +161,7 @@ proc read_config_file {{config "sta2htm.cfg"}} {
   variable STA_CORNER   
   variable SLACK_OFFSET
   if [file exist $config] {
+     set STA_CFG_FILE $config
      puts "INFO: Reading config file '$config'..."
      source $config
   } else {
