@@ -36,7 +36,7 @@ namespace eval LIB_STA {
 # GROUP_NVP
 # GROUP_GID
 #
-proc parse_timing_report {sta_mode {sta_check ""} } {
+proc parse_timing_report {sta_mode {sta_check ""} {sta_postfix ""}} {
   variable STA_CURR_RUN
   variable STA_SUM_DIR
   variable STA_RPT_ROOT
@@ -45,7 +45,6 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
   variable STA_DATA
   variable STA_CHECK
   variable STA_CORNER
-  variable STA_POSTFIX
   variable VIO_LIST
   variable MET_LIST
   variable WAV_LIST
@@ -66,7 +65,6 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
   puts $fdat [format "#%-4s %10s %10s" ID NVP WNS]
   puts $fdat [format "#%4s %10s %10s" "----" "----------" "----------"]
 
-  if {$STA_POSTFIX==""} { set STA_POSTFIX {""}}
   set FID 0
   set NVP 0
   set WNS 0.0
@@ -89,7 +87,6 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
     set tns 0.0
 
     catch {exec rm -fr $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.*}
-    foreach sta_postfix $STA_POSTFIX { 
       #  puts "INFO: $STA_RPT_ROOT/$STA_RPT_PATH/$STA_RPT_FILE"
       if [catch {eval glob $STA_RPT_ROOT/$STA_RPT_PATH/$STA_RPT_FILE} files] {
          set files ""
@@ -233,11 +230,6 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
               break;
             }
           }
-          puts "\t:   WNS = $wns"
-          puts "\t:   TNS = $tns"
-          puts "\t:   NVP = $nvp"
-          puts "\t:   NMP = $nmp"
-          puts "\t:   NWP = $nwp"
           #############################################################
           } elseif {($rpt_type=="constraint") && [regexp {\-verbose} $line rpt_style]} {
           puts "\t:   Report : $rpt_type $rpt_style (Line# $line_rpt)"
@@ -338,12 +330,6 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
               }
             }
           }
-          puts "\t:   Path# $nspt , Line# $line_cnt"
-          puts "\t:   WNS = $wns"
-          puts "\t:   TNS = $tns"
-          puts "\t:   NVP = $nvp"
-          puts "\t:   NMP = $nmp"
-          puts "\t:   NWP = $nwp"
           #############################################################
           } elseif {$rpt_type == "timing"} {
           puts "\t:   Report : $rpt_type $rpt_style (Line# $line_rpt)"
@@ -447,15 +433,24 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
               }
             }
           }
+          #############################################################
+          } else {
+            continue
+          }
           puts "\t:   Path# $nspt , Line# $line_cnt"
           puts "\t:   WNS = $wns"
           puts "\t:   TNS = $tns"
           puts "\t:   NVP = $nvp"
           puts "\t:   NMP = $nmp"
           puts "\t:   NWP = $nwp"
-          #############################################################
-          } else {
-          }
+          set dqi_path $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name/.dqi
+          catch { exec mkdir -p $dqi_path; 
+                  exec echo $nvp > $dqi_path/NVP;
+                  exec echo $nvp > $dqi_path/NWP;
+                  exec echo $nvp > $dqi_path/WNS;
+                  exec echo $nvp > $dqi_path/TNS;
+                  } msg
+          puts $msg
         }
         # end while
         close $fout
@@ -471,8 +466,6 @@ proc parse_timing_report {sta_mode {sta_check ""} } {
 
       }
       # foreach fname
-    } 
-    # foreach sta_postfix
     if {$nvp=="-"} {
       puts $fdat [format "*%-4s %10d %10.2f" $sta_corner 0 0.0]
     } else {

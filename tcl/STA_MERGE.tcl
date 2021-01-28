@@ -42,7 +42,8 @@ proc merge_vio_endpoint {sta_mode {sta_check ""} {corner_list ""}} {
      return 
   }
   puts "INFO($sta_mode): Merging slack files of multiple corners ..."
-  array unset SLACK
+  set WNS 0.0
+  set TNS 0.0
   foreach corner_mask $corner_list {
   if ![catch {glob $STA_SUM_DIR/$sta_mode/$sta_check/$corner_mask*.vio} files] {
     foreach fname $files {
@@ -76,6 +77,8 @@ proc merge_vio_endpoint {sta_mode {sta_check ""} {corner_list ""}} {
       }
       close $fin
     }
+    if {$slack<$WNS} { set WNS $slack }
+    set TNS [format "%.2f" [expr $TNS+$slack]]
   }
   }
   
@@ -86,6 +89,16 @@ proc merge_vio_endpoint {sta_mode {sta_check ""} {corner_list ""}} {
 #  set VIO_LIST [lsort -real -increasing -index 1 $VIO_LIST] 
   set VIO_LIST [lsort -unique $VIO_LIST] 
   set VIO_LIST [lsort -index 0 $VIO_LIST] 
+
+  set NVP [llength $VIO_LIST]
+  set dqi_path $STA_SUM_DIR/$sta_mode/$sta_check/.dqi
+  catch { 
+    exec mkdir -p $dqi_path; 
+    exec echo $NVP > $dqi_path/NVP;
+    exec echo $WNS > $dqi_path/WNS;
+    exec echo $TNS > $dqi_path/TNS;
+  }
+  
 }
 
 
