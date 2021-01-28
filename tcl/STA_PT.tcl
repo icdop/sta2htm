@@ -87,11 +87,10 @@ proc parse_timing_report {sta_mode {sta_check ""} {sta_postfix ""}} {
     set tns 0.0
 
     catch {exec rm -fr $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.*}
-      #  puts "INFO: $STA_RPT_ROOT/$STA_RPT_PATH/$STA_RPT_FILE"
-      if [catch {eval glob $STA_RPT_ROOT/$STA_RPT_PATH/$STA_RPT_FILE} files] {
-         set files ""
-         continue
-      }
+    #  puts "INFO: $STA_RPT_ROOT/$STA_RPT_PATH/$STA_RPT_FILE"
+    if [catch {eval glob $STA_RPT_ROOT/$STA_RPT_PATH/$STA_RPT_FILE} files] {
+       set files ""
+    } else {
       #  puts "INFO: $files"
       foreach fname [lsort -increasing -unique $files] {
         incr FID 
@@ -466,6 +465,7 @@ proc parse_timing_report {sta_mode {sta_check ""} {sta_postfix ""}} {
 
       }
       # foreach fname
+    }
     if {$nvp=="-"} {
       puts $fdat [format "*%-4s %10d %10.2f" $sta_corner 0 0.0]
     } else {
