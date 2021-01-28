@@ -1,0 +1,261 @@
+###########################################################
+# STA2HTM LIBRARY ver.2020.07                             #
+###########################################################
+INFO: STA2HTM = /home/toolsadm/GITHOME/sta2htm
+INFO: Loading 'LIB_HTML.tcl'...
+INFO: Loading 'LIB_STA.tcl'...
+INFO: Loading 'STA_CORNER.tcl'...
+INFO: Loading 'LIB_WAIVE.tcl'...
+INFO: Loading 'STA_PT.tcl'...
+INFO: Loading 'STA_MERGE.tcl'...
+INFO: Loading 'STA_CLOCK.tcl'...
+INFO: Loading 'STA_BLOCK.tcl'...
+INFO: Loading 'STA_GROUP.tcl'...
+INFO: Loading 'STA_CHART.tcl'...
+INFO: Loading 'STA_COMP.tcl'...
+INFO: Parsing Arguments..
+INFO: Reading config file 'STA/.sta/sta2htm.cfg'...
+INFO: Reading corner table file 'STA/.sta/sta2htm.corner'...
+CORNER:  000 => 000_TT
+CORNER:  151 => 151_ML
+CORNER:  157 => 157_BC
+CORNER:  231 => 231_WCL
+CORNER:  258 => 258_WC
+INFO: Total 5 corners.
+
+MODE: func setup
+INFO: Parsing Timing Report Files (setup)...
+(1) 000	000_TT	STA/func/000_TT/setup.rpt
+	:   Report : constraint -path slack_only (Line# 2)
+	:   max_delay/setup ('VCLK_APB' group)
+	:   max_delay/setup ('VCLK_FLH' group)
+	:   WNS = -42.14
+	:   TNS = -78.84
+	:   NVP = 5
+	:   NMP = 0
+	:   NWP = 0
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:          3          0          3      -6.00  VCLK_APB
+	:          2          0          2     -42.14  VCLK_FLH
+(2) 157	157_BC	STA/func/157_BC/setup.rpt
+	:   Report : constraint -path slack_only (Line# 2)
+	:   max_delay/setup ('VCLK_APB' group)
+	:   WNS = -2.06
+	:   TNS = -2.06
+	:   NVP = 1
+	:   NMP = 0
+	:   NWP = 0
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:          1          0          1      -2.06  VCLK_APB
+(3) 231	231_WCL	STA/func/231_WCL/setup.rpt
+	:   Report : constraint -path slack_only (Line# 2)
+	:   max_delay/setup ('VCLK_APB' group)
+	:   max_delay/setup ('VCLK_CAN' group)
+	:   max_delay/setup ('VCLK_DO' group)
+	:   max_delay/setup ('VCLK_FLH' group)
+	:   WNS = -24.15
+	:   TNS = -205.02
+	:   NVP = 16
+	:   NMP = 0
+	:   NWP = 0
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:          7          0          7     -24.15  VCLK_APB
+	:          2          0          2     -14.56  VCLK_CAN
+	:          5          0          5      -5.15  VCLK_DO
+	:          2          0          2     -21.70  VCLK_FLH
+(4) 258	258_WC	STA/func/258_WC/setup.rpt
+	:   Report : constraint -path slack_only (Line# 2)
+	:   max_delay/setup ('VCLK_APB' group)
+	:   max_delay/setup ('VCLK_CAN' group)
+	:   max_delay/setup ('VCLK_DO' group)
+	:   max_delay/setup ('VCLK_FLH' group)
+	:   WNS = -57.43
+	:   TNS = -171.48
+	:   NVP = 15
+	:   NMP = 0
+	:   NWP = 0
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:          7          0          7     -15.00  VCLK_APB
+	:          2          0          2     -14.56  VCLK_CAN
+	:          5          0          5      -9.43  VCLK_DO
+	:          1          0          1     -57.43  VCLK_FLH
+INFO: STA_CORNER(scan,setup) is not defined...
+INFO(func): Merging slack files of multiple corners ...
+(000)	: uniq_end/func/setup/000_TT.vio
+(157)	: uniq_end/func/setup/157_BC.vio
+(231)	: uniq_end/func/setup/231_WCL.vio
+(258)	: uniq_end/func/setup/258_WC.vio
+INFO(func): Generating waived endpoint TEXT format report..
+INFO(func): Generating unique endpoint TEXT format report..
+INFO(func): Generating unique endpoint HTML format report..
+INFO(func): Generating waived endpoint HTML format report..
+INFO(func): 4 Clocks
+INFO(func): 0 blocks
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:         12          0         12     -24.15  VCLK_APB
+	:          2          0          2     -14.56  VCLK_CAN
+	:          8          0          8      -9.43  VCLK_DO
+	:          4          0          4     -57.43  VCLK_FLH
+INFO: Generating Violation Statistics Graph (func/setup)...
+	:uniq_end/func/setup.nvp_wns.png
+
+MODE: func hold
+INFO: Parsing Timing Report Files (hold)...
+(1) 000	000_TT	STA/func/000_TT/hold.rpt
+	:   Report : constraint -path slack_only (Line# 2)
+	:   min_delay/hold ('CLK_VIP' group)
+	:   min_delay/hold ('CLK_VIP_DIV2' group)
+	:   WNS = -44.21
+	:   TNS = -140.46
+	:   NVP = 6
+	:   NMP = 0
+	:   NWP = 0
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:          3          0          3     -44.21  CLK_VIP
+	:          3          0          3     -13.61  CLK_VIP_DIV2
+(2) 151	151_ML	STA/func/151_ML/hold.rpt
+	:   Report : constraint -path slack_only (Line# 2)
+	:   min_delay/hold ('CLK_DI_ISP' group)
+	:   min_delay/hold ('CLK_MCU' group)
+	:   min_delay/hold ('CLK_VAE' group)
+	:   min_delay/hold ('CLK_VIDEO_DIV2_ISP' group)
+	:   min_delay/hold ('CLK_VIDEO_ISP' group)
+	:   WNS = -1.77
+	:   TNS = -13.25
+	:   NVP = 15
+	:   NMP = 0
+	:   NWP = 0
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:          3          0          3      -0.90  CLK_DI_ISP
+	:          5          0          5      -1.33  CLK_MCU
+	:          2          0          2      -0.58  CLK_VAE
+	:          4          0          4      -1.77  CLK_VIDEO_DIV2_ISP
+	:          1          0          1      -1.76  CLK_VIDEO_ISP
+(3) 157	157_BC	STA/func/157_BC/hold.rpt
+	:   Report : constraint -path slack_only (Line# 2)
+	:   min_delay/hold ('clock_gating_default' group)
+	:   min_delay/hold ('CLK_DI_ISP' group)
+	:   min_delay/hold ('CLK_MCU' group)
+	:   min_delay/hold ('CLK_VIDEO_DIV2_ISP' group)
+	:   min_delay/hold ('CLK_VIDEO_ISP' group)
+	:   min_delay/hold ('CLK_XTAL_MCU' group)
+	:   WNS = -1.05
+	:   TNS = -10.01
+	:   NVP = 17
+	:   NMP = 0
+	:   NWP = 0
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:          1          0          1      -1.05  **clock_gating_default**
+	:          2          0          2      -0.76  CLK_DI_ISP
+	:          3          0          3      -0.33  CLK_MCU
+	:          3          0          3      -0.82  CLK_VIDEO_DIV2_ISP
+	:          3          0          3      -0.82  CLK_VIDEO_ISP
+	:          5          0          5      -0.87  CLK_XTAL_MCU
+(4) 258	258_WC	STA/func/258_WC/hold.rpt
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+
+MODE: scan hold
+INFO: Parsing Timing Report Files (hold)...
+(1) 000	000_TT	STA/scan/000_TT/hold.rpt
+	:   Report : constraint -path slack_only (Line# 2)
+	:   min_delay/hold ('OCC4' group)
+	:   WNS = -15.26
+	:   TNS = -22.78
+	:   NVP = 2
+	:   NMP = 0
+	:   NWP = 0
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:          2          0          2     -15.26  OCC4
+(2) 157	157_BC	STA/scan/157_BC/hold.rpt
+	:   Report : constraint -path slack_only (Line# 2)
+	:   min_delay/hold ('OCC4' group)
+	:   WNS = -55.26
+	:   TNS = -80.52
+	:   NVP = 2
+	:   NMP = 0
+	:   NWP = 0
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:          2          0          2     -55.26  OCC4
+INFO(func): Merging slack files of multiple corners ...
+(000)	: uniq_end/func/hold/000_TT.vio
+(151)	: uniq_end/func/hold/151_ML.vio
+(157)	: uniq_end/func/hold/157_BC.vio
+(258)	: uniq_end/func/hold/258_WC.vio
+INFO(func): Generating waived endpoint TEXT format report..
+INFO(func): Generating unique endpoint TEXT format report..
+INFO(func): Generating unique endpoint HTML format report..
+INFO(func): Generating waived endpoint HTML format report..
+INFO(func): 1 Clocks
+INFO(func): 1 blocks
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:          1          0          1      -1.05  **clock_gating_default**
+	:          3          0          3      -0.90  CLK_DI_ISP
+	:          5          0          5      -1.33  CLK_MCU
+	:          2          0          2      -0.58  CLK_VAE
+	:          5          0          5      -1.77  CLK_VIDEO_DIV2_ISP
+	:          3          0          3      -1.76  CLK_VIDEO_ISP
+	:          3          0          3     -44.21  CLK_VIP
+	:          3          0          3     -13.61  CLK_VIP_DIV2
+	:          5          0          5      -0.87  CLK_XTAL_MCU
+INFO: Generating Violation Statistics Graph (func/hold)...
+	:uniq_end/func/hold.nvp_wns.png
+INFO(scan): Merging slack files of multiple corners ...
+(000)	: uniq_end/scan/hold/000_TT.vio
+(157)	: uniq_end/scan/hold/157_BC.vio
+INFO(scan): Generating waived endpoint TEXT format report..
+INFO(scan): Generating unique endpoint TEXT format report..
+INFO(scan): Generating unique endpoint HTML format report..
+INFO(scan): Generating waived endpoint HTML format report..
+INFO(scan): 1 Clocks
+INFO(scan): 1 blocks
+INFO: Generating Slack Summary Report..
+	: ========== ========== ========== ========== ==========================
+	:       REAL     WAIVED        NVP        WNS PathGroup
+	: ========== ========== ========== ========== ==========================
+	:          2          0          2     -55.26  OCC4
+INFO: Generating Violation Statistics Graph (scan/hold)...
+	:uniq_end/scan/hold.nvp_wns.png
+INFO: Generating STA Index HTML Files ...
+INFO: Generating Mode Index HTML Files ...
+INFO: Generating Mode Index Page (func) ...
+INFO: Generating Mode Index Page (scan) ...
+INFO: Generating Check Index HTML Files ...
+INFO: Generating Corner Index HTML Files ...
+INFO: Generating STA Index HTML Files ...
+INFO: sta_uniq_end Done...

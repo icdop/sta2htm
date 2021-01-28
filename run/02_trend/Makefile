@@ -10,16 +10,16 @@ $(STA_RUN):
 	(cd $@; sta_rpt_uniq_end) | tee run.$@.log
 
 run: $(STA_RUN)
-	tree -P index.htm $(STA_RUN)| tee run.log
+	make tree
 
 view:
-	firefox index.htm &
+	firefox $(STA_RUN)/uniq_end/index.htm &
 
-htm:
-	tree -P *.htm $(STA_RUN) 
+tree:
+	tree -P index.htm $(STA_RUN)| tee tree.log
 
 diff:
-	diff run.log logs/run.log 
+	diff tree.log logs/tree.log 
 
 clean:
 	rm -fr $(STA_RUN) *.log
