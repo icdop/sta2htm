@@ -25,7 +25,6 @@ Design : top
 
    Endpoint                                                  Slack
    -----------------------------------------------------------------
-   pad_can_txd                                            -0.11456  (VIOLATED)
    pad_can_stby                                           -0.00649  (VIOLATED)
 
    max_delay/setup ('VCLK_DO' group)

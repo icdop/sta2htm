@@ -57,6 +57,8 @@ proc merge_vio_endpoint {sta_mode {sta_check ""} {corner_list ""}} {
         set slack   [format "%.2f" [lindex $line 0]]
         set egroup  [lindex $line 1]
         set instpin [lindex $line 2]
+        if {$slack<$WNS} { set WNS $slack }
+        set TNS [format "%.2f" [expr $TNS+$slack]]
         if [info exist VIO_WNS($egroup,$instpin,$sta_corner)] {
           if {($VIO_WNS($egroup,$instpin,$sta_corner)-$slack)>0.00} {
             set VIO_WNS($egroup,$instpin,$sta_corner) $slack
@@ -74,8 +76,6 @@ proc merge_vio_endpoint {sta_mode {sta_check ""} {corner_list ""}} {
       }
       close $fin
     }
-    if {$slack<$WNS} { set WNS $slack }
-    set TNS [format "%.2f" [expr $TNS+$slack]]
   }
   }
   

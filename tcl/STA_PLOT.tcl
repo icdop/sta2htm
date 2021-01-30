@@ -1,20 +1,30 @@
 #!/usr/bin/tclsh
 #
-# Plot STA Chart
+# GunPlot STA Chart
 #
 # By Albert Li 
 # 2020/07/02
+#
 #
 
 puts "INFO: Loading 'STA_PLOT.tcl'..."
 namespace eval LIB_STA {
 
-
-proc create_nvp_wns_plot {sta_path {odir "."}} {
-  set data_file [format "%s/%s.nvp_wns" $odir $sta_path]
+#
+# <Title>
+# Create NVP/WNS Plot PNG
+#
+# <Input>
+# $odir/$sta_path.nvp_wns.dat
+#
+# <Output>
+# $odir/$sta_path.nvp_wns.png
+#
+proc create_nvp_wns_plot {data_path {title_prefix ""}} {
+  set data_file [format "%s.nvp_wns" $data_path]
   set ymax [get_nvp_ymax $data_file.dat]
   set fout [open "$data_file.plt" w]
-    puts $fout "set title \"$sta_path\""
+    puts $fout "set title \"$title_prefix$data_path\""
     puts $fout "set term png truecolor size 1000,400 medium"
     puts $fout "set output \"$data_file.png\""
     puts $fout "set style data histogram"
@@ -32,10 +42,23 @@ proc create_nvp_wns_plot {sta_path {odir "."}} {
     puts $fout "     \"\"     using 3:xticlabels(1) with linespoints lc 3 lw 2 pt 7 ps 1 axis x1y2  title \"WNS\", \\"
     puts $fout "     \"\"     using 0:3:(sprintf(\"(%d)\",\$3)) with labels center offset -0.5,2 axis x1y2 notitle lc 3"
    close $fout
-  puts "INFO: Generating Violation Statistics Graph ($sta_path)..."
+  puts "INFO: Generating Violation Statistics Graph ($data_path)..."
   puts "\t:$data_file.png"
   catch {exec gnuplot $data_file.plt}
 }
+
+#
+# <Title>
+# Create NVP/WNS Comparison Plot PNG
+#
+# <Input>
+# $odir/$sta_path.nvp_wns.dat
+# $xdir/$sta_path.nvp_wns.dat
+#
+# <Output>
+# $odir/$sta_path.nvp_wns.comp.png
+#
+
 
 proc create_comp_nvp_wns_plot {sta_path odir xdir {comp "diff"}} {
   set data_file [format "%s/%s.nvp_wns" $odir $sta_path]

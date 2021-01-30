@@ -19,12 +19,9 @@ Design : top
 
    Endpoint                                                  Slack
    -----------------------------------------------------------------
-   u_core/u_ful_regd_slice/payload_reg_b_reg_65_/D -0.00157 (VIOLATED)
    u_core/u_ful_regd_slice/payload_reg_b_reg_14_/D -0.00120 (VIOLATED)
-   u_core/u_ful_regd_slice/payload_reg_b_reg_24_/D -0.00037 (VIOLATED)
    u_core/u_ful_regd_slice/payload_reg_b_reg_58_/D -0.00081 (VIOLATED)
    u_core/u_ful_regd_slice/payload_reg_b_reg_41_/D -0.00045 (VIOLATED)
-   u_core/u_ful_regd_slice/payload_reg_a_reg_43_/D -0.00133 (VIOLATED)
    u_core/u_ful_regd_slice/payload_reg_a_reg_65_/D -0.00054 (VIOLATED)
    u_core/u_ful_regd_slice/payload_reg_b_reg_47_/D -0.00093 (VIOLATED)
    u_core/u_rev_regd_slice/payload_reg_reg_36_/D -0.00078 (VIOLATED)

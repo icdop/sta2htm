@@ -11,6 +11,6 @@ Design : top
 
    Endpoint                                                  Slack
    -----------------------------------------------------------------
-   u_ddr_phy/dfi_address[8]                           -0.12526 (VIOLATED)
-   u_ddr_phy/dfi_address[7]                           -0.11111 (VIOLATED)
-   u_ddr_phy/dfi_address[6]                           -0.08526 (VIOLATED)
+   u_ddr_phy/dfi_address[8]                           -0.08526 (VIOLATED)
+   u_ddr_phy/dfi_address[7]                           -0.07111 (VIOLATED)
+   u_ddr_phy/dfi_address[6]                           -0.04526 (VIOLATED)

@@ -19,8 +19,7 @@ namespace eval LIB_STA {
 #   Ex: (STA/$sta_mode/$corner_name/rpt/$sta_check/RptTimCnst.rpt)
 #
 # <Refer>
-# report_slack_summary
-#
+# report_violation_histogram
 #
 # <Output>
 # $STA_SUM_DIR/$sta_mode/$sta_check.htm
@@ -445,16 +444,16 @@ proc parse_timing_report {sta_mode {sta_check ""} {sta_postfix ""}} {
         set dqi_path $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name/.dqi/520-STA
         catch { exec mkdir -p $dqi_path; 
                 exec echo $nvp > $dqi_path/NVP;
-                exec echo $nvp > $dqi_path/NWP;
-                exec echo $nvp > $dqi_path/WNS;
-                exec echo $nvp > $dqi_path/TNS;
+                exec echo $nwp > $dqi_path/NWP;
+                exec echo $wns > $dqi_path/WNS;
+                exec echo $tns > $dqi_path/TNS;
                 } msg
         puts $msg
         close $fout
         close $fin
         catch {exec rm -f $STA_SUM_DIR/$sta_mode/$sta_check/.unzip.rpt}
 
-        report_slack_summary $sta_mode $sta_check/$corner_name
+        report_violation_histogram $sta_mode $sta_check/$corner_name
 
         set bid [output_block_table $sta_mode $sta_check $corner_name]
         set cid [output_clock_table $sta_mode $sta_check $corner_name]
