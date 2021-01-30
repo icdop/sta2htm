@@ -5,9 +5,6 @@
 # By Albert Li 
 # 2020/07/02
 #
-# package require LIB_CORNER
-# package require LIB_PLOT
-# package require LIB_HTML
 
 puts "INFO: Loading 'STA_MERGE.tcl'..."
 namespace eval LIB_STA {
@@ -91,7 +88,7 @@ proc merge_vio_endpoint {sta_mode {sta_check ""} {corner_list ""}} {
   set VIO_LIST [lsort -index 0 $VIO_LIST] 
 
   set NVP [llength $VIO_LIST]
-  set dqi_path $STA_SUM_DIR/$sta_mode/$sta_check/.dqi
+  set dqi_path $STA_SUM_DIR/$sta_mode/$sta_check/.dqi/520-STA
   catch { 
     exec mkdir -p $dqi_path; 
     exec echo $NVP > $dqi_path/NVP;

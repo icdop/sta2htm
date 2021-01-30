@@ -1,35 +1,36 @@
 #!/usr/bin/tclsh
 #
-# Parse Timing Report File
+# Create HTML Report fome STA Timing Report File
 #
 # By Albert Li 
 # 2020/07/02
 #
-# package require LIB_WAIVE
-# package require LIB_CORNER
-# package require LIB_PLOT
-# package require LIB_HTML
 
 puts "INFO: Loading 'LIB_STA.tcl'..."
 namespace eval LIB_STA {
 global env
 
+variable STA_RUN_LIST   "."
 variable STA_CURR_RUN	"."
-variable STA_CFG_DIR    ".sta"
-variable STA_CFG_FILE   ".sta/sta2htm.cfg"
 variable STA_SUM_DIR    "uniq_end"
 variable STA_RPT_ROOT    "STA"
 variable STA_RPT_PATH    {$sta_mode/$corner_name}
 variable STA_RPT_FILE    {$sta_check$sta_postfix.rpt*}
 variable STA_POSTFIX    ""
 
+variable STA_CFG_FILE   "sta2htm.cfg"
+variable STA_CFG_DIR    ".sta"
+variable STA_CFG_PATH   "STA/.sta .sta ."
+
 variable STA_DATA
 variable STA_CHECK      "setup"
 variable STA_CHECK_LIST "setup hold"
 variable STA_MODE_LIST  ""
 variable STA_CORNER     
-variable STA_CORNER_NAME 
+variable STA_CORNER_MAP 
 variable STA_CORNER_LIST ""
+
+variable CORNER_NAME
 
 variable VIO_FILE  
 variable VIO_LIST  ""
@@ -60,8 +61,10 @@ proc init {} {
   uplevel 1 source $STA2HTM/tcl/STA_CLOCK.tcl
   uplevel 1 source $STA2HTM/tcl/STA_BLOCK.tcl
   uplevel 1 source $STA2HTM/tcl/STA_GROUP.tcl
+  uplevel 1 source $STA2HTM/tcl/STA_PLOT.tcl
   uplevel 1 source $STA2HTM/tcl/STA_CHART.tcl
   uplevel 1 source $STA2HTM/tcl/STA_COMP.tcl
+  uplevel 1 source $STA2HTM/tcl/STA_TREND.tcl
   
   set STA_CURR_RUN [file tail $env(PWD)]
 }
@@ -142,16 +145,12 @@ proc parse_argv { {argv ""} } {
 }
 
 proc read_config {{config "sta2htm.cfg"}} {
-  variable STA_RPT_ROOT
   variable STA_CFG_DIR
   variable STA_CFG_FILE
+  variable STA_CFG_PATH
 
-  read_config_file $STA_RPT_ROOT/$STA_CFG_DIR/sta2htm.cfg
-  read_config_file $STA_CFG_DIR/sta2htm.cfg
-  read_config_file $config
-}
-
-proc read_config_file {{config "sta2htm.cfg"}} {
+  variable STA_RUN_LIST
+  variable STA_RPT_ROOT
   variable STA_RPT_PATH
   variable STA_RPT_FILE
   variable STA_CORNER_LIST
@@ -160,22 +159,16 @@ proc read_config_file {{config "sta2htm.cfg"}} {
   variable STA_CHECK 
   variable STA_CORNER   
   variable SLACK_OFFSET
-  if [file exist $config] {
-     set STA_CFG_FILE $config
-     puts "INFO: Reading config file '$config'..."
-     source $config
-  } else {
+  
+  foreach path $STA_CFG_PATH {
+    if [file exist $path/$config] {
+       set STA_CFG_FILE $path/$config
+       puts "INFO: Reading config file '$path/$config'..."
+       source $path/$config
+    }
   }
 }
 
-proc read_offset_file {{config "sta2htm.slk"}} {
-  variable SLACK_OFFSET
-  if [file exist $config] {
-     puts "INFO: Reading offset file '$config'..."
-     source $config
-  } else {
-  }
-}
 
 #
 # <Title>
@@ -325,6 +318,7 @@ proc report_index_main {} {
   puts $fo "<td colspan=7>$STA_CURR_RUN/$STA_CFG_FILE<hr>"
   puts $fo "<iframe name=sta_config src='../$STA_CFG_FILE' width=100% height=200 scrolling=auto></iframe>"
   puts $fo "</td>"
+  puts $fo "</tr>"
   foreach sta_mode $STA_MODE_LIST {
     puts $fo "<tr>"
     puts $fo "<th>Mode</th>"
@@ -337,11 +331,11 @@ proc report_index_main {} {
     puts $fo "</tr>"
       foreach sta_check $STA_CHECK_LIST {
       if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
-         set num_corner [expr [llength $STA_CORNER($sta_mode,$sta_check)]+2]
+         set num_row [expr [llength $STA_CORNER($sta_mode,$sta_check)]+2]
          puts $fo "<tr>"
-         puts $fo "<td rowspan=$num_corner bgcolor=#00c0c0><a href=$sta_mode/index.htm>$sta_mode</a></td>"
-         puts $fo "<td rowspan=$num_corner bgcolor=#80c0c0><a href=$sta_mode/$sta_check.htm>$sta_check</a></td>"
-         puts $fo "<td colspan=6></td>"
+         puts $fo "<td rowspan=$num_row bgcolor=#00c0c0><a href=$sta_mode/index.htm>$sta_mode</a></td>"
+         puts $fo "<td rowspan=$num_row bgcolor=#80c0c0><a href=$sta_mode/$sta_check.htm>$sta_check</a></td>"
+#         puts $fo "<td colspan=6></td>"
          puts $fo "</tr>"
          foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
             if {[info exist CORNER_NAME($sta_corner)]} {
@@ -384,13 +378,12 @@ proc report_index_main {} {
          }
          puts $fo "<tr>"
          puts $fo "<td colspan=6></td>"
-         puts $fo "</td></tr>"
+         puts $fo "</tr>"
       }
     }
-    puts $fo "<tr><td colspan=8>"
-    puts $fo "</td></tr>"
+    puts $fo "<tr><td colspan=8></td>"
+    puts $fo "</tr>"
   }
-  puts $fo "</tr>"
   puts $fo "</table>"
   puts $fo "</body>"
   puts $fo "</html>"
@@ -543,7 +536,7 @@ proc report_index_corner {{sta_check_list ""}} {
   variable STA_MODE_LIST
   variable STA_CHECK_LIST
   variable STA_CORNER
-  variable STA_CORNER_NAME
+  variable STA_CORNER_MAP
   variable CORNER_NAME
   variable VIO_FILE
 
@@ -569,6 +562,7 @@ proc report_index_corner {{sta_check_list ""}} {
   puts $fo "<tr>"
   puts $fo "<th>Corner</th>"
   set STA_CORNER_LIST ""
+  array unset STA_CORNER_MAP
   foreach sta_check $STA_CHECK_LIST {
     foreach sta_mode $STA_MODE_LIST {
       if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
@@ -576,23 +570,14 @@ proc report_index_corner {{sta_check_list ""}} {
          puts $fo "$sta_mode<br>/$sta_check"
          puts $fo "</a></th>"
          foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
-            if {[info exist CORNER_NAME($sta_corner)]} {
-               set STA_CORNER_NAME($sta_mode,$sta_check,$sta_corner) $CORNER_NAME($sta_corner)
-               lappend STA_CORNER_LIST $sta_corner
-            } else {
-               puts "ERROR: CORNER_NAME($sta_corner) is not defined, but is used in STA_CORNER($sta_mode,$sta_check)!"
+            lappend STA_CORNER_LIST $sta_corner
+            set STA_CORNER_MAP($sta_mode,$sta_check,$sta_corner) $CORNER_NAME($sta_corner)
+            if {![info exist CORNER_NAME($sta_corner)]} {
+               puts "WARNING: CORNER_NAME($sta_corner) is not defined, but is used in STA_CORNER($sta_mode,$sta_check)!"
+               set CORNER_NAME(sta_corner) $sta_corner
             }
          }
       }
-#      if {![catch  {glob  $STA_SUM_DIR/$sta_mode/$sta_check/\*.vio} vio_file_list]} {
-#         foreach fname $vio_file_list {
-#            set fname [file tail $fname]
-#            regsub {\.vio$} $fname "" corner_name
-#            regsub {\_\S+$} $corner_name "" sta_corner 
-#            set STA_CORNER_NAME($sta_mode,$sta_check,$sta_corner) $corner_name
-#            puts "INFO: $sta_corner = $corner_name"
-#         }
-#      }
     }
   }
   puts $fo "</tr>"
@@ -605,7 +590,7 @@ proc report_index_corner {{sta_check_list ""}} {
     foreach sta_check $STA_CHECK_LIST {
       foreach sta_mode $STA_MODE_LIST {
         if {![info exist STA_CORNER($sta_mode,$sta_check)]} continue
-        if {[info exist STA_CORNER_NAME($sta_mode,$sta_check,$sta_corner)]} {
+        if {[info exist STA_CORNER_MAP($sta_mode,$sta_check,$sta_corner)]} {
            puts $fo "<td align=right>"
            set vio_file $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.vio
            if {![catch {open $vio_file r} fin]} {
@@ -786,7 +771,7 @@ proc report_sta_check {sta_mode {sta_check ""} } {
      return 
   }
 
-  create_curr_nvp_plot "$sta_mode/$sta_check" $STA_SUM_DIR
+  create_nvp_wns_plot "$sta_mode/$sta_check" $STA_SUM_DIR
     
   set fo [open "$STA_SUM_DIR/$sta_mode/$sta_check.htm" w]
   puts $fo "<html>"
@@ -1324,54 +1309,6 @@ proc report_slack_summary {sta_mode {fname "uniq_end"}} {
   }
   puts $flog [format "( %6s ~ %6s \] : %10s %10s %10s" $pi "" $NVP_REAL($ri) $NVP_ACCUM($ri) $NVP_ACCUM($ri)]
   close $flog
-}
-proc get_nvp_ymax {datfile} {
-  set ymax 100
-  if {[catch {open $datfile r} fin]} {
-     return $ymax
-  }
-  while {[gets $fin line] >= 0} {
-        if {[regexp {^\#} $line]} continue;
-        set wns  [lindex $line 2]
-        set nvp  [lindex $line 1]
-        if {$nvp>$ymax} {
-           if {$nvp>1000} {
-              set ymax $nvp
-           } else if {$nvp>100} {
-              set ymax 1000
-           } else if {$nvp>10} {
-              set ymax 100
-           }
-        }
-  }
-  close $fin
-  return $ymax
-}
-proc create_curr_nvp_plot {path odir} {
-  set ofile [format "%s/%s.nvp_wns" $odir $path]
-  set ymax [get_nvp_ymax $ofile.dat]
-  set fout [open "$ofile.plt" w]
-    puts $fout "set title \"$path\""
-    puts $fout "set term png truecolor size 1000,400 medium"
-    puts $fout "set output \"$ofile.png\""
-    puts $fout "set style data histogram"
-    puts $fout "set style histogram clustered gap 1"
-    puts $fout "set style fill solid 0.4 border"
-    puts $fout "set grid"
-    puts $fout "set size 1,1"
-    puts $fout "set yrange \[0:$ymax\]"
-    puts $fout "set ylabel \"NVP\""
-    puts $fout "set y2label \"WNS (ps)\""
-    puts $fout "set ytics nomirror"
-    puts $fout "set y2tics"
-    puts $fout "plot \"$ofile.dat\" using 2:xticlabels(1) axis x1y1  title \"NVP\", \\"
-    puts $fout "     \"\"     using 0:2:2 with labels center offset 0,1 notitle, \\"
-    puts $fout "     \"\"     using 3:xticlabels(1) with linespoints lc 3 lw 2 pt 7 ps 1 axis x1y2  title \"WNS\", \\"
-    puts $fout "     \"\"     using 0:3:(sprintf(\"(%d)\",\$3)) with labels center offset -0.5,2 axis x1y2 notitle lc 3"
-   close $fout
-  puts "INFO: Generating Violation Statistics Graph ($path)..."
-  puts "\t:$ofile.png"
-  catch {exec gnuplot $ofile.plt}
 }
 
 

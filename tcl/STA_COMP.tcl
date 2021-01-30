@@ -68,46 +68,6 @@ proc report_comp_sta_html {{sta_check ""} {comp "diff"} } {
   close $fo
 }
 
-proc create_comp_nvp_plot {path odir xdir {comp "diff"}} {
-  set ofile [format "%s/%s.nvp_wns" $odir $path]
-  set odir [file normalize $odir]
-  set oname [format "%s/%s" [file tail [file dirname $odir]] [file tail $odir]]
-  set xfile [format "%s/%s.nvp_wns" $xdir $path]
-  set xdir [file normalize $xdir]
-  set xname [format "%s/%s" [file tail [file dirname $xdir]] [file tail $xdir]]
-
-
-  set ymax [get_nvp_ymax $ofile.dat]
-  set ymax1 [get_nvp_ymax $xfile.dat]
-  if {$ymax1>$ymax} { set ymax $ymax1}
-  set fout [open "$ofile.$comp.plt" w]
-    puts $fout "set title \"$path\""
-    puts $fout "set term png truecolor size 1000,400 medium"
-    puts $fout "set output \"$ofile.$comp.png\""
-    puts $fout "set style data histogram"
-    puts $fout "set style histogram clustered gap 1"
-    puts $fout "set style fill solid 0.4 border"
-    puts $fout "set grid"
-    puts $fout "set size 1,1"
-    puts $fout "set yrange \[0:$ymax\]"
-    puts $fout "set ylabel \"NVP\""
-    puts $fout "set y2label \"WNS (ps)\""
-    puts $fout "set ytics nomirror"
-    puts $fout "set y2tics"
-    puts $fout "plot \"$xfile.dat\" using 2:xticlabels(1) lc 0 axis x1y1  title \"$xname-NVP\", \\"
-#    puts $fout "     \"$xfile.dat\" using 0:2:2 with labels right offset 0,1 notitle, \\"
-    puts $fout "     \"$xfile.dat\" using 3:xticlabels(1) with linespoints lc 0 lw 1 pt 7 ps 1 axis x1y2  title \"$xname-WNS\", \\"
-#    puts $fout "     \"$xfile.dat\" using 0:3:(sprintf(\"(%di)\",\$3)) with labels center offset -0.5,2 axis x1y2 notitle lc 0, \\"
-    puts $fout "     \"$ofile.dat\" using 2:xticlabels(1) lc 1 axis x1y1  title \"$oname-NVP\", \\"
-    puts $fout "     \"$ofile.dat\" using 0:2:2 with labels left offset 0,0 notitle, \\"
-    puts $fout "     \"$ofile.dat\" using 3:xticlabels(1) with linespoints lc 3 lw 2 pt 7 ps 1 axis x1y2  title \"$oname-WNS\", \\"
-    puts $fout "     \"$ofile.dat\" using 0:3:(sprintf(\"(%d)\",\$3)) with labels center offset -0.5,2 axis x1y2 notitle lc 3"
-   close $fout
-  puts "INFO: Generating Violation Diff Chart ($path)..."
-  puts "\t:$ofile.$comp.png"
-  catch {exec gnuplot $ofile.$comp.plt}
-  catch {exec diff -W 60 -y $ofile.dat $xfile.dat > $ofile.$comp.rpt}
-}
 
 }
 

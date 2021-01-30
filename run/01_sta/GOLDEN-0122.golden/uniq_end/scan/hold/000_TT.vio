@@ -1,0 +1,8 @@
+# File : /home/toolsadm/GITHOME/sta2htm/run/reports/apr0-0122/scan/000_TT/hold.rpt
+# Report : constraint -path slack_only (Line# 2)
+   -125.26 OCC4                           u_ddr_phy/dfi_address[8]
+   -111.11 OCC4                           u_ddr_phy/dfi_address[7]
+    -85.26 OCC4                           u_ddr_phy/dfi_address[6]
+    -65.26 OCC4                           u_ddr_phy/dfi_address[5]
+    -45.26 OCC4                           u_ddr_phy/dfi_address[4]
+    -25.26 OCC4                           u_ddr_phy/dfi_address[3]

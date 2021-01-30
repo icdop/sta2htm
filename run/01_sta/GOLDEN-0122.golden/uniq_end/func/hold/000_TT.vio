@@ -1,0 +1,15 @@
+# File : /home/toolsadm/GITHOME/sta2htm/run/reports/apr0-0122/func/000_TT/hold.rpt
+# Report : constraint -path slack_only (Line# 2)
+   -125.26 CLK_VIP                        u_core/u_vip/trf_64x64_u_trf_64x64/AA[0]
+    -85.26 CLK_VIP                        u_core/u_vip/trf_64x64_u_trf_64x64/AA[1]
+    -75.26 CLK_VIP                        u_core/u_vip/trf_64x64_u_trf_64x64/AA[2]
+    -65.26 CLK_VIP                        u_core/u_vip/trf_64x64_u_trf_64x64/AA[3]
+    -55.26 CLK_VIP                        u_core/u_vip/trf_64x64_u_trf_64x64/AA[4]
+    -45.26 CLK_VIP                        u_core/u_vip/trf_64x64_u_trf_64x64/AA[5]
+    -35.26 CLK_VIP                        u_core/u_vip/trf_64x64_u_trf_64x64/AA[6]
+    -25.26 CLK_VIP                        u_core/u_vip/trf_64x64_u_trf_64x64/AA[7]
+    -15.61 CLK_VIP_DIV2                   u_core/u_vip/trf_1kx64_m8_u_trf_1kx64_m8/D[63]
+    -14.61 CLK_VIP_DIV2                   u_core/u_vip/trf_1kx64_m8_u_trf_1kx64_m8/D[62]
+    -13.61 CLK_VIP_DIV2                   u_core/u_vip/trf_1kx64_m8_u_trf_1kx64_m8/D[61]
+    -12.61 CLK_VIP_DIV2                   u_core/u_vip/trf_1kx64_m8_u_trf_1kx64_m8/D[60]
+    -11.61 CLK_VIP_DIV2                   u_core/u_vip/trf_1kx64_m8_u_trf_1kx64_m8/D[64]

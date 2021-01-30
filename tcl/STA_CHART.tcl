@@ -39,7 +39,7 @@ proc create_check_chart {sta_mode {sta_check ""} } {
   close $fo
 }
 
-proc create_curr_nvp_chart {path odir} {
+proc create_nvp_wns_chart {path odir} {
   
   set datfile [format "%s/%s.nvp_wns.dat" $odir $path]
   set outfile [format "%s/%s.nvp_wns.js" $odir $path]

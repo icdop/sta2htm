@@ -9,9 +9,6 @@ source $STA_HOME/tcl/LIB_STA.tcl
 ::LIB_STA::read_config
 ::LIB_STA::read_corner
 
-::LIB_STA::report_index_main
-::LIB_STA::report_index_mode
-::LIB_STA::report_index_check
-::LIB_STA::report_index_corner
+::LIB_STA::report_index_trend
 
-puts "INFO: sta_index Done..."
+puts "INFO: sta_gen_index Done..."
