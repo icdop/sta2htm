@@ -1,4 +1,4 @@
-set title "scan/hold"
+set title "GOLDEN-0122/uniq_end/scan/hold"
 set term png truecolor size 1000,400 medium
 set output "uniq_end/scan/hold.nvp_wns.png"
 set style data histogram
