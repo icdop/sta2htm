@@ -6,8 +6,8 @@
 # 2021/01/13
 #
 
-puts "INFO: Loading 'LIB_HTML.tcl'..."  
-namespace eval LIB_HTML {
+puts "INFO: Loading 'STA_HTML.tcl'..."  
+namespace eval STA_HTML {
 global STA_HOME
 
 variable TABLE_CSS

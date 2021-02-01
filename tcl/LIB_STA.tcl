@@ -9,6 +9,7 @@
 puts "INFO: Loading 'LIB_STA.tcl'..."
 namespace eval LIB_STA {
 global env
+global STA2HTM  
 
 variable STA_RUN_LIST   "."
 variable STA_CURR_RUN	"."
@@ -53,7 +54,16 @@ proc init {} {
   global env
   global STA2HTM
   variable STA_CURR_RUN
+
+  set STA2HTM [file dirname [file dirname [file normalize [info script]]]]
+  puts "###########################################################"
+  puts "# STA2HTM LIBRARY ver.2020.07                             #"
+  puts "###########################################################"
+  puts "INFO: STA2HTM = $STA2HTM"
   
+  uplevel 1 source $STA2HTM/tcl/STA_PLOT.tcl
+  uplevel 1 source $STA2HTM/tcl/STA_HTML.tcl
+  uplevel 1 source $STA2HTM/tcl/STA_CHART.tcl
   uplevel 1 source $STA2HTM/tcl/STA_CORNER.tcl
   uplevel 1 source $STA2HTM/tcl/STA_WAIVE.tcl
   uplevel 1 source $STA2HTM/tcl/STA_PT.tcl
@@ -62,8 +72,6 @@ proc init {} {
   uplevel 1 source $STA2HTM/tcl/STA_CLOCK.tcl
   uplevel 1 source $STA2HTM/tcl/STA_BLOCK.tcl
   uplevel 1 source $STA2HTM/tcl/STA_GROUP.tcl
-  uplevel 1 source $STA2HTM/tcl/STA_PLOT.tcl
-  uplevel 1 source $STA2HTM/tcl/STA_CHART.tcl
   uplevel 1 source $STA2HTM/tcl/STA_COMP.tcl
   uplevel 1 source $STA2HTM/tcl/STA_TREND.tcl
   
@@ -302,7 +310,7 @@ proc report_index_main {} {
   puts "INFO: Generating STA Index HTML Files ..."
   set fo [open "$STA_SUM_DIR/index.htm" "w"]
   puts $fo "<html>"
-  puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
 #  puts $fo "\[<a href=index.htm>\@Index</a>\]"
   puts $fo "\[\@Index\]"
@@ -412,7 +420,7 @@ proc report_index_mode {{sta_check_list ""}} {
   puts "INFO: Generating Mode Index HTML Files ..."
   set fo [open "$STA_SUM_DIR/mode.htm" "w"]
   puts $fo "<html>"
-  puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
 #  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
@@ -473,7 +481,7 @@ proc report_mode_summary {sta_mode} {
   puts "INFO: Generating Mode Index Page ($sta_mode) ..."
   set fo [open "$STA_SUM_DIR/$sta_mode/index.htm" "w"]
   puts $fo "<html>"
-  puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=../index.htm>\@Index</a>\]"
   puts $fo "\[<a href=../mode.htm>\@Mode</a>\]"
@@ -548,7 +556,7 @@ proc report_index_corner {{sta_check_list ""}} {
   puts "INFO: Generating Corner Index HTML Files ..."
   set fo [open "$STA_SUM_DIR/corner.htm" "w"]
   puts $fo "<html>"
-  puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
   puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
@@ -646,7 +654,7 @@ proc report_index_check {{sta_check_list ""}} {
   puts "INFO: Generating Check Index HTML Files ..."
   set fo [open "$STA_SUM_DIR/check.htm" "w"]
   puts $fo "<html>"
-  puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
   puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
@@ -708,7 +716,7 @@ proc report_check_summary {{sta_check ""}} {
 
   set fo [open "$STA_SUM_DIR/$sta_check.htm" "w"]
   puts $fo "<html>"
-  puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
   puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
@@ -777,7 +785,7 @@ proc report_sta_check {sta_mode {sta_check ""} } {
     
   set fo [open "$STA_SUM_DIR/$sta_mode/$sta_check.htm" w]
   puts $fo "<html>"
-  puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=../index.htm>\@Index</a>\]"
   puts $fo "\[<a href=../mode.htm>\@Mode</a>\]"
@@ -1059,7 +1067,7 @@ proc report_endpoint_html {sta_mode {sta_check ""} {corner_list ""}} {
   set fout [open "$STA_SUM_DIR/$sta_mode/$sta_check.uniq_end.htm" w]
   puts $fout "<html>"
   puts $fout "<head>"
-  puts $fout $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fout "</head>"
   puts $fout "<body>"
   puts $fout "<table border=\"1\" id=\"sta_tbl\">"
@@ -1143,7 +1151,7 @@ proc report_wavpoint_html {sta_mode {sta_check ""} {corner_list ""}} {
   set fout [open "$STA_SUM_DIR/$sta_mode/$sta_check.waive_end.htm" w]
   puts $fout "<html>"
   puts $fout "<head>"
-  puts $fout $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fout "</head>"
   puts $fout "<body>"
   puts $fout "<table border=\"1\" id=\"sta_tbl\">"

@@ -36,10 +36,9 @@ proc report_index_trend {{out_dir ".trend"}} {
   file mkdir $out_dir
   set fo [open "index.htm" "w"]
   puts $fo "<html>"
-  puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
-#  puts $fo "\[<a href=index.htm>\@Trend</a>\]"
-  puts $fo "\[\@Trend\]"
+  puts $fo "\[<a href=$STA_CFG_FILE target=sta_output>\@Trend</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" width=1000 id=\"sta_tbl\">"
@@ -89,11 +88,15 @@ proc report_index_trend {{out_dir ".trend"}} {
                 puts $fo "<td align=right><a href='$sta_run/$STA_SUM_DIR/$sta_mode/$sta_check.nvp_wns.png' target=sta_output> $NVP</a> </td>"
               }
               foreach sta_corner $STA_CORNER_LIST {
-                set corner_name $CORNER_NAME($sta_corner)
-                if {[catch {exec cat $sta_run/$STA_SUM_DIR/$sta_mode/$sta_check/$corner_name/.dqi/520-STA/NVP} nvp]} {
-                  puts $fo "<td align=right> * </td>"
+                if {[lsearch $STA_CORNER($sta_mode,$sta_check) $sta_corner]<0} {
+                    puts $fo "<td align=right bgcolor=#c0c0c0> - </td>"
                 } else {
-                  puts $fo "<td align=right> $nvp </td>"
+                  set corner_name $CORNER_NAME($sta_corner)
+                  if {[catch {exec cat $sta_run/$STA_SUM_DIR/$sta_mode/$sta_check/$corner_name/.dqi/520-STA/NVP} nvp]} {
+                    puts $fo "<td align=right> * </td>"
+                  } else {
+                    puts $fo "<td align=right> $nvp </td>"
+                  }
                 }
               }
               if {$nvp=="-"} {

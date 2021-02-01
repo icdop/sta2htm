@@ -21,11 +21,11 @@ proc create_check_chart {sta_mode {sta_check ""} } {
   create_curr_nvp_chart "$sta_mode/$sta_check" $STA_SUM_DIR
   set fo [open "$STA_SUM_DIR/$sta_mode/$sta_check.chart.htm" w]
   puts $fo "<html>"
-  puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
-  puts $fo $::LIB_HTML::CHART_JS(sta2htm)
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
+  puts $fo $::STA_HTML::CHART_JS(sta2htm)
   puts $fo "<script>"
-  puts $fo $::LIB_HTML::CHART_JS(color)
-  puts $fo $::LIB_HTML::CHART_JS(onload)
+  puts $fo $::STA_HTML::CHART_JS(color)
+  puts $fo $::STA_HTML::CHART_JS(onload)
   puts $fo "</script>"
   puts $fo "<script src='$sta_check.nvp_wns.js'></script>"
   puts $fo "<head>"

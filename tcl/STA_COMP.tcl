@@ -28,7 +28,7 @@ proc report_comp_sta_html {{sta_check ""} {comp "diff"} } {
  
   set fo [open "$STA_SUM_DIR/$sta_check.$comp.htm" "w"]
   puts $fo "<html>"
-  puts $fo $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
   puts $fo "\[<a href=mode.htm>\@Mode</a>\]"

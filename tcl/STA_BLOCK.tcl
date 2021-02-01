@@ -227,7 +227,7 @@ proc output_block_table {sta_mode sta_check corner_name} {
       set fout [open "$STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.blk.htm" w]
       puts $fout "<html>"
       puts $fout "<head>"
-      puts $fout $::LIB_HTML::TABLE_CSS(sta_tbl)
+      puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
       puts $fout "</head>"
       puts $fout "<body>"
       puts $fout "<div id=sta_block class=\"collapse\">"
@@ -305,7 +305,7 @@ proc report_index_block {sta_mode {sta_check ""} {corner_list ""}} {
   set fout [open "$STA_SUM_DIR/$sta_mode/$sta_check.blk.htm" w]
   puts $fout "<html>"
   puts $fout "<head>"
-  puts $fout $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fout "</head>"
   puts $fout "<body>"
   puts $fout "<div id=sta_block class=\"collapse\">"

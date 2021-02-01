@@ -214,7 +214,7 @@ proc output_clock_table {sta_mode sta_check corner_name} {
       set fout [open "$STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.clk.htm" w]
       puts $fout "<html>"
       puts $fout "<head>"
-      puts $fout $::LIB_HTML::TABLE_CSS(sta_tbl)
+      puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
       puts $fout "</head>"
       puts $fout "<body>"
       puts $fout "<div id=sta_clock class=\"collapse\">"
@@ -292,7 +292,7 @@ proc report_index_clock {sta_mode {sta_check ""} {corner_list ""}} {
   set fout [open "$STA_SUM_DIR/$sta_mode/$sta_check.clk.htm" w]
   puts $fout "<html>"
   puts $fout "<head>"
-  puts $fout $::LIB_HTML::TABLE_CSS(sta_tbl)
+  puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fout "</head>"
   puts $fout "<body>"
   puts $fout "<div id=sta_clock class=\"collapse\">"
