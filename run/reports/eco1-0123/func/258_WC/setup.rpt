@@ -16,10 +16,6 @@ Design : top
    pad_gpio_pa[5]                                         -0.01200  (VIOLATED)
    pad_gpio_pa[6]                                         -0.01100  (VIOLATED)
    pad_gpio_pa[7]                                         -0.00435  (VIOLATED)
-   pad_gpio_pa[8]                                         -0.00425  (VIOLATED)
-   pad_gpio_pa[9]                                         -0.00415  (VIOLATED)
-   pad_gpio_pa[10]                                        -0.00400  (VIOLATED)
-   pad_gpio_pa[11]                                        -0.00404  (VIOLATED)
    pad_gpio_pa[12]                                        -0.00300  (VIOLATED)
 
    max_delay/setup ('VCLK_CAN' group)
@@ -38,8 +34,6 @@ Design : top
    pad_do_data[5]                                         -0.00700  (VIOLATED)
    pad_do_data[4]                                         -0.00600  (VIOLATED)
    pad_do_data[2]                                         -0.00000  (VIOLATED)
-   pad_do_data[1]                                         -0.00400  (VIOLATED)
-   pad_do_data[0]                                         -0.00300  (VIOLATED)
    pad_do_data[13]                                        -0.00292  (VIOLATED)
    pad_do_data[12]                                        -0.00086  (VIOLATED)
 
@@ -47,8 +41,6 @@ Design : top
 
    Endpoint                                                  Slack
    -----------------------------------------------------------------
-   pad_sflash_io[2]                                       -0.07743  (VIOLATED)
-   pad_sflash_io[3]                                       -0.06214  (VIOLATED)
    pad_sflash_io[1]                                       -0.02170  (VIOLATED)
 
    max_delay/setup ('VCLK_MCU08' group)
