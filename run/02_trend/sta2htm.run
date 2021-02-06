@@ -1,5 +1,27 @@
-GOLDEN-210122 = reports/apr0-0120 
-GOLDEN-210123 = reports/eco1-0123 
-GOLDEN-210124 = reports/eco2-0124 
-TRYRUN-210125 = reports/eco2-0125
-GOLDEN-210127 = reports/eco3-0127 
+[REPORT]
+#VERSION	REPORTS
+-------------	-----------------------
+GOLDEN-210122	reports/apr0-0120 
+GOLDEN-210123	reports/eco1-0123 
+GOLDEN-210124	reports/eco2-0124 
+#TRYRUN-210125	reports/eco2-0125
+#GOLDEN-210127	reports/eco3-0127 
+
+[SCENARIO]
+#MODE	CHECK	CORNERS
+#----	------	-----------------------
+func	setup	000 -   157 231 258
+func	hold	000 151 157 -   258
+#scan	setup	000 -   157 -   -
+scan	hold	000 -   157 -   258
+
+[CORNER]
+#ID	CName		Process	Volt	Temp	RCxt	Library
+#--	----------	-------	----	----	-------	----------
+000	000_TT		TTT	0.8	25	RCtyp	
+151	151_ML		FFG	0.88	125	Cmax
+157	157_BC		FFF	0.88	-40	Cmin
+231	231_WCL		SSG	0.72	-40	Cmax
+258	258_WC		SSG	0.72	125	Cmax
+
+
