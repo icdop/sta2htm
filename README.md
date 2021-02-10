@@ -136,7 +136,15 @@ $STA_RPT_PATH/$STA_RPT_FILE (violation.rpt) : Primetime report
 
 + <code> % make view </code>
 + <code> % firefox $(STA_RUN)/index.htm </code>
+
 ![run/01_sta/screenshot/uniq_end_index.png](./run/01_sta/screenshot/uniq_end_index.png?raw=true)
+
+![run/01_sta/screenshot/uniq_end_mode.png](./run/01_sta/screenshot/uniq_end_mode.png?raw=true)
+
+![run/01_sta/screenshot/uniq_end_corner.png](./run/01_sta/screenshot/uniq_end_corner.png?raw=true)
+
+![run/01_sta/screenshot/uniq_end_summary.png](./run/01_sta/screenshot/uniq_end_summary.png?raw=true)
+
 <pre>
 uniq_end/
 ├── func
