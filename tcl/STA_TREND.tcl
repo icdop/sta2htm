@@ -96,8 +96,7 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
                 if {![info exist STA_SCENARIO_MAP($sta_check,$sta_mode,$sta_corner)]} {
                     puts $fo "<td align=right bgcolor=#c0c0c0> - </td>"
                 } else {
-                  set corner_name $STA_CORNER_NAME($sta_corner)
-                  if {[catch {exec cat $sta_run/$sta_group/$sta_mode/$sta_check/$corner_name/.dqi/520-STA/NVP} nvp]} {
+                  if {[catch {exec cat $sta_run/$sta_group/$sta_mode/$sta_check/$sta_corner/.dqi/520-STA/NVP} nvp]} {
                     puts $fo "<td align=right> * </td>"
                   } else {
                     puts $fo "<td align=right> $nvp </td>"

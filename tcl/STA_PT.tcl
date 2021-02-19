@@ -22,7 +22,7 @@ namespace eval LIB_STA {
 # <Output>
 # $sta_group/$sta_mode/$sta_check.htm
 # $sta_group/$sta_mode/$sta_check.nvp_wns.dat
-# $sta_group/$sta_mode/$sta_check/$corner_name.vio
+# $sta_group/$sta_mode/$sta_check/$sta_corner.vio
 #
 # VIO_LIST
 # MET_LIST
@@ -65,8 +65,8 @@ proc parse_timing_report {sta_report_path sta_report_filter sta_group sta_mode s
   
   foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
     set corner_name [get_corner_name $sta_corner]
-    if {[file exist $sta_group/$sta_mode/$sta_check/$corner_name.vio]} {
-      puts "INFO: $sta_group/$sta_mode/$sta_check/$corner_name.vio"
+    if {[file exist $sta_group/$sta_mode/$sta_check/$sta_corner.vio]} {
+      puts "INFO: $sta_group/$sta_mode/$sta_check/$sta_corner.vio"
       continue
     }
     reset_waive_list
@@ -76,7 +76,7 @@ proc parse_timing_report {sta_report_path sta_report_filter sta_group sta_mode s
     set wns 0.0
     set tns 0.0
 
-    catch {exec rm -fr $sta_group/$sta_mode/$sta_check/$corner_name.*}
+    catch {exec rm -fr $sta_group/$sta_mode/$sta_check/$sta_corner.*}
     set files ""
     foreach filter $sta_report_filter {
       puts "FILTER: $sta_report_path/$filter"
@@ -121,7 +121,7 @@ proc parse_timing_report {sta_report_path sta_report_filter sta_group sta_mode s
         set VIO_LIST ""
         set slack_offset 0
 
-        set fout [open $sta_group/$sta_mode/$sta_check/$corner_name.vio a]
+        set fout [open $sta_group/$sta_mode/$sta_check/$sta_corner.vio a]
         puts $fout "# File : [file normalize $fname]"
         set nspt 0
         while {[gets $fin line] >= 0} {
@@ -435,7 +435,7 @@ proc parse_timing_report {sta_report_path sta_report_filter sta_group sta_mode s
         puts "\t:   NVP = $nvp"
         puts "\t:   NMP = $nmp"
         puts "\t:   NWP = $nwp"
-        set dqi_path $sta_group/$sta_mode/$sta_check/$corner_name/.dqi/520-STA
+        set dqi_path $sta_group/$sta_mode/$sta_check/$sta_corner/.dqi/520-STA
         catch { exec mkdir -p $dqi_path; 
                 exec echo $nvp > $dqi_path/NVP;
                 exec echo $nwp > $dqi_path/NWP;
@@ -447,10 +447,10 @@ proc parse_timing_report {sta_report_path sta_report_filter sta_group sta_mode s
         close $fin
         catch {exec rm -f $sta_group/$sta_mode/$sta_check/.unzip.rpt}
 
-        report_violation_histogram $sta_group $sta_mode $sta_check/$corner_name
+        report_violation_histogram $sta_group $sta_mode $sta_check/$sta_corner
 
-        set bid [output_block_table $sta_group $sta_mode $sta_check $corner_name]
-        set cid [output_clock_table $sta_group $sta_mode $sta_check $corner_name]
+        set bid [output_block_table $sta_group $sta_mode $sta_check $sta_corner]
+        set cid [output_clock_table $sta_group $sta_mode $sta_check $sta_corner]
 
         lappend STA_DATA($sta_mode,$sta_check,$sta_corner) [list $corner_name $fname $nwp $nvp $wns $tns $cid $bid]
 

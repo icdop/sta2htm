@@ -28,7 +28,7 @@ scan          dc_capture        scan_0211.sdc
 [CORNER]
 #<sta_corner>  <corner_name>    Lib_corner	RC_corner   LibFiles
 #------------  -------------    --------------  ---------- ----------
-000            000_TT           TTT:0.80V:025C  RCtyp           	
+000            000_TT           TTT:0.80V:025C  RCtyp
 151            151_ML           FFG:0.88V:125C  Cmax
 157            157_BC           FFF:0.88V:-40C  Cmin
 231            231_WCL          SSG:0.72V:-40C  Cmax

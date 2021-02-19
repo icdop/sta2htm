@@ -29,18 +29,6 @@ proc print_corner_list {} {
   }
 }
 
-proc check_corner_list {corner_list} {
-  variable STA_CORNER_NAME
-
-  set error 0
-  foreach sta_corner $corner_list {
-     if {![info exist STA_CORNER_NAME($sta_corner)]} {
-        incr error
-        puts "ERROR: STA_CORNER_NAME($sta_corner) is not defined!"
-     }
-  }
-  return $error
-}
 
 proc read_sta_corner {{corner_setup "sta2htm.corner"}} {
   variable STA_CFG_DIR
@@ -84,7 +72,7 @@ proc get_corner_id {corner_name} {
        return $corner_id
     }
   } 
-  return "999"
+  return "-"
 }
 
 proc get_corner_name {corner_id} {

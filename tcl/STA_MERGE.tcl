@@ -42,10 +42,8 @@ proc merge_vio_endpoint {sta_group sta_mode sta_check {corner_list ""}} {
   if ![catch {glob $sta_group/$sta_mode/$sta_check/$corner_mask*.vio} files] {
     foreach fname $files {
       set fin [open $fname r]
-      regsub {\.vio$} [file tail $fname] "" corner_name
-      if {![regexp {^(\d+)\_} $corner_name whole sta_corner]} {
-         set sta_corner [get_corner_id $corner_name]
-      }
+      regsub {\.vio$} [file tail $fname] "" sta_corner
+      set corner_name [get_corner_name $sta_corner]
       puts "($sta_corner)\t: $fname"
       set VIO_FILE($sta_mode,$sta_check,$sta_corner) $fname
       while {[gets $fin line] >= 0} {

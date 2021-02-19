@@ -136,10 +136,7 @@ proc report_clock_table {sta_group sta_mode sta_check} {
   puts "$sta_group/$sta_mode/$sta_check/*.vio"
   if {![catch {glob $sta_group/$sta_mode/$sta_check/*.vio} files]} {
     foreach fname $files {
-      regsub {\.vio$} [file tail $fname] "" corner_name
-      if {![regexp {^(\d+)\_} $corner_name whole sta_corner]} {
-         set sta_corner [get_corner_id $corner_name]
-      }
+      regsub {\.vio$} [file tail $fname] "" sta_corner
       puts "($sta_corner)\t: $fname"
       set VIO_FILE($sta_mode,$sta_check,$sta_corner) $fname
       set sline ""
@@ -161,7 +158,7 @@ proc report_clock_table {sta_group sta_mode sta_check} {
         }
       }
       close $fin
-      output_clock_table $sta_group $sta_mode $sta_check $corner_name
+      output_clock_table $sta_group $sta_mode $sta_check $sta_corner
     }
   }
 }
@@ -191,7 +188,7 @@ proc extract_clock_list {sta_corner} {
       set CLOCK_LIST [lsort -unique $CLOCK_LIST]
 }
 
-proc output_clock_table {sta_group sta_mode sta_check corner_name} {
+proc output_clock_table {sta_group sta_mode sta_check sta_corner} {
   variable CLOCK_NUM
   variable CLOCK_GID
   variable CLOCK_WNS
@@ -200,12 +197,10 @@ proc output_clock_table {sta_group sta_mode sta_check corner_name} {
   variable sCLOCK_LIST
   variable eCLOCK_LIST
 
-      set sta_corner [get_corner_id $corner_name]
-
       extract_clock_list $sta_corner
       set CLOCK_NUM [assign_clock_gid]
 
-      set fout [open "$sta_group/$sta_mode/$sta_check/$corner_name.clk.htm" w]
+      set fout [open "$sta_group/$sta_mode/$sta_check/$sta_corner.clk.htm" w]
       puts $fout "<html>"
       puts $fout "<head>"
       puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
@@ -214,7 +209,7 @@ proc output_clock_table {sta_group sta_mode sta_check corner_name} {
       puts $fout "<div id=sta_clock class=\"collapse\">"
       puts $fout "<table border=\"1\" id=\"sta_tbl\">"
       puts $fout "<caption>"
-      puts $fout "$sta_mode/$sta_check/$corner_name"
+      puts $fout "$sta_mode/$sta_check/$sta_corner"
       puts $fout "</caption>"
       puts $fout "<TR>"
       puts $fout "<TH align=left><pre>#$CLOCK_NUM Clocks</a></TH>" 
@@ -296,8 +291,7 @@ proc report_index_clock {sta_group sta_mode sta_check {corner_list ""}} {
   puts $fout "<TH><pre>NVP</TH>" 
   puts $fout "<TH><pre>WNS</TH>" 
   foreach sta_corner $corner_list {
-     set corner_name [get_corner_name $sta_corner]
-     puts $fout "<TH><a href=$sta_check/$corner_name.clk.htm><pre>$sta_corner</a></TH>"
+     puts $fout "<TH><a href=$sta_check/$sta_corner.clk.htm><pre>$sta_corner</a></TH>"
   }
   puts $fout "</TR>"
 

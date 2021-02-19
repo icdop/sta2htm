@@ -74,6 +74,8 @@ proc reset_sta_config {} {
   array set STA_CORNER       {}
   array set STA_SCENARIO_DEF {}
   array set STA_SCENARIO_MAP {}
+  
+  set STA_CORNER_NAME(-) "-"
 }
 
 
@@ -167,6 +169,7 @@ proc sync_sta_config {} {
        set STA_CORNER_DEF($sta_corner) ""
     }
   }
+  set error 0
   set scenario_id 0
   set STA_SCENARIO_LIST ""
   array set STA_SCENARIO_DEF {}
@@ -180,10 +183,22 @@ proc sync_sta_config {} {
          lappend STA_SCENARIO_LIST $sta_scenario
          set STA_SCENARIO_DEF($sta_scenario) [format "%-10s %-10s" $sta_check $sta_mode]
          foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
-           set STA_SCENARIO_MAP($sta_check,$sta_mode,$sta_corner) $STA_CORNER_NAME($sta_corner)
+           if {$sta_corner != "-"} {
+               if {![info exist STA_CORNER_NAME($sta_corner)]} {
+                  incr error
+                  set STA_CORNER_NAME($sta_corner) $sta_corner
+                  puts "ERROR: STA_CORNER($sta_mode,$sta_check) has undefined corner ($sta_corner) !"
+               }
+               set STA_SCENARIO_MAP($sta_check,$sta_mode,$sta_corner) $STA_CORNER_NAME($sta_corner)
+           }
          }
       }
     }
+  }
+  
+  if {$error>0} {
+     puts "INFO: $error ERRORs found, please check the config file."
+     return -1
   }
 }
 #

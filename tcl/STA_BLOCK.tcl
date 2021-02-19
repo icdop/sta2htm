@@ -153,10 +153,7 @@ proc report_block_table {sta_group sta_mode sta_check} {
   puts "$sta_group/$sta_mode/$sta_check/*.vio"
   if {![catch {glob $sta_group/$sta_mode/$sta_check/*.vio} files]} {
     foreach fname $files {
-      regsub {\.vio$} [file tail $fname] "" corner_name
-      if {![regexp {^(\d+)\_} $corner_name whole sta_corner]} {
-         set sta_corner [get_corner_id $corner_name]
-      }
+      regsub {\.vio$} [file tail $fname] "" sta_corner
       puts "($sta_corner)\t: $fname"
       set VIO_FILE($sta_mode,$sta_check,$sta_corner) $fname
       set sclock -
@@ -176,7 +173,7 @@ proc report_block_table {sta_group sta_mode sta_check} {
         }
       }
       close $fin
-      output_block_table $sta_group $sta_mode $sta_check $corner_name
+      output_block_table $sta_group $sta_mode $sta_check $sta_corner
     }
   }
 }
@@ -206,7 +203,7 @@ proc extract_block_list {sta_corner} {
       set BLOCK_LIST [lsort -unique $BLOCK_LIST]
 }
 
-proc output_block_table {sta_group sta_mode sta_check corner_name} {
+proc output_block_table {sta_group sta_mode sta_check sta_corner} {
   variable BLOCK_GID
   variable BLOCK_WNS
   variable BLOCK_NVP
@@ -215,12 +212,10 @@ proc output_block_table {sta_group sta_mode sta_check corner_name} {
   variable sBLOCK_LIST
   variable eBLOCK_LIST
 
-      set sta_corner [get_corner_id $corner_name]
-
       extract_block_list $sta_corner
       set BLOCK_NUM [assign_block_gid]
 
-      set fout [open "$sta_group/$sta_mode/$sta_check/$corner_name.blk.htm" w]
+      set fout [open "$sta_group/$sta_mode/$sta_check/$sta_corner.blk.htm" w]
       puts $fout "<html>"
       puts $fout "<head>"
       puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
@@ -229,7 +224,7 @@ proc output_block_table {sta_group sta_mode sta_check corner_name} {
       puts $fout "<div id=sta_block class=\"collapse\">"
       puts $fout "<table border=\"1\" id=\"sta_tbl\">"
       puts $fout "<caption>"
-      puts $fout "$sta_mode/$sta_check/$corner_name"
+      puts $fout "$sta_mode/$sta_check/$sta_corner"
       puts $fout "</caption>"
       puts $fout "<TR>"
       puts $fout "<TH align=left><pre>#$BLOCK_NUM Blocks</a></TH>" 
@@ -311,8 +306,7 @@ proc report_index_block {sta_group sta_mode sta_check {corner_list ""}} {
   puts $fout "<TH><pre>NVP</TH>" 
   puts $fout "<TH><pre>WNS</TH>" 
   foreach sta_corner $corner_list {
-     set corner_name [get_corner_name $sta_corner]
-     puts $fout "<TH><a href=$sta_check/$corner_name.blk.htm><pre>$sta_corner</a></TH>"
+     puts $fout "<TH><a href=$sta_check/$sta_corner.blk.htm><pre>$sta_corner</a></TH>"
   }
   puts $fout "</TR>"
 
