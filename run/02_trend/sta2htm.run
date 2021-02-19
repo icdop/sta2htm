@@ -1,27 +1,46 @@
-[REPORT]
-#VERSION	REPORTS
--------------	-----------------------
-GOLDEN-210122	reports/apr0-0120 
-GOLDEN-210123	reports/eco1-0123 
-GOLDEN-210124	reports/eco2-0124 
-#TRYRUN-210125	reports/eco2-0125
-#GOLDEN-210127	reports/eco3-0127 
+#
+[VERSION]
+#STA_RUN	STA_RUN_REPORT         STA_RUN_GROUPS
+#-------------	---------------------  ----------------
+GOLDEN-0122	reports/apr0-0120      uniq_end
+GOLDEN-0123	reports/eco1-0123      uniq_end
+GOLDEN-0124	reports/eco2-0124      uniq_end
+;TRYRUN-0125	reports/eco2-0125      uniq_end
+;GOLDEN-0127	reports/eco3-0127      uniq_end
 
-[SCENARIO]
-#MODE	CHECK	CORNERS
-#----	------	-----------------------
-func	setup	000 -   157 231 258
-func	hold	000 151 157 -   258
-#scan	setup	000 -   157 -   -
-scan	hold	000 -   157 -   258
+[GROUP]
+#STA_GROUP   STA_GROUP_REPORT
+#---------   -----------------------------------------------
+uniq_end     $sta_mode/$corner_name/$sta_check.rpt
+
+[CHECK]
+#<sta_check> STA_CHECK_DEF
+#----------- -------------------
+setup        
+hold         
+
+[MODE]
+#<sta_mode>   STA_MODE_NAME     STA_MODE_DEF
+#-----------  ----------------- -------------------
+func          functional        func_0210.sdc
+scan          dc_capture        scan_0211.sdc
 
 [CORNER]
-#ID	CName		Process	Volt	Temp	RCxt	Library
-#--	----------	-------	----	----	-------	----------
-000	000_TT		TTT	0.8	25	RCtyp	
-151	151_ML		FFG	0.88	125	Cmax
-157	157_BC		FFF	0.88	-40	Cmin
-231	231_WCL		SSG	0.72	-40	Cmax
-258	258_WC		SSG	0.72	125	Cmax
+#<sta_corner>  <corner_name>    Lib_corner	RC_corner   LibFiles
+#------------  -------------    --------------  ---------- ----------
+000            000_TT           TTT:0.80V:025C  RCtyp           	
+151            151_ML           FFG:0.88V:125C  Cmax
+157            157_BC           FFF:0.88V:-40C  Cmin
+231            231_WCL          SSG:0.72V:-40C  Cmax
+258            258_WC           SSG:0.72V:125C  Cmax
+
+[SCENARIO]
+#SID    CHECK   MODE	CORNERS
+#-----	------	------- --------------------
+S001    setup   func	000 -   157 231 258
+;S002   setup	scan	000 -   157 -   -
+H001    hold	func	000 151 157 -   258
+H002    hold	scan	000 -   157 -   258
+
 
 

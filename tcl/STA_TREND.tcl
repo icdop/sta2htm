@@ -15,42 +15,47 @@ namespace eval LIB_STA {
 #   Create trend index.htm file
 #
 # <Input>
-#   $STA_RUN/$STA_SUM_DIR/index.htm
+#   $STA_RUN/$sta_group/index.htm
 #
 # <Output>
-#   $STA_SUM_DIR/index.htm
+#   $sta_group/index.htm
 #
-proc report_index_trend {{out_dir ".trend"}} {
-  variable STA_CFG_FILE
-  variable STA_RPT_ROOT
-  variable STA_SUM_DIR
+proc report_index_runset {{plot_dir ".snapshot"}} {
+  variable STA_RUN_FILE
   variable STA_RUN_LIST
+  variable STA_GROUP_LIST
   variable STA_MODE_LIST
   variable STA_CHECK_LIST
   variable STA_CORNER_LIST
+  variable STA_CORNER_NAME
   variable STA_CORNER
-  variable CORNER_NAME
+  variable STA_SCENARIO_MAP
 
   puts "INFO: Generating STA Trend Tracking HTML Files ..."
   set num_col [expr [llength $STA_CORNER_LIST]+5]
-  file mkdir $out_dir
   set fo [open "index.htm" "w"]
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
-  puts $fo "\[<a href=$STA_CFG_FILE target=sta_output>\@Trend</a>\]"
+  puts $fo "\[<a href=$STA_RUN_FILE target=sta_output>\@Trend</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
+  
+  foreach sta_group $STA_GROUP_LIST {
+  set out_dir "$plot_dir/$sta_group"
+  file mkdir $out_dir
+
   puts $fo "<table border=\"1\" width=1000 id=\"sta_tbl\">"
+  puts $fo "<caption> $sta_group </caption>"
   puts $fo "<tr>"
   puts $fo "<td colspan=$num_col>"
-  puts $fo "<iframe name=sta_output src='$STA_CFG_FILE' width=100% height=420 scrolling=auto></iframe>"
+  puts $fo "<iframe name=sta_output src='$STA_RUN_FILE' width=100% height=420 scrolling=auto></iframe>"
   puts $fo "</td>"
   puts $fo "</tr>"
-  foreach sta_mode $STA_MODE_LIST {
+  foreach sta_check $STA_CHECK_LIST {
     puts $fo "<tr>"
-    puts $fo "<th>Mode</th>"
     puts $fo "<th>Check</th>"
+    puts $fo "<th>Mode</th>"
     puts $fo "<th>Version</th>"
     puts $fo "<th>WNS</th>"
     puts $fo "<th>NVP</th>"
@@ -58,7 +63,7 @@ proc report_index_trend {{out_dir ".trend"}} {
       puts $fo "<td align=right bgcolor=#f0f080>$sta_corner</td>"
     }
     puts $fo "</tr>"
-      foreach sta_check $STA_CHECK_LIST {
+    foreach sta_mode $STA_MODE_LIST {
       if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
          set fdat [open "$out_dir/$sta_mode.$sta_check.nvp_wns.dat" w]
          puts $fdat "# $sta_mode/$sta_check"
@@ -68,31 +73,31 @@ proc report_index_trend {{out_dir ".trend"}} {
          
          set num_row [expr [llength $STA_RUN_LIST]+2]
          puts $fo "<tr>"
-         puts $fo "<td rowspan=$num_row>$sta_mode</td>"
-         puts $fo "<td rowspan=$num_row><a href=$out_dir/$sta_mode.$sta_check.nvp_wns.png target=sta_output>$sta_check</a></td>"
+         puts $fo "<td rowspan=$num_row>$sta_check</td>"
+         puts $fo "<td rowspan=$num_row><a href=$out_dir/$sta_mode.$sta_check.nvp_wns.png target=sta_output>$sta_mode</a></td>"
          puts $fo "</tr>"
          foreach sta_run $STA_RUN_LIST {
             puts $fo "<tr>"
-            if {[file exist $sta_run/$STA_SUM_DIR/$sta_mode/$sta_check]} {
+            if {[file exist $sta_run/$sta_group/$sta_mode/$sta_check]} {
               puts $fo "<td align=left>$sta_run</td>"
-              if {[catch {exec cat $sta_run/$STA_SUM_DIR/$sta_mode/$sta_check/.dqi/520-STA/WNS} WNS]} {
+              if {[catch {exec cat $sta_run/$sta_group/$sta_mode/$sta_check/.dqi/520-STA/WNS} WNS]} {
                 set WNS "-"
                 puts $fo "<td align=right> - </td>"
               } else {
-                puts $fo "<td align=right><a href='$sta_run/$STA_SUM_DIR/$sta_mode/$sta_check.htm'> $WNS</a> </td>"
+                puts $fo "<td align=right><a href='$sta_run/$sta_group/$sta_mode/$sta_check.htm'> $WNS</a> </td>"
               }
-              if {[catch {exec cat $sta_run/$STA_SUM_DIR/$sta_mode/$sta_check/.dqi/520-STA/NVP} NVP]} {
+              if {[catch {exec cat $sta_run/$sta_group/$sta_mode/$sta_check/.dqi/520-STA/NVP} NVP]} {
                 set NVP "-"
                 puts $fo "<td align=right> - </td>"
               } else {
-                puts $fo "<td align=right><a href='$sta_run/$STA_SUM_DIR/$sta_mode/$sta_check.nvp_wns.png' target=sta_output> $NVP</a> </td>"
+                puts $fo "<td align=right><a href='$sta_run/$sta_group/$sta_mode/$sta_check.nvp_wns.png' target=sta_output> $NVP</a> </td>"
               }
               foreach sta_corner $STA_CORNER_LIST {
-                if {[lsearch $STA_CORNER($sta_mode,$sta_check) $sta_corner]<0} {
+                if {![info exist STA_SCENARIO_MAP($sta_check,$sta_mode,$sta_corner)]} {
                     puts $fo "<td align=right bgcolor=#c0c0c0> - </td>"
                 } else {
-                  set corner_name $CORNER_NAME($sta_corner)
-                  if {[catch {exec cat $sta_run/$STA_SUM_DIR/$sta_mode/$sta_check/$corner_name/.dqi/520-STA/NVP} nvp]} {
+                  set corner_name $STA_CORNER_NAME($sta_corner)
+                  if {[catch {exec cat $sta_run/$sta_group/$sta_mode/$sta_check/$corner_name/.dqi/520-STA/NVP} nvp]} {
                     puts $fo "<td align=right> * </td>"
                   } else {
                     puts $fo "<td align=right> $nvp </td>"
@@ -105,6 +110,7 @@ proc report_index_trend {{out_dir ".trend"}} {
                 puts $fdat [format "%-10s %10d %10.2f" $sta_run $NVP [expr -$WNS]]
               }
             }
+            puts $fo "</tr>"
          }
          close $fdat
          create_nvp_wns_plot "$out_dir/$sta_mode.$sta_check"
@@ -113,10 +119,13 @@ proc report_index_trend {{out_dir ".trend"}} {
          puts $fo "</tr>"
       }
     }
-    puts $fo "<tr><td colspan=$num_col>"
-    puts $fo "</td></tr>"
+    puts $fo "<tr>"
+    puts $fo "<td colspan=$num_col></td>"
+    puts $fo "</tr>"
   }
   puts $fo "</table>"
+  } 
+  # end of STA_GROUP_LIST
   puts $fo "</body>"
   puts $fo "</html>"
   close $fo
@@ -124,17 +133,21 @@ proc report_index_trend {{out_dir ".trend"}} {
 
 proc report_sta_report_directory {} {
   variable STA_RUN_LIST
-  variable STA_RPT_ROOT
+  variable STA_RUN_REPORT
          foreach sta_run $STA_RUN_LIST {
             puts $fo "<tr>"
             puts $fo "<td>$sta_run</td>"
-              if {![catch {file readlink $sta_run/$STA_RPT_ROOT} sta_report]} {
-                 set sta_report [file normalize $sta_run/$STA_RPT_ROOT]
+              if [info exist STA_RUN_REPORT($sta_run)] {
+                 set sta_report [file normalize $STA_RUN_REPORT($sta_run)]
+                 puts $fo "<td><a href=\"$sta_report\">$sta_report</a></td>"
+              } elseif {![catch {file readlink $sta_run/STA} sta_report]} {
+                 set sta_report [file normalize $sta_run/STA]
                  puts $fo "<td><a href=\"$sta_report\">$sta_report</a></td>"
               } else {
-                 puts $fo "<td>$sta_run/$STA_RPT_ROOT</td>"                 
+                 puts $fo "<td>*</td>"
               }
            puts $fo "</tr>"
          }
 }
+
 }

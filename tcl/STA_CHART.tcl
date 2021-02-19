@@ -8,18 +8,15 @@
 puts "INFO: Loading 'STA_CHART.tcl'..."
 namespace eval LIB_STA {
 
-proc create_check_chart {sta_mode {sta_check ""} } {
-  variable STA_SUM_DIR
-  variable STA_CHECK
+proc create_check_chart {sta_group sta_mode sta_check} {
   variable STA_CORNER
 
-  if {$sta_check==""} { set sta_check $STA_CHECK}
   if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
      puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
      return 
   }
-  create_curr_nvp_chart "$sta_mode/$sta_check" $STA_SUM_DIR
-  set fo [open "$STA_SUM_DIR/$sta_mode/$sta_check.chart.htm" w]
+  create_curr_nvp_chart "$sta_mode/$sta_check" $sta_group
+  set fo [open "$sta_group/$sta_mode/$sta_check.chart.htm" w]
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo $::STA_HTML::CHART_JS(sta2htm)

@@ -10,7 +10,7 @@ namespace eval LIB_STA {
 variable sBLOCK_LIST 
 variable eBLOCK_LIST 
 variable BLOCK_LIST
-variable BLOCK_DEF
+variable STA_BLOCK
 variable BLOCK_NVP
 variable BLOCK_WNS
 variable BLOCK_VIO
@@ -35,23 +35,21 @@ proc reset_block_data {} {
   array unset BLOCK_GID
 }
 
-proc report_block_end {{sta_check ""}} {
+proc report_block_end {sta_group sta_check} {
   variable STA_MODE_LIST
-  variable STA_CHECK
-  if {$sta_check==""} { set sta_check $STA_CHECK}
 
   foreach sta_mode $STA_MODE_LIST {
-     report_block_table $sta_mode $sta_check
-     report_index_block $sta_mode $sta_check
+     report_block_table $sta_group $sta_mode $sta_check
+     report_index_block $sta_group $sta_mode $sta_check
   }
 }
 
 proc get_block_name {instpin} {
-  variable BLOCK_DEF
+  variable STA_BLOCK
   set block "-"
-  if {[info exist BLOCK_DEF]} {
-     foreach {key def} $BLOCK_DEF {
-        if {[regexp "^$def/.*" $key]} { set block $key }
+  if {[info exist STA_BLOCK]} {
+     foreach {key def} $STA_BLOCK {
+        if {[regexp "^$def/.*" $instpin]} { set block $key }
      }
   } elseif {[file tail $instpin]!=$instpin} {
      regsub {\/.*$} $instpin "" block
@@ -62,6 +60,7 @@ proc get_block_name {instpin} {
 proc assign_block_gid {{block_list ""}} {
   variable BLOCK_LIST
   variable BLOCK_GID
+  variable BLOCK_NUM
 
   if {$block_list == ""} { set block_list $BLOCK_LIST}
   array unset BLOCK_GID
@@ -73,6 +72,7 @@ proc assign_block_gid {{block_list ""}} {
        set BLOCK_GID($name) $gid
     }
   }
+  set BLOCK_NUM $gid
   return $gid
 }
 
@@ -130,22 +130,19 @@ proc sort_slack_by_block {corner slack sname ename {report ""} } {
 #    Group Violation Slack based on Clock Group
 #
 # <Input>
-# $STA_SUM_DIR/$sta_mode/$sta_check/*.vio
+# $sta_group/$sta_mode/$sta_check/*.vio
 #
 # <Output>
 # BLOCK_LIST : {{$sblock,$eblock} $wns $wcorner}
 # BLOCK_WNS($sblock,$eblock,$sta_corner) : $wns
 #
-proc report_block_table {sta_mode {sta_check ""}  } {
-  variable STA_SUM_DIR
-  variable STA_CHECK
+proc report_block_table {sta_group sta_mode sta_check} {
   variable STA_CORNER
   variable VIO_FILE
   variable BLOCK_LIST
   variable BLOCK_NVP
   variable BLOCK_WNS
 
-  if {$sta_check==""} { set sta_check $STA_CHECK}
   if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
      puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
      return
@@ -153,8 +150,8 @@ proc report_block_table {sta_mode {sta_check ""}  } {
   array unset BLOCK_NVP
   array unset BLOCK_WNS
   puts "INFO($sta_mode): Group slack files of multiple corners ..."
-  puts "$STA_SUM_DIR/$sta_mode/$sta_check/*.vio"
-  if {![catch {glob $STA_SUM_DIR/$sta_mode/$sta_check/*.vio} files]} {
+  puts "$sta_group/$sta_mode/$sta_check/*.vio"
+  if {![catch {glob $sta_group/$sta_mode/$sta_check/*.vio} files]} {
     foreach fname $files {
       regsub {\.vio$} [file tail $fname] "" corner_name
       if {![regexp {^(\d+)\_} $corner_name whole sta_corner]} {
@@ -179,7 +176,7 @@ proc report_block_table {sta_mode {sta_check ""}  } {
         }
       }
       close $fin
-      output_block_table $sta_mode $sta_check $corner_name
+      output_block_table $sta_group $sta_mode $sta_check $corner_name
     }
   }
 }
@@ -209,8 +206,7 @@ proc extract_block_list {sta_corner} {
       set BLOCK_LIST [lsort -unique $BLOCK_LIST]
 }
 
-proc output_block_table {sta_mode sta_check corner_name} {
-  variable STA_SUM_DIR
+proc output_block_table {sta_group sta_mode sta_check corner_name} {
   variable BLOCK_GID
   variable BLOCK_WNS
   variable BLOCK_NVP
@@ -224,7 +220,7 @@ proc output_block_table {sta_mode sta_check corner_name} {
       extract_block_list $sta_corner
       set BLOCK_NUM [assign_block_gid]
 
-      set fout [open "$STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.blk.htm" w]
+      set fout [open "$sta_group/$sta_mode/$sta_check/$corner_name.blk.htm" w]
       puts $fout "<html>"
       puts $fout "<head>"
       puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
@@ -280,9 +276,7 @@ proc output_block_table {sta_mode sta_check corner_name} {
   
 }
 
-proc report_index_block {sta_mode {sta_check ""} {corner_list ""}} {
-  variable STA_SUM_DIR
-  variable STA_CHECK
+proc report_index_block {sta_group sta_mode sta_check {corner_list ""}} {
   variable STA_CORNER
   variable BLOCK_LIST
   variable BLOCK_GID
@@ -290,7 +284,6 @@ proc report_index_block {sta_mode {sta_check ""} {corner_list ""}} {
   variable BLOCK_WNS
   variable BLOCK_NUM
 
-  if {$sta_check==""} { set sta_check $STA_CHECK}
   if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
      puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
      return
@@ -298,11 +291,11 @@ proc report_index_block {sta_mode {sta_check ""} {corner_list ""}} {
   if {$corner_list==""} { set corner_list $STA_CORNER($sta_mode,$sta_check) }
 
   extract_block_list -
-  set BLOCK_NUM [assign_block_gid]
+  assign_block_gid
 
   puts "INFO($sta_mode): $BLOCK_NUM blocks"
 
-  set fout [open "$STA_SUM_DIR/$sta_mode/$sta_check.blk.htm" w]
+  set fout [open "$sta_group/$sta_mode/$sta_check.blk.htm" w]
   puts $fout "<html>"
   puts $fout "<head>"
   puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
@@ -311,7 +304,7 @@ proc report_index_block {sta_mode {sta_check ""} {corner_list ""}} {
   puts $fout "<div id=sta_block class=\"collapse\">"
   puts $fout "<table border=\"1\" id=\"sta_tbl\">"
   puts $fout "<caption><h3 align=left>"
-  puts $fout "$STA_SUM_DIR/$sta_mode/$sta_check"
+  puts $fout "$sta_group/$sta_mode/$sta_check"
   puts $fout "</h3></caption>"
   puts $fout "<TR>"
   puts $fout "<TH><pre>#$BLOCK_NUM Blocks</TH>" 

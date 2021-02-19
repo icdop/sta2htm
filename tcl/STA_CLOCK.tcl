@@ -33,20 +33,19 @@ proc reset_clock_data {} {
   array unset CLOCK_GID
 }
 
-proc report_clock_end {{sta_check ""}} {
+proc report_clock_end {sta_group sta_check} {
   variable STA_MODE_LIST
-  variable STA_CHECK
-  if {$sta_check==""} { set sta_check $STA_CHECK}
 
   foreach sta_mode $STA_MODE_LIST {
-     report_clock_table $sta_mode $sta_check
-     report_index_clock $sta_mode $sta_check
+     report_clock_table $sta_group $sta_mode $sta_check
+     report_index_clock $sta_group $sta_mode $sta_check
   }
 }
 
 proc assign_clock_gid {{clock_list ""}} {
   variable CLOCK_LIST
   variable CLOCK_GID
+  variable CLOKC_NUM
 
   if {$clock_list == ""} { set clock_list $CLOCK_LIST}
   array unset CLOCK_GID
@@ -58,6 +57,7 @@ proc assign_clock_gid {{clock_list ""}} {
        set CLOCK_GID($name) $cid
     }
   }
+  set CLOCK_NUM $cid
   return $cid
 }
 
@@ -113,23 +113,19 @@ proc sort_slack_by_clock {corner slack sclock eclock {report ""} } {
 #    Group Violation Slack based on Clock Group
 #
 # <Input>
-# $STA_SUM_DIR/$sta_mode/$sta_check/*.vio
+# $sta_group/$sta_mode/$sta_check/*.vio
 #
 # <Output>
 # CLOCK_LIST : {{$sclock,$eclock} $wns $wcorner}
 # CLOCK_WNS($sclock,$eclock,$sta_corner) : $wns
 #
-proc report_clock_table {sta_mode {sta_check ""}  } {
-  variable STA_CURR_RUN
-  variable STA_SUM_DIR
-  variable STA_CHECK
+proc report_clock_table {sta_group sta_mode sta_check} {
   variable STA_CORNER
   variable VIO_FILE
   variable CLOCK_LIST
   variable CLOCK_NVP
   variable CLOCK_WNS
 
-  if {$sta_check==""} { set sta_check $STA_CHECK}
   if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
      puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
      return
@@ -137,8 +133,8 @@ proc report_clock_table {sta_mode {sta_check ""}  } {
   array unset CLOCK_NVP
   array unset CLOCK_WNS
   puts "INFO($sta_mode): Group slack files of multiple corners ..."
-  puts "$STA_SUM_DIR/$sta_mode/$sta_check/*.vio"
-  if {![catch {glob $STA_SUM_DIR/$sta_mode/$sta_check/*.vio} files]} {
+  puts "$sta_group/$sta_mode/$sta_check/*.vio"
+  if {![catch {glob $sta_group/$sta_mode/$sta_check/*.vio} files]} {
     foreach fname $files {
       regsub {\.vio$} [file tail $fname] "" corner_name
       if {![regexp {^(\d+)\_} $corner_name whole sta_corner]} {
@@ -165,7 +161,7 @@ proc report_clock_table {sta_mode {sta_check ""}  } {
         }
       }
       close $fin
-      output_clock_table $sta_mode $sta_check $corner_name
+      output_clock_table $sta_group $sta_mode $sta_check $corner_name
     }
   }
 }
@@ -195,9 +191,7 @@ proc extract_clock_list {sta_corner} {
       set CLOCK_LIST [lsort -unique $CLOCK_LIST]
 }
 
-proc output_clock_table {sta_mode sta_check corner_name} {
-  variable STA_CURR_RUN
-  variable STA_SUM_DIR
+proc output_clock_table {sta_group sta_mode sta_check corner_name} {
   variable CLOCK_NUM
   variable CLOCK_GID
   variable CLOCK_WNS
@@ -211,7 +205,7 @@ proc output_clock_table {sta_mode sta_check corner_name} {
       extract_clock_list $sta_corner
       set CLOCK_NUM [assign_clock_gid]
 
-      set fout [open "$STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.clk.htm" w]
+      set fout [open "$sta_group/$sta_mode/$sta_check/$corner_name.clk.htm" w]
       puts $fout "<html>"
       puts $fout "<head>"
       puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
@@ -267,9 +261,7 @@ proc output_clock_table {sta_mode sta_check corner_name} {
   
 }
 
-proc report_index_clock {sta_mode {sta_check ""} {corner_list ""}} {
-  variable STA_SUM_DIR
-  variable STA_CHECK
+proc report_index_clock {sta_group sta_mode sta_check {corner_list ""}} {
   variable STA_CORNER
   variable CLOCK_LIST
   variable CLOCK_GID
@@ -277,7 +269,6 @@ proc report_index_clock {sta_mode {sta_check ""} {corner_list ""}} {
   variable CLOCK_WNS
   variable CLOCK_NUM
 
-  if {$sta_check==""} { set sta_check $STA_CHECK}
   if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
      puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
      return
@@ -285,11 +276,11 @@ proc report_index_clock {sta_mode {sta_check ""} {corner_list ""}} {
   if {$corner_list==""} { set corner_list $STA_CORNER($sta_mode,$sta_check) }
 
   extract_clock_list -
-  set CLOCK_NUM [assign_clock_gid]
+  assign_clock_gid
 
   puts "INFO($sta_mode): $CLOCK_NUM Clocks"
 
-  set fout [open "$STA_SUM_DIR/$sta_mode/$sta_check.clk.htm" w]
+  set fout [open "$sta_group/$sta_mode/$sta_check.clk.htm" w]
   puts $fout "<html>"
   puts $fout "<head>"
   puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
@@ -298,7 +289,7 @@ proc report_index_clock {sta_mode {sta_check ""} {corner_list ""}} {
   puts $fout "<div id=sta_clock class=\"collapse\">"
   puts $fout "<table border=\"1\" id=\"sta_tbl\">"
   puts $fout "<caption><h3 align=left>"
-  puts $fout "$STA_SUM_DIR/$sta_mode/$sta_check"
+  puts $fout "$sta_group/$sta_mode/$sta_check"
   puts $fout "</h3></caption>"
   puts $fout "<TR>"
   puts $fout "<TH><pre>#$CLOCK_NUM Clocks</TH>" 

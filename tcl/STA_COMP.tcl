@@ -14,19 +14,15 @@ namespace eval LIB_STA {
 # <Input>
 #
 # <Output>
-# $STA_SUM_DIR/$sta_check.$comp.htm
+# $sta_group/$sta_check.$comp.htm
 #
-proc report_comp_sta_html {{sta_check ""} {comp "diff"} } {
+proc report_comp_sta_html {sta_group sta_check {comp "diff"} } {
   variable STA_CURR_RUN
-  variable STA_SUM_DIR
   variable STA_MODE_LIST
-  variable STA_CHECK
   variable STA_CORNER
   
-  if {$sta_check==""} { set sta_check $STA_CHECK}
-
  
-  set fo [open "$STA_SUM_DIR/$sta_check.$comp.htm" "w"]
+  set fo [open "$sta_group/$sta_check.$comp.htm" "w"]
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
@@ -41,7 +37,7 @@ proc report_comp_sta_html {{sta_check ""} {comp "diff"} } {
   puts $fo "<caption><h3 align=\"left\">"
   puts $fo "<a href=..>$STA_CURR_RUN</a>"
   puts $fo "/"
-  puts $fo "<a href=.>$STA_SUM_DIR</a>"
+  puts $fo "<a href=.>$sta_group</a>"
   puts $fo "</a>"
   puts $fo "(<a href=$sta_check.htm>$sta_check</a>)"
   puts $fo "<h3></caption>"

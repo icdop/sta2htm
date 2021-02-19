@@ -17,7 +17,7 @@ variable VIO_WNS
 #   Merge Multiple Slack Violation Report 
 #
 # <Input>
-# $STA_SUM_DIR/$sta_mode/$sta_check/*.vio
+# $sta_group/$sta_mode/$sta_check/*.vio
 #
 # <Output>
 #
@@ -25,15 +25,12 @@ variable VIO_WNS
 # VIO_LIST : {{$egroup,$instpin} $wns $wcorner}
 # VIO_WNS($egroup,$instpin,sta_corner) : $wns
 #
-proc merge_vio_endpoint {sta_mode {sta_check ""} {corner_list ""}} {
-  variable STA_SUM_DIR
-  variable STA_CHECK
+proc merge_vio_endpoint {sta_group sta_mode sta_check {corner_list ""}} {
   variable STA_CORNER
   variable VIO_WNS
   variable VIO_LIST
   variable VIO_FILE
 
-  if {$sta_check==""} { set sta_check $STA_CHECK}
   if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
      puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
      return 
@@ -42,7 +39,7 @@ proc merge_vio_endpoint {sta_mode {sta_check ""} {corner_list ""}} {
   set WNS 0.0
   set TNS 0.0
   foreach corner_mask $corner_list {
-  if ![catch {glob $STA_SUM_DIR/$sta_mode/$sta_check/$corner_mask*.vio} files] {
+  if ![catch {glob $sta_group/$sta_mode/$sta_check/$corner_mask*.vio} files] {
     foreach fname $files {
       set fin [open $fname r]
       regsub {\.vio$} [file tail $fname] "" corner_name
@@ -88,7 +85,7 @@ proc merge_vio_endpoint {sta_mode {sta_check ""} {corner_list ""}} {
   set VIO_LIST [lsort -index 0 $VIO_LIST] 
 
   set NVP [llength $VIO_LIST]
-  set dqi_path $STA_SUM_DIR/$sta_mode/$sta_check/.dqi/520-STA
+  set dqi_path $sta_group/$sta_mode/$sta_check/.dqi/520-STA
   catch { 
     exec mkdir -p $dqi_path; 
     exec echo $NVP > $dqi_path/NVP;

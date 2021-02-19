@@ -5,8 +5,6 @@
 # By Albert Li 
 # 2020/07/14
 #
-# package require STA_WAIVE
-# package require STA_CORNER
 
 puts "INFO: Loading 'STA_PT.tcl'..."
 namespace eval LIB_STA {
@@ -15,16 +13,16 @@ namespace eval LIB_STA {
 #   Parsing PrimeTime STA Timing Violation Report
 #
 # <Input>
-# $STA_RPT_ROOT/$STA_RPT_PATH/$STA_RPT_FILE
-#   Ex: (STA/$sta_mode/$corner_name/rpt/$sta_check/RptTimCnst.rpt)
+# $sta_report_path/$sta_report_file
+#   Ex: ($sta_report_path/$sta_mode/$corner_name/rpt/$sta_check/RptTimCnst.rpt)
 #
 # <Refer>
 # report_violation_histogram
 #
 # <Output>
-# $STA_SUM_DIR/$sta_mode/$sta_check.htm
-# $STA_SUM_DIR/$sta_mode/$sta_check.nvp_wns.dat
-# $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.vio
+# $sta_group/$sta_mode/$sta_check.htm
+# $sta_group/$sta_mode/$sta_check.nvp_wns.dat
+# $sta_group/$sta_mode/$sta_check/$corner_name.vio
 #
 # VIO_LIST
 # MET_LIST
@@ -33,31 +31,26 @@ namespace eval LIB_STA {
 # GROUP_NVP
 # GROUP_GID
 #
-proc parse_timing_report {sta_mode {sta_check ""} {sta_postfix ""}} {
+proc parse_timing_report {sta_report_path sta_report_filter sta_group sta_mode sta_check} {
   variable STA_CURR_RUN
-  variable STA_SUM_DIR
-  variable STA_RPT_ROOT
-  variable STA_RPT_PATH
-  variable STA_RPT_FILE
-  variable STA_DATA
-  variable STA_CHECK
   variable STA_CORNER
+  
+  variable STA_DATA
   variable VIO_LIST
   variable MET_LIST
   variable WAV_LIST
   
-  if {$sta_check==""} { set sta_check $STA_CHECK}
   if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
      puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
      return 
   }
   puts "INFO: Parsing Timing Report Files ($sta_check)..."
-  file delete -force $STA_SUM_DIR/$sta_mode/$sta_check
-  file mkdir $STA_SUM_DIR/$sta_mode/$sta_check
+  file delete -force $sta_group/$sta_mode/$sta_check
+  file mkdir $sta_group/$sta_mode/$sta_check
+  puts "INFO: $sta_group/$sta_mode/$sta_check"
 
-
-  set fdat [open "$STA_SUM_DIR/$sta_mode/$sta_check.nvp_wns.dat" w]
-  puts $fdat "# $STA_CURR_RUN/$STA_SUM_DIR"
+  set fdat [open "$sta_group/$sta_mode/$sta_check.nvp_wns.dat" w]
+  puts $fdat "# $STA_CURR_RUN/$sta_group"
   puts $fdat [format "#%4s %10s %10s" "----" "----------" "----------"]
   puts $fdat [format "#%-4s %10s %10s" ID NVP WNS]
   puts $fdat [format "#%4s %10s %10s" "----" "----------" "----------"]
@@ -72,8 +65,8 @@ proc parse_timing_report {sta_mode {sta_check ""} {sta_postfix ""}} {
   
   foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
     set corner_name [get_corner_name $sta_corner]
-    if {[file exist $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.vio]} {
-      puts "INFO: $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.vio"
+    if {[file exist $sta_group/$sta_mode/$sta_check/$corner_name.vio]} {
+      puts "INFO: $sta_group/$sta_mode/$sta_check/$corner_name.vio"
       continue
     }
     reset_waive_list
@@ -83,12 +76,13 @@ proc parse_timing_report {sta_mode {sta_check ""} {sta_postfix ""}} {
     set wns 0.0
     set tns 0.0
 
-    catch {exec rm -fr $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.*}
-    #  puts "INFO: $STA_RPT_ROOT/$STA_RPT_PATH/$STA_RPT_FILE"
-    if [catch {eval glob $STA_RPT_ROOT/$STA_RPT_PATH/$STA_RPT_FILE} files] {
-       set files ""
-    } else {
-      #  puts "INFO: $files"
+    catch {exec rm -fr $sta_group/$sta_mode/$sta_check/$corner_name.*}
+    set files ""
+    foreach filter $sta_report_filter {
+      puts "FILTER: $sta_report_path/$filter"
+    
+      if [catch {eval glob $sta_report_path/$filter} files] continue;
+      puts "INFO: $files"
       foreach fname [lsort -increasing -unique $files] {
         incr FID 
         set wns 0.0
@@ -107,8 +101,8 @@ proc parse_timing_report {sta_mode {sta_check ""} {sta_postfix ""}} {
     #    }
         puts "($FID) $sta_corner\t$corner_name\t$fname"
         if [regsub {\.gz$} $fname "" n] {
-           exec gunzip -c $fname > $STA_SUM_DIR/$sta_mode/$sta_check/.unzip.rpt
-           set fin [open $STA_SUM_DIR/$sta_mode/$sta_check/.unzip.rpt r]
+           exec gunzip -c $fname > $sta_group/$sta_mode/$sta_check/.unzip.rpt
+           set fin [open $sta_group/$sta_mode/$sta_check/.unzip.rpt r]
         } else {
            set fin [open $fname r]
         }
@@ -127,7 +121,7 @@ proc parse_timing_report {sta_mode {sta_check ""} {sta_postfix ""}} {
         set VIO_LIST ""
         set slack_offset 0
 
-        set fout [open $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.vio a]
+        set fout [open $sta_group/$sta_mode/$sta_check/$corner_name.vio a]
         puts $fout "# File : [file normalize $fname]"
         set nspt 0
         while {[gets $fin line] >= 0} {
@@ -441,7 +435,7 @@ proc parse_timing_report {sta_mode {sta_check ""} {sta_postfix ""}} {
         puts "\t:   NVP = $nvp"
         puts "\t:   NMP = $nmp"
         puts "\t:   NWP = $nwp"
-        set dqi_path $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name/.dqi/520-STA
+        set dqi_path $sta_group/$sta_mode/$sta_check/$corner_name/.dqi/520-STA
         catch { exec mkdir -p $dqi_path; 
                 exec echo $nvp > $dqi_path/NVP;
                 exec echo $nwp > $dqi_path/NWP;
@@ -451,18 +445,18 @@ proc parse_timing_report {sta_mode {sta_check ""} {sta_postfix ""}} {
         puts $msg
         close $fout
         close $fin
-        catch {exec rm -f $STA_SUM_DIR/$sta_mode/$sta_check/.unzip.rpt}
+        catch {exec rm -f $sta_group/$sta_mode/$sta_check/.unzip.rpt}
 
-        report_violation_histogram $sta_mode $sta_check/$corner_name
+        report_violation_histogram $sta_group $sta_mode $sta_check/$corner_name
 
-        set bid [output_block_table $sta_mode $sta_check $corner_name]
-        set cid [output_clock_table $sta_mode $sta_check $corner_name]
+        set bid [output_block_table $sta_group $sta_mode $sta_check $corner_name]
+        set cid [output_clock_table $sta_group $sta_mode $sta_check $corner_name]
 
         lappend STA_DATA($sta_mode,$sta_check,$sta_corner) [list $corner_name $fname $nwp $nvp $wns $tns $cid $bid]
 
       }
       # foreach fname
-    }
+    }  
     if {$nvp=="-"} {
       puts $fdat [format "*%-4s %10d %10.2f" $sta_corner 0 0.0]
     } else {

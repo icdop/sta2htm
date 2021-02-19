@@ -8,7 +8,7 @@
 
 puts "INFO: Loading 'STA_HTML.tcl'..."  
 namespace eval STA_HTML {
-global STA_HOME
+global STA2HTM
 
 variable TABLE_CSS
 variable CHART_JS
@@ -39,7 +39,7 @@ set TABLE_CSS(sta_tbl) {
     </style>
 }
 
-set CHART_JS(sta2htm) "<script src='$STA_HOME/etc/html/chartjs/Chart.bundle.js'></script>"
+set CHART_JS(sta2htm) "<script src='$STA2HTM/etc/html/chartjs/Chart.bundle.js'></script>"
 
 set CHART_JS(cndjs) {
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js" integrity="sha512-zO8oeHCxetPn1Hd9PdDleg5Tw1bAaP0YmNvPY8CwcRyUk7d7/+nyElmFrB6f7vg4f7Fv4sui1mcep8RIEShczg==" crossorigin="anonymous"></script>

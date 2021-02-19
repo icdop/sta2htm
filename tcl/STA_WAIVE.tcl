@@ -38,7 +38,6 @@ proc print_waive_list {} {
 }
 
 proc read_waive_list {{sta_mode "all"}} {
-  variable STA_RPT_ROOT
   variable STA_CFG_DIR
   variable WAIVE_MASK
 
@@ -46,12 +45,6 @@ proc read_waive_list {{sta_mode "all"}} {
      set filename $sta_mode.waive
   } elseif [file exist "$STA_CFG_DIR/$sta_mode.waive"] {
      set filename "$STA_CFG_DIR/$sta_mode.waive"
-  } elseif [file exist "$STA_CFG_DIR/$sta_mode.waive"] {
-     set filename "$STA_CFG_DIR/$sta_mode.waive"
-  } elseif [file exist "$STA_CFG_DIR/$sta_mode.waive"] {
-     set filename "$STA_CFG_DIR/$sta_mode.waive"
-  } elseif [file exist "$STA_RPT_ROOT/$STA_CFG_DIR/$sta_mode.waive"] {
-     set filename "$STA_RPT_ROOT/$STA_CFG_DIR/$sta_mode.waive"
   } elseif [file exist $sta_mode] {
      if {[file type $sta_mode]=="file"} {
         set filename $sta_mode

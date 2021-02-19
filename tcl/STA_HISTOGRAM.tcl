@@ -17,13 +17,12 @@ namespace eval LIB_STA {
 # VIO_LIST : (($egroup,$epoint) $wns $wcorner)
 #
 # <Output>
-# $STA_SUM_DIR/$sta_mode/$fname.wns
-# $STA_SUM_DIR/$sta_mode/$fname.nvp
-# $STA_SUM_DIR/$sta_mode/$fname.sum
+# $sta_group/$sta_mode/$fname.wns
+# $sta_group/$sta_mode/$fname.nvp
+# $sta_group/$sta_mode/$fname.sum
 #
 #
-proc report_violation_histogram {sta_mode {fname "uniq_end"}} {
-  variable STA_SUM_DIR
+proc report_violation_histogram {sta_group sta_mode {fname "uniq_end"}} {
   variable NVP_GP
   variable NVP_WAIVED_GP
   variable NVP_REAL_GP
@@ -74,7 +73,7 @@ proc report_violation_histogram {sta_mode {fname "uniq_end"}} {
   set T 0
   set V 0
   set W 0
-  set flog [open $STA_SUM_DIR/$sta_mode/$fname.wns w]
+  set flog [open $sta_group/$sta_mode/$fname.wns w]
   puts $flog [format "# Mode : %s" $sta_mode/$fname]
   puts $flog [format "#%10s %10s %10s %10s %s"  "==========" "==========" "==========" "==========" "=========================="]
   puts $flog [format "#%10s %10s %10s %10s %s" "NVP" "WAIVED" "NVP-W" "WNS" "PathGroup"]
@@ -101,7 +100,7 @@ proc report_violation_histogram {sta_mode {fname "uniq_end"}} {
   puts $flog ""
   close $flog
 
-  set flog [open $STA_SUM_DIR/$sta_mode/$fname.nvp w]
+  set flog [open $sta_group/$sta_mode/$fname.nvp w]
   puts $flog [format "# $sta_mode/$fname"]
   puts $flog [format "#==================================="]
   puts $flog [format "# %6s | %10s %10s" "Slack" "NVP" "Accum"]
@@ -116,7 +115,7 @@ proc report_violation_histogram {sta_mode {fname "uniq_end"}} {
   puts $flog [format "  %6s   %10s %10s" $pi $NVP_ACCUM($ri) $NVP_ACCUM($ri)]
   close $flog
 
-  set flog [open $STA_SUM_DIR/$sta_mode/$fname.sum w]
+  set flog [open $sta_group/$sta_mode/$fname.sum w]
   puts $flog [format "# $sta_mode/$fname"]
   puts $flog [format "#======================================================"]
   puts $flog [format "# %6s - %6s | : %10s %10s" "Max" "Min" "NVP" "Accmu"]
