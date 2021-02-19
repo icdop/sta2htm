@@ -248,23 +248,24 @@ proc report_index_main {sta_group} {
   puts $fo "<iframe name=sta_config src='../$STA_CFG_FILE' width=100% height=200 scrolling=auto></iframe>"
   puts $fo "</td>"
   puts $fo "</tr>"
-  foreach sta_mode $STA_MODE_LIST {
+  foreach sta_check $STA_CHECK_LIST {
+#    set num_col [expr [llength STA_MODE_LIST] +1]
     puts $fo "<tr>"
-    puts $fo "<th>Mode</th>"
-    puts $fo "<th>Check</th>"
-    puts $fo "<th>Corner</th>"
+#    puts $fo "<th>Check</th>"
+    puts $fo "<th colspan=2>$sta_check</th>"
+#    puts $fo "<th>Mode</th>"
+#    puts $fo "<th>Corner</th>"
     puts $fo "<th align=right>NVP</th>"
     puts $fo "<th align=right>WNS</th>"
     puts $fo "<th align=right>TNS</th>"
     puts $fo "<th>STA Report</th>"
     puts $fo "</tr>"
-      foreach sta_check $STA_CHECK_LIST {
+    foreach sta_mode $STA_MODE_LIST {
       if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
          set num_row [expr [llength $STA_CORNER($sta_mode,$sta_check)]+2]
          puts $fo "<tr>"
-         puts $fo "<td rowspan=$num_row bgcolor=#00c0c0><a href=$sta_mode/index.htm>$sta_mode</a></td>"
-         puts $fo "<td rowspan=$num_row bgcolor=#80c0c0><a href=$sta_mode/$sta_check.htm>$sta_check</a></td>"
-#         puts $fo "<td colspan=6></td>"
+#         puts $fo "<td rowspan=$num_row bgcolor=#00c0c0><a href=$sta_mode/index.htm>$sta_mode</a></td>"
+         puts $fo "<td rowspan=$num_row bgcolor=#80c0c0><a href=$sta_mode/$sta_check.htm>$sta_mode</a></td>"
          puts $fo "</tr>"
          foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
             if {[info exist STA_CORNER_NAME($sta_corner)]} {
@@ -524,7 +525,6 @@ proc report_index_corner {sta_group} {
         } elseif {![info exist STA_SCENARIO_MAP($sta_check,$sta_mode,$sta_corner)]} {
            puts $fo "<td align=right bgcolor='#c0c0c0'></td>"
         } else {
-           puts $fo "<td align=right>"
            set vio_file $sta_group/$sta_mode/$sta_check/$sta_corner.vio
            if {![catch {open $vio_file r} fin]} {
              set nvp 0
@@ -533,16 +533,17 @@ proc report_index_corner {sta_group} {
              }
              close $fin
              if {$nvp!=0} {
+               puts $fo "<td align=right>"
                puts $fo "<a href=$sta_mode/$sta_check/$sta_corner.vio>"
                puts $fo $nvp
                puts $fo "</a>"
+               puts $fo "</td>"
              } else {
-               puts $fo "." 
+               puts $fo "<td align=right bgcolor=#80f080>.</td>" 
              }
            } else {
-               puts $fo "*" 
+               puts $fo "<td align=right bgcolor=#f08080>*</td>" 
            }
-           puts $fo "</td>"
         }
       }
     }

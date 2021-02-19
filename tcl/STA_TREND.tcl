@@ -46,7 +46,7 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
   file mkdir $out_dir
 
   puts $fo "<table border=\"1\" width=1000 id=\"sta_tbl\">"
-  puts $fo "<caption> $sta_group </caption>"
+#  puts $fo "<caption> $sta_group </caption>"
   puts $fo "<tr>"
   puts $fo "<td colspan=$num_col>"
   puts $fo "<iframe name=sta_output src='$STA_RUN_FILE' width=100% height=420 scrolling=auto></iframe>"
@@ -54,8 +54,8 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
   puts $fo "</tr>"
   foreach sta_check $STA_CHECK_LIST {
     puts $fo "<tr>"
-    puts $fo "<th>Check</th>"
-    puts $fo "<th>Mode</th>"
+    puts $fo "<th>$sta_check</th>"
+#    puts $fo "<th>Mode</th>"
     puts $fo "<th>Version</th>"
     puts $fo "<th>WNS</th>"
     puts $fo "<th>NVP</th>"
@@ -73,7 +73,7 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
          
          set num_row [expr [llength $STA_RUN_LIST]+2]
          puts $fo "<tr>"
-         puts $fo "<td rowspan=$num_row>$sta_check</td>"
+#         puts $fo "<td rowspan=$num_row>$sta_check</td>"
          puts $fo "<td rowspan=$num_row><a href=$out_dir/$sta_mode.$sta_check.nvp_wns.png target=sta_output>$sta_mode</a></td>"
          puts $fo "</tr>"
          foreach sta_run $STA_RUN_LIST {
@@ -97,7 +97,9 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
                     puts $fo "<td align=right bgcolor=#c0c0c0> - </td>"
                 } else {
                   if {[catch {exec cat $sta_run/$sta_group/$sta_mode/$sta_check/$sta_corner/.dqi/520-STA/NVP} nvp]} {
-                    puts $fo "<td align=right> * </td>"
+                    puts $fo "<td align=right bgcolor=#f08080> * </td>"
+                  } elseif {$nvp==0} {
+                    puts $fo "<td align=right bgcolor=#80f080> . </td>"
                   } else {
                     puts $fo "<td align=right> $nvp </td>"
                   }
