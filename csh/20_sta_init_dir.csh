@@ -47,7 +47,7 @@ echo "# STA_RPT := $STA_RPT"
 
 mkdir -p $RUN_DIR
 #echo "STA2HTM := $STA2HTM" > Makefile
-cp -fr $ETC_DIR/sta/sta2htm.make $RUN_DIR/Makefile
+cp -fr $ETC_DIR/make/sta2htm.make $RUN_DIR/Makefile
 cp -fr $STA_RPT/.sta $RUN_DIR/.sta
 rm -f $RUN_DIR/STA
 ln -s $STA_RPT $RUN_DIR/STA

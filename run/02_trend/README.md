@@ -13,12 +13,11 @@ GOLDEN-0123 := $(RPT_DIR)/eco1-0123
 GOLDEN-0124 := $(RPT_DIR)/eco2-0124
 
 run: $(STA_RUN_LIST)
-	make tree
 	make index
 
 $(STA_RUN_LIST):
 	sta_init_dir $@ $($@)
-	(cd $@; sta_rpt_uniq_end) | tee run.$@.log
+	(cd $@; make run) | tee run.$@.log
 
 index: $(STA_RUN_LIST)
 	sta_run_index

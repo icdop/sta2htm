@@ -181,7 +181,6 @@ proc report_uniq_end {{sta_group "uniq_end"}} {
       #    create_check_chart $sta_group $sta_mode $sta_check
 
     }
-    report_check_summary $sta_group $sta_check
 
     foreach sta_mode $STA_MODE_LIST {
       if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
@@ -198,17 +197,147 @@ proc report_uniq_end {{sta_group "uniq_end"}} {
 
         report_vio_histogram $sta_group $sta_mode $sta_check.uniq_end
 
-        report_sta_check $sta_group $sta_mode $sta_check
+        report_scenario_summary $sta_group $sta_mode $sta_check
 
       }
     }
   }
-  report_index_main $sta_group
-  report_index_mode $sta_group
-  report_index_check $sta_group
-  report_index_corner $sta_group
 }
 
+
+
+#
+# <Title>
+# Report One Page Summary of the STA Scenario
+#
+# <Output>
+# $sta_group/$sta_mode/$sta_check.htm
+#
+
+proc report_scenario_summary {sta_group sta_mode sta_check} {
+  variable STA_CURR_RUN
+  variable STA_CORNER
+  variable STA_DATA
+
+  if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
+     puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
+     return 
+  }
+
+  create_nvp_wns_plot "$sta_group/$sta_mode/$sta_check" $STA_CURR_RUN/
+    
+  set fo [open "$sta_group/$sta_mode/$sta_check.htm" w]
+  puts $fo "<html>"
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
+  puts $fo "<head>"
+  puts $fo "\[<a href=../index.htm>\@Index</a>\]"
+  puts $fo "\[<a href=../mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=../check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=../corner.htm>\@Corner</a>\]"
+  puts $fo "</head>"
+  puts $fo "<body>"
+  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
+  puts $fo "<caption>"
+  puts $fo "<h3 align=left>"
+  puts $fo "$STA_CURR_RUN/$sta_group/$sta_mode/$sta_check"
+  puts $fo "</h3>"
+  puts $fo "</caption>"
+  puts $fo "<tr><td colspan=10>"
+  puts $fo "<a href=../mode.htm>"
+  puts $fo "<img src=$sta_check.nvp_wns.png  width=800 height=350>"
+  puts $fo "</a>"
+  puts $fo "</td>"
+  puts $fo "<td>"
+  puts $fo "<iframe name=sta_info src=\"$sta_check.uniq_end.nvp\" height=350></iframe>"
+  puts $fo "</td>"
+  puts $fo "</tr>"
+  puts $fo "<tr>"
+  puts $fo "<th><a href=$sta_check.uniq_end.rpt target=sta_output>#</a></th>"
+  puts $fo "<th><a href=index.htm>Mode</a></th>"
+  puts $fo "<th><a href=../$sta_check.htm>Check</a></th>"
+  puts $fo "<th><a href=../corner.htm>Corner</a></th>"
+  puts $fo "<th><a href=$sta_check.waive_end.rpt target=sta_output>Waive</a></th>"
+  puts $fo "<th><a href=$sta_check.uniq_end.rpt target=sta_output>NVP</a></th>"
+  puts $fo "<th><a href=$sta_check.uniq_end.wns target=sta_output>WNS</a></th>"
+  puts $fo "<th><a href=$sta_check.uniq_end.nvp target=sta_output>TNS</a></th>"
+  puts $fo "<th><a href=$sta_check.clk.htm target=sta_output>Clock</a></th>"
+  puts $fo "<th><a href=$sta_check.blk.htm target=sta_output>Block</a></th>"
+  puts $fo "<th><a href=$sta_check.uniq_end.htm>Unique Endpoint</a>"
+  puts $fo "</tr>"
+  puts $fo ""
+
+  set WNS 0.0
+  set TNS 0.0
+  set fid 0
+  foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
+    if {[info exist STA_DATA($sta_mode,$sta_check,$sta_corner)]} {
+      foreach data $STA_DATA($sta_mode,$sta_check,$sta_corner) {
+        incr fid
+        set corner_name [lindex $data 0]
+        set fname  [lindex $data 1]
+        set nwp    [lindex $data 2]
+        set nvp    [lindex $data 3]
+        set wns    [lindex $data 4]
+        set tns    [lindex $data 5]
+        set cid    [lindex $data 6]
+        set bid    [lindex $data 7]
+
+        if {$wns<$WNS} { set WNS $wns}
+        set TNS [expr ($TNS+$tns)]
+        
+        puts $fo "<tr>"
+        puts $fo "<td>$fid</td>"
+        puts $fo "<td>$sta_mode</td>"
+        puts $fo "<td>$sta_check</td>"
+        puts $fo "<td align=left>$sta_corner</td>"
+        if {$nwp>0} {
+        puts $fo "<td align=center><a href=$sta_corner/$sta_check.htm> $nwp</a> </td>"
+        } else {
+        puts $fo "<td align=center> . </td>"
+        }
+        if {$nvp>0} {
+        puts $fo "<td align=right><a href=$sta_corner/$sta_check.vio target=sta_output> $nvp </a></td>"
+        puts $fo "<td align=right><a href=$sta_corner/$sta_check.wns target=sta_output> $wns </a></td>"
+        puts $fo "<td align=right><a href=$sta_corner/$sta_check.nvp target=sta_output>$tns</a></td>"
+        puts $fo "<td align=center><a href=$sta_corner/$sta_check.clk.htm target=sta_output> $cid </a></td>"
+        puts $fo "<td align=center><a href=$sta_corner/$sta_check.blk.htm target=sta_output> $bid </a></td>"
+        } else {
+        puts $fo "<td align=right> $nvp </td>"
+        puts $fo "<td align=right> $wns </td>"
+        puts $fo "<td align=right> $tns </td>"
+        puts $fo "<td align=center> $cid </td>"
+        puts $fo "<td align=center> $bid </td>"
+        }
+        puts $fo "<td><a href=\"../../$fname\" target=sta_output>$fname</a></td>"
+        puts $fo "</tr>"
+      }
+    }
+  }
+  puts $fo "<tr>"
+  puts $fo "<th></th>"
+  puts $fo "<th></th>"
+  puts $fo "<th></th>"
+  puts $fo "<th></th>"
+  puts $fo "<th></th>"
+  puts $fo "<th></th>"
+  puts $fo "<th>[format "%.2f" $WNS]</th>"
+  puts $fo "<th>[format "%.2f" $TNS]</th>"
+  puts $fo "<th></th>"
+  puts $fo "<th></th>"
+  puts $fo "<th>"
+  puts $fo "</th>"
+  puts $fo "</tr>"
+  puts $fo "<tr>"
+  puts $fo "<td colspan=11>"
+  puts $fo "<iframe name=sta_output src='$sta_check.uniq_end.rpt' width=100% height=350 scrolling=auto></iframe>"
+  puts $fo "</td>"
+  puts $fo "</tr>"
+  puts $fo "</table>"
+  puts $fo "</body>"
+  puts $fo "</html>"
+  close $fo
+
+}
 
 #
 # <Title>
@@ -217,7 +346,25 @@ proc report_uniq_end {{sta_group "uniq_end"}} {
 # <Output>
 #   $sta_group/index.htm
 #
-proc report_index_main {sta_group} {
+proc report_group_index {{sta_group ""}} {
+  variable STA_CURR_GROUP
+
+  if {$sta_group==""} { set sta_group $STA_CURR_GROUP}
+ 
+  report_group_index_main $sta_group
+  report_group_index_mode $sta_group
+  report_group_index_check $sta_group
+  report_group_index_corner $sta_group
+}
+
+#
+# <Title>
+#   Create master index.htm file
+#
+# <Output>
+#   $sta_group/index.htm
+#
+proc report_group_index_main {sta_group} {
   variable STA_CURR_RUN
   variable STA_CFG_FILE
   variable STA_MODE_LIST
@@ -345,7 +492,7 @@ proc report_index_main {sta_group} {
 # <Output>
 # $sta_group/mode.htm
 #
-proc report_index_mode {sta_group} {
+proc report_group_index_mode {sta_group} {
   variable STA_CURR_RUN
   variable STA_MODE_LIST
   variable STA_CHECK_LIST
@@ -374,6 +521,7 @@ proc report_index_mode {sta_group} {
   }
   puts $fo "</tr>"
   foreach sta_mode $STA_MODE_LIST {
+    report_mode_summary $sta_group $sta_mode
     puts $fo "<tr>"
     puts $fo "<th><a href=$sta_mode/index.htm>$sta_mode</a></th>"
     foreach sta_check $STA_CHECK_LIST {
@@ -390,7 +538,6 @@ proc report_index_mode {sta_group} {
       }
     }
     puts $fo "</tr>"
-    report_mode_summary $sta_group $sta_mode
   }
   puts $fo "</table>"
   puts $fo "</body>"
@@ -469,12 +616,133 @@ proc report_mode_summary {sta_group sta_mode} {
 
 #
 # <Title>
+# Create index file which contains a table of all combination of modes and corners
+#
+# <Output>
+# $sta_group/check.htm
+#
+proc report_group_index_check {sta_group} {
+  variable STA_CURR_RUN
+  variable STA_MODE_LIST
+  variable STA_CHECK_LIST
+  variable STA_CORNER
+
+  file mkdir $sta_group
+  puts "INFO: Generating Check Index HTML Files ..."
+  set fo [open "$sta_group/check.htm" "w"]
+  puts $fo "<html>"
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
+  puts $fo "<head>"
+  puts $fo "\[<a href=index.htm>\@Index</a>\]"
+  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
+#  puts $fo "\[<a href=check.htm>\@Check</a>\]"
+  puts $fo "\[\@Check\]"
+  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "</head>"
+  puts $fo "<body>"
+  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
+  puts $fo "<caption><h3 align=\"left\">"
+  puts $fo "$STA_CURR_RUN/$sta_group/</h3></caption>"
+  puts $fo "<tr>"
+  puts $fo "<th>Check</th>"
+  foreach sta_mode $STA_MODE_LIST {
+    puts $fo "<th><a href=$sta_mode/index.htm>$sta_mode</a></th>"
+  }
+  puts $fo "</tr>"
+  foreach sta_check $STA_CHECK_LIST {
+    report_check_summary $sta_group $sta_check
+    puts $fo "<tr>"
+    puts $fo "<td bgcolor=#80c0c0><a href=$sta_check.htm>$sta_check</a></td>"
+    foreach sta_mode $STA_MODE_LIST {
+      if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
+        set corner_list $STA_CORNER($sta_mode,$sta_check)
+        puts $fo "<td><a href=$sta_mode/$sta_check.htm>NVP</a><hr>"
+        puts $fo "<iframe src=$sta_mode/$sta_check.nvp_wns.dat width=250 height=150></iframe>" 
+        puts $fo "</td>"
+      } else {
+        set corner_list ""
+        puts $fo "<td></td>"
+      }
+    }
+    puts $fo "</tr>"
+  }
+  puts $fo "</table>"
+  puts $fo "</body>"
+  puts $fo "</html>"
+  close $fo
+}
+
+
+#
+# <Title>
+# Report Check Summary Page 
+#
+# <Input>
+#
+# <Output>
+# $sta_group/$sta_check.htm
+#
+proc report_check_summary {sta_group sta_check} {
+  variable STA_CURR_RUN
+  variable STA_MODE_LIST
+  variable STA_CHECK_LIST
+  variable STA_CORNER
+  variable STA_POSTFIX
+  
+
+  set fo [open "$sta_group/$sta_check.htm" "w"]
+  puts $fo "<html>"
+  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
+  puts $fo "<head>"
+  puts $fo "\[<a href=index.htm>\@Index</a>\]"
+  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "</head>"
+  puts $fo "<body>"
+  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
+  puts $fo "<caption><h3 align=\"left\">"
+  puts $fo "$STA_CURR_RUN/$sta_group/"
+  foreach check $STA_CHECK_LIST {
+    puts $fo "(<a href=$check.htm>$check</a>)"
+  }
+  puts $fo "</h3></caption>"
+  puts $fo "<tr>"
+  puts $fo "<th>Mode</th>"
+  puts $fo "<td bgcolor=#80c0c0><a href=$sta_check.htm>$sta_check</a></td>"
+  puts $fo "<th></th>"
+  puts $fo "</tr>"
+  foreach sta_mode $STA_MODE_LIST {
+    puts $fo "<tr>"
+    puts $fo "<th><a href=$sta_mode/index.htm>$sta_mode</a></th>"
+    if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
+      puts $fo "<td>"
+      puts $fo "<a href=$sta_mode/$sta_check.htm>"
+      puts $fo "<img src=$sta_mode/$sta_check.nvp_wns.png width=600>"
+      puts $fo "</a>"
+      puts $fo "</td>"
+      puts $fo "<td>"
+      puts $fo "<iframe src=\"$sta_mode/$sta_check.nvp_wns.dat\" height=\"250\" width=\"250\"></iframe>"
+      puts $fo "</td>"
+    } else {
+    }
+    puts $fo "</tr>"
+  }
+  puts $fo "</table>"
+  puts $fo "</body>"
+  puts $fo "</html>"
+  close $fo
+}
+
+
+#
+# <Title>
 # Create index file which contains a table of all combination of corners and checks
 #
 # <Output>
 # $sta_group/corner.htm
 #
-proc report_index_corner {sta_group} {
+proc report_group_index_corner {sta_group} {
   variable STA_CURR_RUN
   variable STA_MODE_LIST
   variable STA_CHECK_LIST
@@ -573,259 +841,6 @@ proc report_index_corner {sta_group} {
   puts $fo "</html>"
   close $fo
 }
-
-#
-# <Title>
-# Create index file which contains a table of all combination of modes and corners
-#
-# <Output>
-# $sta_group/check.htm
-#
-proc report_index_check {sta_group} {
-  variable STA_CURR_RUN
-  variable STA_MODE_LIST
-  variable STA_CHECK_LIST
-  variable STA_CORNER
-
-  file mkdir $sta_group
-  puts "INFO: Generating Check Index HTML Files ..."
-  set fo [open "$sta_group/check.htm" "w"]
-  puts $fo "<html>"
-  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
-  puts $fo "<head>"
-  puts $fo "\[<a href=index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
-#  puts $fo "\[<a href=check.htm>\@Check</a>\]"
-  puts $fo "\[\@Check\]"
-  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
-  puts $fo "</head>"
-  puts $fo "<body>"
-  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fo "<caption><h3 align=\"left\">"
-  puts $fo "$STA_CURR_RUN/$sta_group/</h3></caption>"
-  puts $fo "<tr>"
-  puts $fo "<th>Check</th>"
-  foreach sta_mode $STA_MODE_LIST {
-    puts $fo "<th><a href=$sta_mode/index.htm>$sta_mode</a></th>"
-  }
-  puts $fo "</tr>"
-  foreach sta_check $STA_CHECK_LIST {
-    puts $fo "<tr>"
-    puts $fo "<td bgcolor=#80c0c0><a href=$sta_check.htm>$sta_check</a></td>"
-    foreach sta_mode $STA_MODE_LIST {
-      if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
-        set corner_list $STA_CORNER($sta_mode,$sta_check)
-        puts $fo "<td><a href=$sta_mode/$sta_check.htm>NVP</a><hr>"
-        puts $fo "<iframe src=$sta_mode/$sta_check.nvp_wns.dat width=250 height=150></iframe>" 
-        puts $fo "</td>"
-      } else {
-        set corner_list ""
-        puts $fo "<td></td>"
-      }
-    }
-    puts $fo "</tr>"
-  }
-  puts $fo "</table>"
-  puts $fo "</body>"
-  puts $fo "</html>"
-  close $fo
-}
-
-#
-# <Title>
-# Report Check Summary Page 
-#
-# <Input>
-#
-# <Output>
-# $sta_group/$sta_check.htm
-#
-proc report_check_summary {sta_group sta_check} {
-  variable STA_CURR_RUN
-  variable STA_MODE_LIST
-  variable STA_CHECK_LIST
-  variable STA_CORNER
-  variable STA_POSTFIX
-  
-
-  set fo [open "$sta_group/$sta_check.htm" "w"]
-  puts $fo "<html>"
-  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
-  puts $fo "<head>"
-  puts $fo "\[<a href=index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
-  puts $fo "</head>"
-  puts $fo "<body>"
-  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fo "<caption><h3 align=\"left\">"
-  puts $fo "$STA_CURR_RUN/$sta_group/"
-  foreach check $STA_CHECK_LIST {
-    puts $fo "(<a href=$check.htm>$check</a>)"
-  }
-  puts $fo "</h3></caption>"
-  puts $fo "<tr>"
-  puts $fo "<th>Mode</th>"
-  puts $fo "<td bgcolor=#80c0c0><a href=$sta_check.htm>$sta_check</a></td>"
-  puts $fo "<th></th>"
-  puts $fo "</tr>"
-  foreach sta_mode $STA_MODE_LIST {
-    puts $fo "<tr>"
-    puts $fo "<th><a href=$sta_mode/index.htm>$sta_mode</a></th>"
-    if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
-      puts $fo "<td>"
-      puts $fo "<a href=$sta_mode/$sta_check.htm>"
-      puts $fo "<img src=$sta_mode/$sta_check.nvp_wns.png width=600>"
-      puts $fo "</a>"
-      puts $fo "</td>"
-      puts $fo "<td>"
-      puts $fo "<iframe src=\"$sta_mode/$sta_check.nvp_wns.dat\" height=\"250\" width=\"250\"></iframe>"
-      puts $fo "</td>"
-    } else {
-    }
-    puts $fo "</tr>"
-  }
-  puts $fo "</table>"
-  puts $fo "</body>"
-  puts $fo "</html>"
-  close $fo
-}
-
-
-#
-# <Title>
-# Report One Page Summary of the STA Check
-#
-# <Output>
-# $sta_group/$sta_mode/sta_check.htm
-#
-
-proc report_sta_check {sta_group sta_mode sta_check} {
-  variable STA_CURR_RUN
-  variable STA_CORNER
-  variable STA_DATA
-
-  if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
-     puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
-     return 
-  }
-
-  create_nvp_wns_plot "$sta_group/$sta_mode/$sta_check" $STA_CURR_RUN/
-    
-  set fo [open "$sta_group/$sta_mode/$sta_check.htm" w]
-  puts $fo "<html>"
-  puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
-  puts $fo "<head>"
-  puts $fo "\[<a href=../index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=../mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=../check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=../corner.htm>\@Corner</a>\]"
-  puts $fo "</head>"
-  puts $fo "<body>"
-  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fo "<caption>"
-  puts $fo "<h3 align=left>"
-  puts $fo "$STA_CURR_RUN/$sta_group/$sta_mode/$sta_check"
-  puts $fo "</h3>"
-  puts $fo "</caption>"
-  puts $fo "<tr><td colspan=10>"
-  puts $fo "<a href=../mode.htm>"
-  puts $fo "<img src=$sta_check.nvp_wns.png  width=800 height=350>"
-  puts $fo "</a>"
-  puts $fo "</td>"
-  puts $fo "<td>"
-  puts $fo "<iframe name=sta_info src=\"$sta_check.uniq_end.nvp\" height=350></iframe>"
-  puts $fo "</td>"
-  puts $fo "</tr>"
-  puts $fo "<tr>"
-  puts $fo "<th><a href=$sta_check.uniq_end.rpt target=sta_output>#</a></th>"
-  puts $fo "<th><a href=index.htm>Mode</a></th>"
-  puts $fo "<th><a href=../$sta_check.htm>Check</a></th>"
-  puts $fo "<th><a href=../corner.htm>Corner</a></th>"
-  puts $fo "<th><a href=$sta_check.waive_end.rpt target=sta_output>Waive</a></th>"
-  puts $fo "<th><a href=$sta_check.uniq_end.rpt target=sta_output>NVP</a></th>"
-  puts $fo "<th><a href=$sta_check.uniq_end.wns target=sta_output>WNS</a></th>"
-  puts $fo "<th><a href=$sta_check.uniq_end.nvp target=sta_output>TNS</a></th>"
-  puts $fo "<th><a href=$sta_check.clk.htm target=sta_output>Clock</a></th>"
-  puts $fo "<th><a href=$sta_check.blk.htm target=sta_output>Block</a></th>"
-  puts $fo "<th><a href=$sta_check.uniq_end.htm>Unique Endpoint</a>"
-  puts $fo "</tr>"
-  puts $fo ""
-
-  set WNS 0.0
-  set TNS 0.0
-  set fid 0
-  foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
-    if {[info exist STA_DATA($sta_mode,$sta_check,$sta_corner)]} {
-      foreach data $STA_DATA($sta_mode,$sta_check,$sta_corner) {
-        incr fid
-        set corner_name [lindex $data 0]
-        set fname  [lindex $data 1]
-        set nwp    [lindex $data 2]
-        set nvp    [lindex $data 3]
-        set wns    [lindex $data 4]
-        set tns    [lindex $data 5]
-        set cid    [lindex $data 6]
-        set bid    [lindex $data 7]
-
-        if {$wns<$WNS} { set WNS $wns}
-        set TNS [expr ($TNS+$tns)]
-        
-        puts $fo "<tr>"
-        puts $fo "<td>$fid</td>"
-        puts $fo "<td>$sta_mode</td>"
-        puts $fo "<td>$sta_check</td>"
-        puts $fo "<td align=left>$sta_corner</td>"
-        if {$nwp>0} {
-        puts $fo "<td align=center><a href=$sta_corner/$sta_check.htm> $nwp</a> </td>"
-        } else {
-        puts $fo "<td align=center> . </td>"
-        }
-        if {$nvp>0} {
-        puts $fo "<td align=right><a href=$sta_corner/$sta_check.vio target=sta_output> $nvp </a></td>"
-        puts $fo "<td align=right><a href=$sta_corner/$sta_check.wns target=sta_output> $wns </a></td>"
-        puts $fo "<td align=right><a href=$sta_corner/$sta_check.nvp target=sta_output>$tns</a></td>"
-        puts $fo "<td align=center><a href=$sta_corner/$sta_check.clk.htm target=sta_output> $cid </a></td>"
-        puts $fo "<td align=center><a href=$sta_corner/$sta_check.blk.htm target=sta_output> $bid </a></td>"
-        } else {
-        puts $fo "<td align=right> $nvp </td>"
-        puts $fo "<td align=right> $wns </td>"
-        puts $fo "<td align=right> $tns </td>"
-        puts $fo "<td align=center> $cid </td>"
-        puts $fo "<td align=center> $bid </td>"
-        }
-        puts $fo "<td><a href=\"../../$fname\" target=sta_output>$fname</a></td>"
-        puts $fo "</tr>"
-      }
-    }
-  }
-  puts $fo "<tr>"
-  puts $fo "<th></th>"
-  puts $fo "<th></th>"
-  puts $fo "<th></th>"
-  puts $fo "<th></th>"
-  puts $fo "<th></th>"
-  puts $fo "<th></th>"
-  puts $fo "<th>[format "%.2f" $WNS]</th>"
-  puts $fo "<th>[format "%.2f" $TNS]</th>"
-  puts $fo "<th></th>"
-  puts $fo "<th></th>"
-  puts $fo "<th>"
-  puts $fo "</th>"
-  puts $fo "</tr>"
-  puts $fo "<tr>"
-  puts $fo "<td colspan=11>"
-  puts $fo "<iframe name=sta_output src='$sta_check.uniq_end.rpt' width=100% height=350 scrolling=auto></iframe>"
-  puts $fo "</td>"
-  puts $fo "</tr>"
-  puts $fo "</table>"
-  puts $fo "</body>"
-  puts $fo "</html>"
-  close $fo
-
-}
-
 
 
 
