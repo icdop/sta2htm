@@ -54,7 +54,7 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
   puts $fo "</tr>"
   foreach sta_check $STA_CHECK_LIST {
     puts $fo "<tr>"
-    puts $fo "<th>$sta_check</th>"
+    puts $fo "<th>\[$sta_check\]</th>"
 #    puts $fo "<th>Mode</th>"
     puts $fo "<th>Version</th>"
     puts $fo "<th>WNS</th>"
@@ -78,15 +78,15 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
          puts $fo "</tr>"
          foreach sta_run $STA_RUN_LIST {
             puts $fo "<tr>"
-            if {[file exist $sta_run/$sta_group/$sta_mode/$sta_check]} {
-              puts $fo "<td align=left>$sta_run</td>"
-              if {[catch {exec cat $sta_run/$sta_group/$sta_mode/$sta_check/.dqi/520-STA/WNS} WNS]} {
+            if {[file exist $sta_run/$sta_group/$sta_mode/.dqi/520-STA/$sta_check]} {
+              puts $fo "<td align=left><a href='$sta_run/$sta_group/$sta_mode/$sta_check.htm'>$sta_run</a></td>"
+              if {[catch {exec cat $sta_run/$sta_group/$sta_mode/.dqi/520-STA/$sta_check/WNS} WNS]} {
                 set WNS "-"
                 puts $fo "<td align=right> - </td>"
               } else {
-                puts $fo "<td align=right><a href='$sta_run/$sta_group/$sta_mode/$sta_check.htm'> $WNS</a> </td>"
+                puts $fo "<td align=right><a href='$sta_run/$sta_group/$sta_mode/$sta_check.nvp_wns.png' target=sta_output> $WNS</a> </td>"
               }
-              if {[catch {exec cat $sta_run/$sta_group/$sta_mode/$sta_check/.dqi/520-STA/NVP} NVP]} {
+              if {[catch {exec cat $sta_run/$sta_group/$sta_mode/.dqi/520-STA/$sta_check/NVP} NVP]} {
                 set NVP "-"
                 puts $fo "<td align=right> - </td>"
               } else {
@@ -96,7 +96,7 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
                 if {![info exist STA_SCENARIO_MAP($sta_check,$sta_mode,$sta_corner)]} {
                     puts $fo "<td align=right bgcolor=#c0c0c0> - </td>"
                 } else {
-                  if {[catch {exec cat $sta_run/$sta_group/$sta_mode/$sta_check/$sta_corner/.dqi/520-STA/NVP} nvp]} {
+                  if {[catch {exec cat $sta_run/$sta_group/$sta_mode/$sta_corner/.dqi/520-STA/$sta_check/NVP} nvp]} {
                     puts $fo "<td align=right bgcolor=#f08080> * </td>"
                   } elseif {$nvp==0} {
                     puts $fo "<td align=right bgcolor=#80f080> . </td>"

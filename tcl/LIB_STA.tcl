@@ -49,7 +49,7 @@ variable NVP_GP
 variable NVP_WAIVED_GP
 variable NVP_REAL_GP
 variable WNS_GP
-variable WNS_HRANGE  "0 -1 -2 -3 -4 -5 -10 -15 -20 -25 -30 -40 -50 -100 -200 -300 -500 -1000"
+variable WNS_HRANGE  "0 -1 -2 -3 -4 -5 -10 -15 -20 -30 -40 -50 -100 -200 -300 -500 -1000"
 variable NVP_ACCUM
 variable NVP_REAL
 
@@ -177,7 +177,7 @@ proc report_uniq_end {{sta_group "uniq_end"}} {
       }
       puts "\nMODE: $sta_mode $sta_check"
 
-      parse_timing_report $STA_RPT_PATH $STA_RPT_FILE $sta_group $sta_mode $sta_check 
+      parse_primetime_report $sta_group $sta_mode $sta_check $STA_RPT_PATH $STA_RPT_FILE 
       #    create_check_chart $sta_group $sta_mode $sta_check
 
     }
@@ -187,7 +187,7 @@ proc report_uniq_end {{sta_group "uniq_end"}} {
       if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
         set corner_list $STA_CORNER($sta_mode,$sta_check)
 
-        merge_vio_endpoint $sta_group $sta_mode $sta_check $corner_list
+        unique_vio_endpoint $sta_group $sta_mode $sta_check $corner_list
 
         report_endpoint_text $sta_group $sta_mode $sta_check $corner_list
         report_endpoint_html $sta_group $sta_mode $sta_check $corner_list
@@ -196,7 +196,7 @@ proc report_uniq_end {{sta_group "uniq_end"}} {
         report_index_clock $sta_group $sta_mode $sta_check $corner_list
         report_index_block $sta_group $sta_mode $sta_check $corner_list
 
-        report_violation_histogram $sta_group $sta_mode $sta_check.uniq_end
+        report_vio_histogram $sta_group $sta_mode $sta_check.uniq_end
 
         report_sta_check $sta_group $sta_mode $sta_check
 
@@ -224,6 +224,7 @@ proc report_index_main {sta_group} {
   variable STA_CHECK_LIST
   variable STA_CORNER
   variable STA_CORNER_NAME
+  variable STA_CORNER_DEF
 
   file mkdir $sta_group
   puts "INFO: Generating STA Index HTML Files ..."
@@ -231,12 +232,10 @@ proc report_index_main {sta_group} {
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
-#  puts $fo "\[<a href=index.htm>\@Index</a>\]"
-  puts $fo "\[\@Index\]"
+  puts $fo "\[<a href=../../index.htm>\@Index</a>\]"
   puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
   puts $fo "\[<a href=check.htm>\@Check</a>\]"
   puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
-  puts $fo "\[<a href=../../index.htm>\@Trend</a>\]"
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<table border=\"1\" id=\"sta_tbl\">"
@@ -244,7 +243,7 @@ proc report_index_main {sta_group} {
   puts $fo "$STA_CURR_RUN/$sta_group/"
   puts $fo "</h3></caption>"
   puts $fo "<tr>"
-  puts $fo "<td colspan=7>$STA_CURR_RUN/$STA_CFG_FILE<hr>"
+  puts $fo "<td colspan=6>$STA_CURR_RUN/$STA_CFG_FILE<hr>"
   puts $fo "<iframe name=sta_config src='../$STA_CFG_FILE' width=100% height=200 scrolling=auto></iframe>"
   puts $fo "</td>"
   puts $fo "</tr>"
@@ -268,10 +267,11 @@ proc report_index_main {sta_group} {
          puts $fo "<td rowspan=$num_row bgcolor=#80c0c0><a href=$sta_mode/$sta_check.htm>$sta_mode</a></td>"
          puts $fo "</tr>"
          foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
-            if {[info exist STA_CORNER_NAME($sta_corner)]} {
+            puts $fo "<tr>"
+            if {$sta_corner=="-"} {
+            } elseif {[info exist STA_CORNER_NAME($sta_corner)]} {
                set corner_name $STA_CORNER_NAME($sta_corner)
-               puts $fo "<tr>"
-               if {![catch {open $sta_group/$sta_mode/$sta_check/$sta_corner.vio r} fin]} {
+               if {![catch {open $sta_group/$sta_mode/$sta_corner/$sta_check.vio r} fin]} {
                  set nvp 0
                  set wns 0.0
                  set tns 0.0
@@ -289,29 +289,40 @@ proc report_index_main {sta_group} {
                    }
                  }
                  close $fin
-                 puts $fo "<td align=left bgcolor=#f0f080><a href=$sta_mode/$sta_check/$sta_corner.vio> $corner_name </a></td>"
+                 puts $fo "<td align=left bgcolor=#f0f080><a href=$sta_mode/$sta_corner/$sta_check.vio> $corner_name </a></td>"
                  puts $fo "<td align=right> $nvp </td>"
                  puts $fo "<td align=right> $wns </td>"
                  puts $fo "<td align=right> $tns </td>"
                  puts $fo "<td><a href=\"$fname\">$fname</a></td>"
+               } elseif {[info exist STA_CORNER_DEF($sta_corner)]} {
+                  puts $fo "<td align=left bgcolor=#f0f080>$corner_name</td>"
+                  puts $fo "<td align=right bgcolor=#f0c0c0>*</td>"
+                  puts $fo "<td align=right bgcolor=#f0c0c0>*</td>"
+                  puts $fo "<td align=right bgcolor=#f0c0c0>*</td>"
+                  puts $fo "<td bgcolor=#f0c0c0>Report Not Found!</td>"
                } else {
                   puts $fo "<td align=left bgcolor=#c0c080>$corner_name</td>"
-                  puts $fo "<td align=right>*</td>"
-                  puts $fo "<td align=right>*</td>"
-                  puts $fo "<td align=right>*</td>"
-                  puts $fo "<td>*</td>"
+                  puts $fo "<td align=right bgcolor=#f08080>*</td>"
+                  puts $fo "<td align=right bgcolor=#f08080>*</td>"
+                  puts $fo "<td align=right bgcolor=#f08080>*</td>"
+                  puts $fo "<td bgcolor=#f08080>Corner Undefined!</td>"
                }
-               puts $fo "</tr>"
             } else {
                puts "ERROR: STA_CORNER_NAME($sta_corner) is not defined, but is used in STA_CORNER($sta_mode,$sta_check)!"
+               puts $fo "<td bgcolor=#f00000>$sta_corner</td>"
+               puts $fo "<td align=right bgcolor=#f08080>*</td>"
+               puts $fo "<td align=right bgcolor=#f08080>*</td>"
+               puts $fo "<td align=right bgcolor=#f08080>*</td>"
+               puts $fo "<td bgcolor=#f08080>Corner Undefined!</td>"
             }
+            puts $fo "</tr>"
          }
          puts $fo "<tr>"
          puts $fo "<td colspan=6></td>"
          puts $fo "</tr>"
       }
     }
-    puts $fo "<tr><td colspan=8></td>"
+    puts $fo "<tr><td colspan=6></td>"
     puts $fo "</tr>"
   }
   puts $fo "</table>"
@@ -487,7 +498,7 @@ proc report_index_corner {sta_group} {
   puts $fo "<tr>"
   puts $fo "<th>Corner</th>"
   puts $fo "<th>Name</th>"
-  puts $fo "<th>Detail</th>"
+  puts $fo "<th>Definition</th>"
   foreach sta_check $STA_CHECK_LIST {
     foreach sta_mode $STA_MODE_LIST {
       if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
@@ -525,7 +536,7 @@ proc report_index_corner {sta_group} {
         } elseif {![info exist STA_SCENARIO_MAP($sta_check,$sta_mode,$sta_corner)]} {
            puts $fo "<td align=right bgcolor='#c0c0c0'></td>"
         } else {
-           set vio_file $sta_group/$sta_mode/$sta_check/$sta_corner.vio
+           set vio_file $sta_group/$sta_mode/$sta_corner/$sta_check.vio
            if {![catch {open $vio_file r} fin]} {
              set nvp 0
              while {[gets $fin line] >= 0} { 
@@ -534,7 +545,7 @@ proc report_index_corner {sta_group} {
              close $fin
              if {$nvp!=0} {
                puts $fo "<td align=right>"
-               puts $fo "<a href=$sta_mode/$sta_check/$sta_corner.vio>"
+               puts $fo "<a href=$sta_mode/$sta_corner/$sta_check.vio>"
                puts $fo $nvp
                puts $fo "</a>"
                puts $fo "</td>"
@@ -760,16 +771,16 @@ proc report_sta_check {sta_group sta_mode sta_check} {
         puts $fo "<td>$sta_check</td>"
         puts $fo "<td align=left>$sta_corner</td>"
         if {$nwp>0} {
-        puts $fo "<td align=center><a href=$sta_check/$sta_corner.htm> $nwp</a> </td>"
+        puts $fo "<td align=center><a href=$sta_corner/$sta_check.htm> $nwp</a> </td>"
         } else {
         puts $fo "<td align=center> . </td>"
         }
         if {$nvp>0} {
-        puts $fo "<td align=right><a href=$sta_check/$sta_corner.vio target=sta_output> $nvp </a></td>"
-        puts $fo "<td align=right><a href=$sta_check/$sta_corner.wns target=sta_output> $wns </a></td>"
-        puts $fo "<td align=right><a href=$sta_check/$sta_corner.nvp target=sta_output>$tns</a></td>"
-        puts $fo "<td align=center><a href=$sta_check/$sta_corner.clk.htm target=sta_output> $cid </a></td>"
-        puts $fo "<td align=center><a href=$sta_check/$sta_corner.blk.htm target=sta_output> $bid </a></td>"
+        puts $fo "<td align=right><a href=$sta_corner/$sta_check.vio target=sta_output> $nvp </a></td>"
+        puts $fo "<td align=right><a href=$sta_corner/$sta_check.wns target=sta_output> $wns </a></td>"
+        puts $fo "<td align=right><a href=$sta_corner/$sta_check.nvp target=sta_output>$tns</a></td>"
+        puts $fo "<td align=center><a href=$sta_corner/$sta_check.clk.htm target=sta_output> $cid </a></td>"
+        puts $fo "<td align=center><a href=$sta_corner/$sta_check.blk.htm target=sta_output> $bid </a></td>"
         } else {
         puts $fo "<td align=right> $nvp </td>"
         puts $fo "<td align=right> $wns </td>"

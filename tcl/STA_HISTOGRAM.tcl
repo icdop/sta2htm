@@ -22,7 +22,7 @@ namespace eval LIB_STA {
 # $sta_group/$sta_mode/$fname.sum
 #
 #
-proc report_violation_histogram {sta_group sta_mode {fname "uniq_end"}} {
+proc report_vio_histogram {sta_group sta_mode {fname "uniq_end"}} {
   variable NVP_GP
   variable NVP_WAIVED_GP
   variable NVP_REAL_GP

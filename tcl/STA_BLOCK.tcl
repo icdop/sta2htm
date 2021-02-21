@@ -130,7 +130,7 @@ proc sort_slack_by_block {corner slack sname ename {report ""} } {
 #    Group Violation Slack based on Clock Group
 #
 # <Input>
-# $sta_group/$sta_mode/$sta_check/*.vio
+# $sta_group/$sta_mode/$sta_corner/$sta_check.vio
 #
 # <Output>
 # BLOCK_LIST : {{$sblock,$eblock} $wns $wcorner}
@@ -150,10 +150,9 @@ proc report_block_table {sta_group sta_mode sta_check} {
   array unset BLOCK_NVP
   array unset BLOCK_WNS
   puts "INFO($sta_mode): Group slack files of multiple corners ..."
-  puts "$sta_group/$sta_mode/$sta_check/*.vio"
-  if {![catch {glob $sta_group/$sta_mode/$sta_check/*.vio} files]} {
+  foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
+    if {[catch {glob $sta_group/$sta_mode/$sta_corner/$sta_check.vio} files]} continue;
     foreach fname $files {
-      regsub {\.vio$} [file tail $fname] "" sta_corner
       puts "($sta_corner)\t: $fname"
       set VIO_FILE($sta_mode,$sta_check,$sta_corner) $fname
       set sclock -
@@ -215,7 +214,7 @@ proc output_block_table {sta_group sta_mode sta_check sta_corner} {
       extract_block_list $sta_corner
       set BLOCK_NUM [assign_block_gid]
 
-      set fout [open "$sta_group/$sta_mode/$sta_check/$sta_corner.blk.htm" w]
+      set fout [open "$sta_group/$sta_mode/$sta_corner/$sta_check.blk.htm" w]
       puts $fout "<html>"
       puts $fout "<head>"
       puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
@@ -224,7 +223,7 @@ proc output_block_table {sta_group sta_mode sta_check sta_corner} {
       puts $fout "<div id=sta_block class=\"collapse\">"
       puts $fout "<table border=\"1\" id=\"sta_tbl\">"
       puts $fout "<caption>"
-      puts $fout "$sta_mode/$sta_check/$sta_corner"
+      puts $fout "$sta_mode/$sta_corner/$sta_check"
       puts $fout "</caption>"
       puts $fout "<TR>"
       puts $fout "<TH align=left><pre>#$BLOCK_NUM Blocks</a></TH>" 
@@ -306,7 +305,7 @@ proc report_index_block {sta_group sta_mode sta_check {corner_list ""}} {
   puts $fout "<TH><pre>NVP</TH>" 
   puts $fout "<TH><pre>WNS</TH>" 
   foreach sta_corner $corner_list {
-     puts $fout "<TH><a href=$sta_check/$sta_corner.blk.htm><pre>$sta_corner</a></TH>"
+     puts $fout "<TH><a href=$sta_corner/$sta_check.blk.htm><pre>$sta_corner</a></TH>"
   }
   puts $fout "</TR>"
 

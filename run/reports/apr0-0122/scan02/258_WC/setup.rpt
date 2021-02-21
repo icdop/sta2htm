@@ -1,0 +1,53 @@
+****************************************
+Report : constraint
+        -all_violators
+        -path slack_only
+Design : top
+****************************************
+
+
+   max_delay/setup ('VCLK_APB' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   pad_gpio_pa[1]                                         -0.01605  (VIOLATED)
+   pad_gpio_pa[2]                                         -0.01505  (VIOLATED)
+   pad_gpio_pa[3]                                         -0.01405  (VIOLATED)
+   pad_gpio_pa[4]                                         -0.01305  (VIOLATED)
+   pad_gpio_pa[5]                                         -0.01205  (VIOLATED)
+   pad_gpio_pa[6]                                         -0.01105  (VIOLATED)
+   pad_gpio_pa[7]                                         -0.00435  (VIOLATED)
+   pad_gpio_pa[8]                                         -0.00425  (VIOLATED)
+   pad_gpio_pa[9]                                         -0.00415  (VIOLATED)
+   pad_gpio_pa[10]                                        -0.00405  (VIOLATED)
+   pad_gpio_pa[11]                                        -0.00404  (VIOLATED)
+   pad_gpio_pa[12]                                        -0.00305  (VIOLATED)
+
+   max_delay/setup ('VCLK_CAN' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   pad_can_txd                                            -0.01456  (VIOLATED)
+   pad_can_stby                                           -0.00609  (VIOLATED)
+
+   max_delay/setup ('VCLK_DO' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   pad_do_data[6]                                         -0.00805  (VIOLATED)
+   pad_do_data[5]                                         -0.00705  (VIOLATED)
+   pad_do_data[4]                                         -0.00605  (VIOLATED)
+   pad_do_data[2]                                         -0.00505  (VIOLATED)
+   pad_do_data[1]                                         -0.00405  (VIOLATED)
+   pad_do_data[0]                                         -0.00300  (VIOLATED)
+   pad_do_data[13]                                        -0.00292  (VIOLATED)
+   pad_do_data[12]                                        -0.00086  (VIOLATED)
+
+   max_delay/setup ('VCLK_FLH' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   pad_sflash_io[3]                                       -0.06214  (VIOLATED)
+   pad_sflash_io[1]                                       -0.02170  (VIOLATED)
+
+

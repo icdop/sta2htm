@@ -14,10 +14,10 @@ variable VIO_WNS
 
 #
 # <Title>
-#   Merge Multiple Slack Violation Report 
+#   Merge & Uniquify Multiple Slack Violation Report 
 #
 # <Input>
-# $sta_group/$sta_mode/$sta_check/*.vio
+# $sta_group/$sta_mode/$sta_corner/$sta_check.vio
 #
 # <Output>
 #
@@ -25,7 +25,7 @@ variable VIO_WNS
 # VIO_LIST : {{$egroup,$instpin} $wns $wcorner}
 # VIO_WNS($egroup,$instpin,sta_corner) : $wns
 #
-proc merge_vio_endpoint {sta_group sta_mode sta_check {corner_list ""}} {
+proc unique_vio_endpoint {sta_group sta_mode sta_check {corner_list ""}} {
   variable STA_CORNER
   variable VIO_WNS
   variable VIO_LIST
@@ -35,15 +35,14 @@ proc merge_vio_endpoint {sta_group sta_mode sta_check {corner_list ""}} {
      puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
      return 
   }
+  if {$corner_list==""} {set corner_list $STA_CORNER($sta_mode,$sta_check)}
   puts "INFO($sta_mode): Merging slack files of multiple corners ..."
   set WNS 0.0
   set TNS 0.0
-  foreach corner_mask $corner_list {
-  if ![catch {glob $sta_group/$sta_mode/$sta_check/$corner_mask*.vio} files] {
+  foreach sta_corner $corner_list {
+    if [catch {glob $sta_group/$sta_mode/$sta_corner/$sta_check.vio} files] continue;
     foreach fname $files {
       set fin [open $fname r]
-      regsub {\.vio$} [file tail $fname] "" sta_corner
-      set corner_name [get_corner_name $sta_corner]
       puts "($sta_corner)\t: $fname"
       set VIO_FILE($sta_mode,$sta_check,$sta_corner) $fname
       while {[gets $fin line] >= 0} {
@@ -72,7 +71,6 @@ proc merge_vio_endpoint {sta_group sta_mode sta_check {corner_list ""}} {
       close $fin
     }
   }
-  }
   
   set VIO_LIST ""
   foreach key [array name cc] {
@@ -83,7 +81,7 @@ proc merge_vio_endpoint {sta_group sta_mode sta_check {corner_list ""}} {
   set VIO_LIST [lsort -index 0 $VIO_LIST] 
 
   set NVP [llength $VIO_LIST]
-  set dqi_path $sta_group/$sta_mode/$sta_check/.dqi/520-STA
+  set dqi_path $sta_group/$sta_mode/.dqi/520-STA/$sta_check
   catch { 
     exec mkdir -p $dqi_path; 
     exec echo $NVP > $dqi_path/NVP;
