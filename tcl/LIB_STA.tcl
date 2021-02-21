@@ -251,7 +251,7 @@ proc report_index_main {sta_group} {
 #    set num_col [expr [llength STA_MODE_LIST] +1]
     puts $fo "<tr>"
 #    puts $fo "<th>Check</th>"
-    puts $fo "<th colspan=2>$sta_check</th>"
+    puts $fo "<th colspan=2 bgcolor=#80f080><a href='$sta_check.htm'>$sta_check</a></th>"
 #    puts $fo "<th>Mode</th>"
 #    puts $fo "<th>Corner</th>"
     puts $fo "<th align=right>NVP</th>"
@@ -290,10 +290,17 @@ proc report_index_main {sta_group} {
                  }
                  close $fin
                  puts $fo "<td align=left bgcolor=#f0f080><a href=$sta_mode/$sta_corner/$sta_check.vio> $corner_name </a></td>"
-                 puts $fo "<td align=right> $nvp </td>"
-                 puts $fo "<td align=right> $wns </td>"
-                 puts $fo "<td align=right> $tns </td>"
-                 puts $fo "<td><a href=\"$fname\">$fname</a></td>"
+                 if {$nvp==0} {
+                   puts $fo "<td align=right bgcolor=#80f080> . </td>"
+                   puts $fo "<td align=right bgcolor=#80f080> $wns </td>"
+                   puts $fo "<td align=right bgcolor=#80f080> . </td>"
+                   puts $fo "<td align=left  bgcolor=#80f080><a href=\"$fname\">$fname</a></td>"
+                 } else {
+                   puts $fo "<td align=right> $nvp </td>"
+                   puts $fo "<td align=right> $wns </td>"
+                   puts $fo "<td align=right> $tns </td>"
+                   puts $fo "<td align=left><a href=\"$fname\">$fname</a></td>"
+                 }
                } elseif {[info exist STA_CORNER_DEF($sta_corner)]} {
                   puts $fo "<td align=left bgcolor=#f0f080>$corner_name</td>"
                   puts $fo "<td align=right bgcolor=#f0c0c0>*</td>"

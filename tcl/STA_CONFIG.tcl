@@ -15,6 +15,7 @@ namespace eval LIB_STA {
   variable STA_BLOCK_LIST   
   variable STA_BLOCK_DEF
   variable STA_CHECK_LIST   
+  variable STA_CHECK_DQI
   variable STA_CHECK_DEF
   variable STA_MODE_LIST    
   variable STA_MODE_NAME
@@ -42,6 +43,7 @@ proc reset_sta_config {} {
   variable STA_BLOCK_LIST
   variable STA_BLOCK_DEF
   variable STA_CHECK_LIST
+  variable STA_CHECK_DQI
   variable STA_CHECK_DEF
   variable STA_MODE_LIST
   variable STA_MODE_NAME
@@ -66,6 +68,7 @@ proc reset_sta_config {} {
   array set STA_RUN_GROUPS   {}
   array set STA_GROUP_FILES  {}
   array set STA_BLOCK_DEF    {}
+  array set STA_CHECK_DQI    {}
   array set STA_CHECK_DEF    {}
   array set STA_MODE_NAME    {}
   array set STA_MODE_DEF     {}

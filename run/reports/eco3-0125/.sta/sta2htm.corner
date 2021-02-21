@@ -1,0 +1,5 @@
+000            000_TT           TTT:0.80V:025C  RCtyp
+151            151_ML           FFG:0.88V:125C  Cmax
+157            157_BC           FFF:0.88V:-40C  Cmin
+231            231_WCL          SSG:0.72V:-40C  Cmax
+258            258_WC           SSG:0.72V:125C  Cmax

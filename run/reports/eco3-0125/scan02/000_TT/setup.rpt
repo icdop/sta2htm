@@ -1,0 +1,21 @@
+****************************************
+Report : constraint
+        -all_violators
+        -path slack_only
+Design : top
+****************************************
+
+
+   max_delay/setup ('VCLK_APB' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   pad_gpio_pa[2]                                         -0.00500  (VIOLATED)
+   pad_gpio_pa[3]                                         -0.00400  (VIOLATED)
+
+   max_delay/setup ('VCLK_FLH' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   pad_sflash_io[1]                                       -0.02170  (VIOLATED)
+
