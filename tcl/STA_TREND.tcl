@@ -20,7 +20,7 @@ namespace eval LIB_STA {
 # <Output>
 #   $sta_group/index.htm
 #
-proc report_index_runset {{plot_dir ".snapshot"}} {
+proc report_index_runset {{plot_dir ".trendchart"}} {
   variable STA_RUN_FILE
   variable STA_RUN_LIST
   variable STA_GROUP_LIST
@@ -44,8 +44,8 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
   puts $fo "<body>"
   
   foreach sta_group $STA_GROUP_LIST {
-  set out_dir "$plot_dir/$sta_group"
-  file mkdir $out_dir
+  set plot_dir/$sta_group "$plot_dir/$sta_group"
+  file mkdir $plot_dir/$sta_group
 
   puts $fo "<table border=\"1\" width=1000 id=\"sta_tbl\">"
 #  puts $fo "<caption> $sta_group </caption>"
@@ -73,7 +73,8 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
     puts $fo "</tr>"
     foreach sta_mode $STA_MODE_LIST {
       if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
-         set fdat [open "$out_dir/$sta_mode.$sta_check.nvp_wns.dat" w]
+         file mkdir $plot_dir/$sta_group/$sta_mode
+         set fdat [open "$plot_dir/$sta_group/$sta_mode/$sta_check.nvp_wns.dat" w]
          puts $fdat "# $sta_mode/$sta_check"
          puts $fdat [format "#%10s %10s %10s" "----------" "----------" "----------"]
          puts $fdat [format "#%-10s %10s %10s" VERSION NVP WNS]
@@ -81,8 +82,8 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
          
          set num_row [expr [llength $STA_RUN_LIST]+2]
          puts $fo "<tr>"
-#         puts $fo "<td rowspan=$num_row>$sta_check</td>"
-         puts $fo "<td rowspan=$num_row><a href=$out_dir/$sta_mode.$sta_check.nvp_wns.png target=sta_output>$sta_mode</a></td>"
+#         puts $fo "<td rowspan=$num_row><a href=$plot_dir/$sta_group/$sta_mode/$sta_check.nvp_wns.png target=sta_output>$sta_mode</a></td>"
+         puts $fo "<td rowspan=$num_row><a href=$plot_dir/$sta_group/$sta_mode/$sta_check.nvp_wns.htm target=sta_output>$sta_mode</a></td>"
          puts $fo "</tr>"
          foreach sta_run $STA_RUN_LIST {
             puts $fo "<tr>"
@@ -94,7 +95,8 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
                   puts $fo "<td align=right> - </td>"
                 } else {
                   set STA_DQI($sta_dqi) $dqi_value
-                  puts $fo "<td align=right><a href='$sta_run/$sta_group/$sta_mode/$sta_check.nvp_wns.png' target=sta_output> $dqi_value</a> </td>"
+#                  puts $fo "<td align=right><a href='$sta_run/$sta_group/$sta_mode/$sta_check.nvp_wns.png' target=sta_output> $dqi_value</a> </td>"
+                  puts $fo "<td align=right><a href='$sta_run/$sta_group/$sta_mode/$sta_check.nvp_wns.htm' target=sta_output> $dqi_value</a> </td>"
                 }
               }
               foreach sta_corner $STA_CORNER_LIST {
@@ -119,10 +121,11 @@ proc report_index_runset {{plot_dir ".snapshot"}} {
             puts $fo "</tr>"
          }
          close $fdat
-         create_nvp_wns_plot "$out_dir/$sta_mode.$sta_check"
          puts $fo "<tr>"
          puts $fo "<td colspan=[expr $num_col-1]></td>"
          puts $fo "</tr>"
+         create_nvp_wns_plot  "$plot_dir/$sta_group/$sta_mode/$sta_check"
+         create_nvp_wns_chart "$plot_dir/$sta_group/$sta_mode/$sta_check"
       }
     }
     puts $fo "<tr>"

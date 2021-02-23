@@ -21,6 +21,7 @@ namespace eval LIB_STA {
 # $odir/$sta_path.nvp_wns.png
 #
 proc create_nvp_wns_plot {data_path {title_prefix ""}} {
+  file mkdir [file dir $data_path]
   set data_file [format "%s.nvp_wns" $data_path]
   set ymax [get_nvp_ymax $data_file.dat]
   set fout [open "$data_file.plt" w]

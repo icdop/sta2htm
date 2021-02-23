@@ -178,7 +178,6 @@ proc report_uniq_end {{sta_group "uniq_end"}} {
       puts "\nMODE: $sta_mode $sta_check"
 
       parse_primetime_report $sta_group $sta_mode $sta_check $STA_RPT_PATH $STA_RPT_FILE 
-      #    create_check_chart $sta_group $sta_mode $sta_check
 
     }
 
@@ -225,6 +224,7 @@ proc report_scenario_summary {sta_group sta_mode sta_check} {
   }
 
   create_nvp_wns_plot "$sta_group/$sta_mode/$sta_check" $STA_CURR_RUN/
+  create_nvp_wns_chart "$sta_group/$sta_mode/$sta_check" $STA_CURR_RUN/
     
   set fo [open "$sta_group/$sta_mode/$sta_check.htm" w]
   puts $fo "<html>"
@@ -244,7 +244,9 @@ proc report_scenario_summary {sta_group sta_mode sta_check} {
   puts $fo "</caption>"
   puts $fo "<tr><td colspan=10>"
   puts $fo "<a href=../mode.htm>"
+  puts $fo "<iframe name=sta_chart src='$sta_check.nvp_wns.htm' width=800 height=350>"
   puts $fo "<img src=$sta_check.nvp_wns.png  width=800 height=350>"
+  puts $fo "</iframe>"
   puts $fo "</a>"
   puts $fo "</td>"
   puts $fo "<td>"
@@ -529,7 +531,9 @@ proc report_group_index_mode {sta_group} {
         set corner_list $STA_CORNER($sta_mode,$sta_check)
         puts $fo "<td>"
         puts $fo "<a href=$sta_mode/$sta_check.htm>"
-        puts $fo "<img src=$sta_mode/$sta_check.nvp_wns.png width=600>"
+        puts $fo "<iframe src=$sta_mode/$sta_check.nvp_wns.htm width=600 height=250>"
+        puts $fo "<img src=$sta_mode/$sta_check.nvp_wns.png width=600 height=250>"
+        puts $fo "</iframe>"
         puts $fo "</a>"
         puts $fo "</td>"
       } else {
@@ -589,7 +593,9 @@ proc report_mode_summary {sta_group sta_mode} {
     puts $fo "<td>"
     if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
       puts $fo "<a href=$sta_check.htm>"
+      puts $fo "<iframe name=sta_chart src='$sta_check.nvp_wns.htm' width=600 height=250>"
       puts $fo "<img src=$sta_check.nvp_wns.png width=600>"
+      puts $fo "</iframe>"
       puts $fo "</a>"
     }
     puts $fo "</td>"
@@ -718,7 +724,9 @@ proc report_check_summary {sta_group sta_check} {
     if {[info exist STA_CORNER($sta_mode,$sta_check)]} {
       puts $fo "<td>"
       puts $fo "<a href=$sta_mode/$sta_check.htm>"
+      puts $fo "<iframe name=sta_chart src='$sta_mode/$sta_check.nvp_wns.htm' width=600 height=250>"
       puts $fo "<img src=$sta_mode/$sta_check.nvp_wns.png width=600>"
+      puts $fo "</iframe>"
       puts $fo "</a>"
       puts $fo "</td>"
       puts $fo "<td>"

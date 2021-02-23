@@ -7,39 +7,63 @@
 
 puts "INFO: Loading 'STA_CHART.tcl'..."
 namespace eval LIB_STA {
+global STA2HTM
+variable CHART_JS
 
-proc create_check_chart {sta_group sta_mode sta_check} {
-  variable STA_CORNER
+set CHART_JS(sta2htm) "<script src='$STA2HTM/etc/html/chartjs/Chart.bundle.js'></script>"
 
-  if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
-     puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
-     return 
-  }
-  create_curr_nvp_chart "$sta_mode/$sta_check" $sta_group
-  set fo [open "$sta_group/$sta_mode/$sta_check.chart.htm" w]
+set CHART_JS(cndjs) {
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js" integrity="sha512-zO8oeHCxetPn1Hd9PdDleg5Tw1bAaP0YmNvPY8CwcRyUk7d7/+nyElmFrB6f7vg4f7Fv4sui1mcep8RIEShczg==" crossorigin="anonymous"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css" integrity="sha512-C7hOmCgGzihKXzyPU/z4nv97W0d9bv4ALuuEbSf6hm93myico9qa0hv4dODThvCsqQUmKmLcJmlpRmCaApr83g==" crossorigin="anonymous" />
+}
+
+set CHART_JS(color) {
+        window.chartColors = {
+                red: 'rgb(255, 99, 132)',
+                orange: 'rgb(255, 159, 64)',
+                yellow: 'rgb(255, 205, 86)',
+                green: 'rgb(75, 192, 192)',
+                blue: 'rgb(54, 162, 235)',
+                purple: 'rgb(153, 102, 255)',
+                grey: 'rgb(201, 203, 207)'
+        };
+}
+
+#
+# <Title>
+# Create NVP/WNS Plot Chart
+#
+# <Input>
+# $data_path.nvp_wns.dat
+#
+# <Output>
+# $data_path.nvp_wns.htm
+# $data_path.nvp_wns.js
+#
+
+proc create_nvp_wns_chart {data_path {title_prefix ""}} {
+  variable STA_CURR_RUN
+  variable CHART_JS
+
+  set data_name [file tail $data_path]
+  file mkdir [file dir $data_path]
+  set fo [open "$data_path.nvp_wns.htm" w]
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
-  puts $fo $::STA_HTML::CHART_JS(sta2htm)
-  puts $fo "<script>"
-  puts $fo $::STA_HTML::CHART_JS(color)
-  puts $fo $::STA_HTML::CHART_JS(onload)
-  puts $fo "</script>"
-  puts $fo "<script src='$sta_check.nvp_wns.js'></script>"
+  puts $fo $CHART_JS(sta2htm)
+  puts $fo "<script src='$data_name.nvp_wns.js'></script>"
   puts $fo "<head>"
   puts $fo "</head>"
   puts $fo "<body>"
-  puts $fo "<div style=\"width:75%;margin:0 auto\">"
-  puts $fo "<canvas id=sta_chart width=800 height=400></canvas>"
+  puts $fo "<div style='width:75%;margin:0 auto'>"
+  puts $fo "<canvas id='$data_path' width=800 height=400></canvas>"
   puts $fo "</div>"
   puts $fo "</body>"
   puts $fo "</html>"
   close $fo
-}
-
-proc create_nvp_wns_chart {path odir} {
   
-  set datfile [format "%s/%s.nvp_wns.dat" $odir $path]
-  set outfile [format "%s/%s.nvp_wns.js" $odir $path]
+  set datfile [format "%s.nvp_wns.dat" $data_path]
+  set outfile [format "%s.nvp_wns.js" $data_path]
   set ymax 100
   if {![catch {open $datfile r} fin]} {
     while {[gets $fin line] >= 0} { 
@@ -63,12 +87,22 @@ proc create_nvp_wns_chart {path odir} {
   }
   close $fin
   set fo [open $outfile w]
+  puts $fo "window.chartColors = {"
+  puts $fo "        red: 'rgb(255, 99, 132)',"
+  puts $fo "        orange: 'rgb(255, 159, 64)',"
+  puts $fo "        yellow: 'rgb(255, 205, 86)',"
+  puts $fo "        green: 'rgb(75, 192, 192)',"
+  puts $fo "        blue: 'rgb(54, 162, 235)',"
+  puts $fo "        purple: 'rgb(153, 102, 255)',"
+  puts $fo "        grey: 'rgb(201, 203, 207)'"
+  puts $fo "};"
   puts $fo "var chartData = {"
   puts $fo "labels: \["
   puts $fo [join $LABEL ","]
   puts $fo "\],"
   puts $fo "datasets: \[{"
   puts $fo "        type: 'line',"
+  puts $fo "        lineTension: 0,"
   puts $fo "        label: 'WNS',"
   puts $fo "        borderColor: window.chartColors.red,"
   puts $fo "        borderWidth: 2,"
@@ -94,7 +128,7 @@ proc create_nvp_wns_chart {path odir} {
   puts $fo "responsive: true,"
   puts $fo "title: {"
   puts $fo "        display: true,"
-  puts $fo "        text: '$path'"
+  puts $fo "        text: '$title_prefix$data_path'"
   puts $fo "},"
   puts $fo "legend: {"
   puts $fo "        display: true,"
@@ -127,6 +161,14 @@ proc create_nvp_wns_chart {path odir} {
   puts $fo "        }\],"
   puts $fo "}"
   puts $fo "};"
+  puts $fo "	window.onload = function() {"
+  puts $fo "                var ctx = document.getElementById('$data_path').getContext('2d');"
+  puts $fo "                window.NVPChart = new Chart(ctx, {"
+  puts $fo "                        type: 'bar',"
+  puts $fo "                        data: chartData,"
+  puts $fo "                        options: chartOption"
+  puts $fo "                });"
+  puts $fo "        };"
   close $fo
 }
 

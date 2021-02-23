@@ -26,5 +26,5 @@ diff: tree
 	diff -y tree.log logs/tree.log 
 
 clean:
-	rm -fr $(STA_RUN_LIST) *.log .snapshot index.htm
+	rm -fr $(STA_RUN_LIST) *.log .trendchart index.htm
 

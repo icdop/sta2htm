@@ -10,7 +10,7 @@ run: $(STA_RUN)
 	make index
 
 index:
-	for i in $(STA_RUN); do ( \
+	@for i in $(STA_RUN); do ( \
 	  cd $$i; make index ; \
 	) ; done
 	
