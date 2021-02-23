@@ -36,7 +36,7 @@ endif
 echo "# STA_RUN := $STA_RUN"
 mkdir -p $STA_RUN/.sta
 cp -fr $ETC_DIR/make/sta2htm.make $STA_RUN/Makefile
-echo "STA_GROUP := " > $STA_RUN/Makefile.run
+echo "# STA_RUN := $STA_RUN" > $STA_RUN/Makefile.inc
 
 if ($1 != "") then
    set STA_RPT = $1
@@ -46,16 +46,20 @@ else
 endif
 set STA_RPT = `realpath $STA_RPT`
 echo "# STA_RPT := $STA_RPT"
+echo "# STA_RPT := $STA_RPT" >> $STA_RUN/Makefile.run
 cp -fr $STA_RPT/.sta/sta2htm.* $STA_RUN/.sta
 rm -f $STA_RUN/$STA_DIR
 ln -s $STA_RPT $STA_RUN/$STA_DIR
 
+if ($1 == "") then
+echo "STA_GROUP := uniq_end" >> $STA_RUN/Makefile.run
+else
 while ($1 != "")
    echo "STA_GROUP += $1" >> $STA_RUN/Makefile.run   
    set STA_GROUP = $1
    shift argv
 end
-
+endif
 
 mkdir -p .javascript
 cp -fr $ETC_DIR/html/chartjs/Chart.bundle.min.js .javascript

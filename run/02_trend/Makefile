@@ -12,7 +12,7 @@ help:
 
 
 $(STA_RUN):
-	sta_init_dir $@ $(STA_RUN_REPORT.$@) $(STA_RUN_GROUP.$@)
+	sta_init_dir $@ $(STA_RUN_REPORT.$@) $(STA_RUN_GROUPS.$@)
 
 
 init: $(STA_RUN)
