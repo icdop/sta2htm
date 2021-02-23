@@ -3,10 +3,6 @@
 #STA_RUN	STA_RUN_REPORT         STA_RUN_GROUPS
 #-------------	---------------------  ----------------
 GOLDEN-0122	reports/apr0-0120      uniq_end
-GOLDEN-0123	reports/eco1-0123      uniq_end
-GOLDEN-0124	reports/eco2-0124      uniq_end
-TRYRUN-0125	reports/eco2-0125      uniq_end
-;GOLDEN-0127	reports/eco3-0127      uniq_end
 
 [GROUP]
 #STA_GROUP   STA_GROUP_REPORT
@@ -42,5 +38,6 @@ S001    setup   func	000 -   157 231 258
 S002    setup	scan02	000 -   -   -   258
 H001    hold	func	000 151 157 -   258
 H002    hold	scan01	000 -   157 -   258
+
 
 

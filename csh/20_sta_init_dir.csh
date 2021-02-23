@@ -2,9 +2,9 @@
 #set verbose=1
 set prog = $0:t
 if (($1 == "") || ($1 == "-h") || ($1 == "--help")) then
-   echo "Usage: $prog [options] <run_dir> <src_version>"
+   echo "Usage: $prog [options] <run_dir> <report_path>"
    echo "       options:"
-   echo "          --STA_DIR <sta_report_dir>"
+   echo "          --STA_GROUP <sta_report_dir>"
    exit -1
 else
    echo "$prog $*"
@@ -18,39 +18,39 @@ endif
 setenv CSH_DIR $STA2HTM/csh
 setenv ETC_DIR $STA2HTM/etc
 
-if ($1 == "--STA_DIR") then
+if ($1 == "--STA_GROUP") then
    shift argv
-   set STA_DIR = $1/
+   set STA_GROUP = $1
    shift argv
-   echo "# STA_DIR := $STA_DIR"
+   echo "# STA_GROUP := $STA_GROUP"
 else
-   set STA_DIR = ""
+   set STA_GROUP = "uniq_end"
 endif
 
 if ($1 != "") then
-   set RUN_DIR = $1
+   set STA_RUN = $1
    shift argv
 else
-   set RUN_DIR = "."
+   set STA_RUN = "."
 endif
-echo "# RUN_DIR := $RUN_DIR"
+echo "# STA_RUN := $STA_RUN"
 
 if ($1 != "") then
    set STA_RPT = $1
    shift argv
 else
-   set STA_RPT = $RUN_DIR
+   set STA_RPT = $STA_RUN
 endif
 
-set STA_RPT = `realpath $STA_DIR$STA_RPT`
+set STA_RPT = `realpath $STA_RPT`
 echo "# STA_RPT := $STA_RPT"
 
-mkdir -p $RUN_DIR
-#echo "STA2HTM := $STA2HTM" > Makefile
-cp -fr $ETC_DIR/make/sta2htm.make $RUN_DIR/Makefile
-cp -fr $STA_RPT/.sta $RUN_DIR/.sta
-rm -f $RUN_DIR/STA
-ln -s $STA_RPT $RUN_DIR/STA
+mkdir -p $STA_RUN
+echo "STA_GROUP := $STA_GROUP" > $STA_RUN/Makefile.run
+cp -fr $ETC_DIR/make/sta2htm.make $STA_RUN/Makefile
+cp -fr $STA_RPT/.sta $STA_RUN/.sta
+rm -f $STA_RUN/STA
+ln -s $STA_RPT $STA_RUN/STA
 
 echo "TIME: @`date +%Y%m%d_%H%M%S` END   $prog"
 echo "======================================================="

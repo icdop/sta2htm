@@ -1,21 +1,31 @@
-STA_DIR := reports
-STA_RUN := GOLDEN-0122
-GOLDEN-0122 := $(STA_DIR)/apr0-0122
+include Makefile.run
+
+#STA_RUN     := GOLDEN-0122
+#GOLDEN-0122 := reports/apr0-0122
+
+help:
+	@echo	"Usage:"
+	@echo	"  make run    # run all : $(STA_RUN)"
+	@echo	"  make index  # create index.htm"
+	@echo	"  make clean  # clean all previous data"
+	@echo
+
+
+run: $(STA_RUN)
+	make index
 
 $(STA_RUN):
 	sta_init_dir $@ $($@)
 	(cd $@; make run ) | tee run.$@.log
 
-run: $(STA_RUN)
-	make index
-
-index:
+index: $(STA_RUN)
 	@for i in $(STA_RUN); do ( \
 	  cd $$i; make index ; \
 	) ; done
+	sta_index_trend
 	
 view:
-	firefox $(STA_RUN)/uniq_end/index.htm &
+	firefox index.htm &
 
 tree: tree.log
 tree.log:
@@ -25,5 +35,5 @@ diff: tree.log
 	diff -y tree.log logs/tree.log 
 
 clean:
-	rm -fr $(STA_RUN) *.log
+	rm -fr $(STA_RUN) *.log .trendchart index.htm
 

@@ -1,0 +1,2 @@
+STA_RUN     := GOLDEN-0122
+GOLDEN-0122 := reports/apr0-0122

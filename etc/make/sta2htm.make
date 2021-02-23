@@ -1,4 +1,6 @@
-STA_GROUP  := uniq_end
+include Makefile.run
+
+#STA_GROUP  := uniq_end
 
 help:
 	@echo	"Usage:"
@@ -15,7 +17,7 @@ $(STA_GROUP):
 
 index: 
 	for i in $(STA_GROUP); do ( \
-	  sta_group_index -sta_group $$i ; \
+	  sta_index_group -sta_group $$i ; \
 	) ; done
 
 

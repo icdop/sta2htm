@@ -1,30 +1,38 @@
-STA_RUN_LIST := GOLDEN-0122 GOLDEN-0123 GOLDEN-0124 TRYRUN-0125
-RPT_DIR := reports
-GOLDEN-0122 = $(RPT_DIR)/apr0-0122
-GOLDEN-0123 = $(RPT_DIR)/eco1-0123
-GOLDEN-0124 = $(RPT_DIR)/eco2-0124
-TRYRUN-0125 = $(RPT_DIR)/eco3-0125
+include Makefile.run
 
-run: $(STA_RUN_LIST)
+#STA_RUN     := GOLDEN-0122
+#GOLDEN-0122 := reports/apr0-0122
+
+help:
+	@echo	"Usage:"
+	@echo	"  make run    # run all : $(STA_RUN)"
+	@echo	"  make index  # create index.htm"
+	@echo	"  make clean  # clean all previous data"
+	@echo
+
+run: $(STA_RUN)
 	make index
 
-$(STA_RUN_LIST):
+$(STA_RUN):
 	sta_init_dir $@ $($@)
 	(cd $@; make run) | tee run.$@.log
 
-index: $(STA_RUN_LIST)
-	sta_run_index
+index: $(STA_RUN)
+	@for i in $(STA_RUN); do ( \
+	  cd $$i; make index ; \
+	) ; done
+	sta_index_trend
 
 view:
 	firefox index.htm &
 
 tree: tree.log
 tree.log: 
-	tree -P index.htm $(STA_RUN_LIST)| tee tree.log
+	tree -P index.htm $(STA_RUN)| tee tree.log
 
 diff: tree
 	diff -y tree.log logs/tree.log 
 
 clean:
-	rm -fr $(STA_RUN_LIST) *.log .trendchart index.htm
+	rm -fr $(STA_RUN) *.log .trendchart index.htm
 
