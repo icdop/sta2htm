@@ -11,11 +11,19 @@ help:
 	@echo
 
 run: $(STA_RUN)
+	@for i in $(STA_RUN); do ( \
+	  (cd $$i; make run) | tee run.$$i.log ; \
+	) ; done
 	make index
 
 $(STA_RUN):
 	sta_init_dir $@ $($@)
-	(cd $@; make run) | tee run.$@.log
+
+init: 
+	for i in $(STA_RUN); do ( \
+	  sta_init_dir $$i $$$$i; \
+	) ; done
+
 
 index: $(STA_RUN)
 	@for i in $(STA_RUN); do ( \

@@ -7,12 +7,11 @@
 
 puts "INFO: Loading 'STA_CHART.tcl'..."
 namespace eval LIB_STA {
-global STA2HTM
 variable CHART_JS
 
-set CHART_JS(sta2htm) "<script src='$STA2HTM/etc/html/chartjs/Chart.bundle.js'></script>"
+set CHART_JS(local) "<script src='.javascript/Chart.bundle.js'></script>"
 
-set CHART_JS(cndjs) {
+set CHART_JS(http) {
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js" integrity="sha512-zO8oeHCxetPn1Hd9PdDleg5Tw1bAaP0YmNvPY8CwcRyUk7d7/+nyElmFrB6f7vg4f7Fv4sui1mcep8RIEShczg==" crossorigin="anonymous"></script>
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css" integrity="sha512-C7hOmCgGzihKXzyPU/z4nv97W0d9bv4ALuuEbSf6hm93myico9qa0hv4dODThvCsqQUmKmLcJmlpRmCaApr83g==" crossorigin="anonymous" />
 }
@@ -46,11 +45,15 @@ proc create_nvp_wns_chart {data_path {title_prefix ""}} {
   variable CHART_JS
 
   set data_name [file tail $data_path]
-  file mkdir [file dir $data_path]
+  set data_dir  [file dir $data_path]
+  file mkdir $data_dir
+  if {![file exists $data_dir/.javascript]} {
+    file link $data_dir/.javascript ../../../.javascript
+  } 
   set fo [open "$data_path.nvp_wns.htm" w]
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
-  puts $fo $CHART_JS(sta2htm)
+  puts $fo $CHART_JS(local)
   puts $fo "<script src='$data_name.nvp_wns.js'></script>"
   puts $fo "<head>"
   puts $fo "</head>"

@@ -5,7 +5,7 @@
 GOLDEN-0122	reports/apr0-0120      uniq_end
 GOLDEN-0123	reports/eco1-0123      uniq_end
 GOLDEN-0124	reports/eco2-0124      uniq_end
-TRYRUN-0125	reports/eco2-0125      uniq_end
+GOLDEN-0125	reports/eco2-0125      uniq_end
 ;GOLDEN-0127	reports/eco3-0127      uniq_end
 
 [GROUP]
