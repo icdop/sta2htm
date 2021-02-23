@@ -10,20 +10,17 @@ help:
 	@echo	"  make clean  # clean all previous data"
 	@echo
 
+$(STA_RUN):
+	sta_init_dir $@ $($@)
+
+init: $(STA_RUN)
+
+
 run: $(STA_RUN)
 	@for i in $(STA_RUN); do ( \
 	  (cd $$i; make run) | tee run.$$i.log ; \
 	) ; done
 	make index
-
-$(STA_RUN):
-	sta_init_dir $@ $($@)
-
-init: 
-	for i in $(STA_RUN); do ( \
-	  sta_init_dir $$i $$$$i; \
-	) ; done
-
 
 index: $(STA_RUN)
 	@for i in $(STA_RUN); do ( \
@@ -42,5 +39,5 @@ diff: tree
 	diff -y tree.log logs/tree.log 
 
 clean:
-	rm -fr $(STA_RUN) *.log .trendchart index.htm
+	rm -fr $(STA_RUN) *.log .trendchart .javascript index.htm
 

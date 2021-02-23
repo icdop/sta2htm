@@ -51,6 +51,8 @@ cp -fr $ETC_DIR/make/sta2htm.make $STA_RUN/Makefile
 cp -fr $STA_RPT/.sta $STA_RUN/.sta
 rm -f $STA_RUN/STA
 ln -s $STA_RPT $STA_RUN/STA
+mkdir -p .javascript
+cp -fr $ETC_DIR/html/chartjs/Chart.bundle.min.js .javascript
 
 echo "TIME: @`date +%Y%m%d_%H%M%S` END   $prog"
 echo "======================================================="

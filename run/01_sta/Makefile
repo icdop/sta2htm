@@ -11,12 +11,22 @@ help:
 	@echo
 
 
-run: $(STA_RUN)
-	make index
-
 $(STA_RUN):
 	sta_init_dir $@ $($@)
-	(cd $@; make run ) | tee run.$@.log
+
+
+init: $(STA_RUN)
+
+javascript:
+	mkdir -p javascript
+	cp -fr ../../etc/html/chartjs/Chart.bundle.min.js javascript
+
+run: $(STA_RUN) javascript
+	@for i in $(STA_RUN); do ( \
+	  (cd $$i; make run) | tee run.$$i.log ; \
+	) ; done
+	make index
+
 
 index: $(STA_RUN)
 	@for i in $(STA_RUN); do ( \
@@ -35,5 +45,5 @@ diff: tree.log
 	diff -y tree.log logs/tree.log 
 
 clean:
-	rm -fr $(STA_RUN) *.log .trendchart index.htm
+	rm -fr $(STA_RUN) *.log .trendchart .javascript index.htm
 
