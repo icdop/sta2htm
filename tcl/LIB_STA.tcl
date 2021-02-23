@@ -17,9 +17,10 @@ variable STA_CFG_DIR    ".sta"
 variable STA_CFG_PATH   "STA/.sta .sta ."
 
 variable STA_CURR_RUN	"."
-variable STA_CURR_GROUP "uniq_end"
+variable STA_CURR_GROUP ""
 variable STA_RPT_PATH   "STA"
-variable STA_RPT_FILE   {$sta_mode/$corner_name$/$sta_check.rpt*}
+variable STA_RPT_FILE   ""
+
 
 variable STA_RUN_LIST    ""
 variable STA_RUN_REPORT
@@ -153,7 +154,7 @@ proc parse_argv { {argv ""} } {
 # <Output>
 #
 #
-proc report_uniq_end {{sta_group "uniq_end"}} {
+proc report_uniq_end {{sta_group ""} {sta_rpt_file ""}} {
   variable STA_RPT_PATH
   variable STA_RPT_FILE
   variable STA_CURR_GROUP
@@ -167,6 +168,18 @@ proc report_uniq_end {{sta_group "uniq_end"}} {
      if [info exist STA_GROUP_FILES($sta_group)] {
         set STA_RPT_FILE $STA_GROUP_FILES($sta_group)
      }
+  } elseif {$STA_CURR_GROUP!=""} {
+     set sta_group $STA_CURR_GROUP   
+  } else {
+     set sta_group "uniq_end"
+     set STA_CURR_GROUP $sta_group
+  }
+  if {$sta_rpt_file!=""} {
+     set STA_RPT_FILE $sta_rpt_file
+  } elseif {$STA_RPT_FILE!=""} {
+     set sta_rpt_file $STA_RPT_FILE
+  } else {
+     set STA_RPT_FILE "$sta_mode/$corner_name/$sta_check.rpt*"
   }
 
   foreach sta_check $STA_CHECK_LIST {

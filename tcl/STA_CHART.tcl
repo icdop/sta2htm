@@ -64,6 +64,9 @@ proc create_nvp_wns_chart {data_path {title_prefix ""}} {
   set datfile [format "%s.nvp_wns.dat" $data_path]
   set outfile [format "%s.nvp_wns.js" $data_path]
   set ymax 100
+  set LABEL ""
+  set NVP ""
+  set WNS ""
   if {![catch {open $datfile r} fin]} {
     while {[gets $fin line] >= 0} { 
         if {[regexp {^\#} $line]} continue;

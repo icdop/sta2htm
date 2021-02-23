@@ -10,8 +10,10 @@ help:
 	@echo	"  make clean  # clean all previous data"
 	@echo
 
+
 $(STA_RUN):
-	sta_init_dir $@ $($@)
+	sta_init_dir $@ $(STA_RUN_REPORT.$@) $(STA_RUN_GROUP.$@)
+
 
 init: $(STA_RUN)
 
@@ -22,22 +24,23 @@ run: $(STA_RUN)
 	) ; done
 	make index
 
+
 index: $(STA_RUN)
 	@for i in $(STA_RUN); do ( \
 	  cd $$i; make index ; \
 	) ; done
 	sta_index_trend
-
+	
 view:
 	firefox index.htm &
 
 tree: tree.log
-tree.log: 
-	tree -P index.htm $(STA_RUN)| tee tree.log
+tree.log:
+	tree $(STA_RUN) | tee tree.log
 
-diff: tree
+diff: tree.log
 	diff -y tree.log logs/tree.log 
 
 clean:
-	rm -fr $(STA_RUN) *.log .trendchart .javascript index.htm
+	rm -fr $(STA_RUN) *.log .trendchart .javascript index.htm index.*.htm
 

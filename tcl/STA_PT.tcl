@@ -19,6 +19,8 @@ namespace eval LIB_STA {
 #
 # <Refer>
 # report_vio_histogram
+# output_block_table
+# output_clock_table
 #
 # <Output>
 # $sta_group/$sta_mode/$sta_check.htm
@@ -34,6 +36,8 @@ namespace eval LIB_STA {
 #
 proc parse_primetime_report {sta_group sta_mode sta_check sta_report_path sta_report_filter} {
   variable STA_CURR_RUN
+  variable STA_MODE_NAME
+  variable STA_CORNER_NAME
   variable STA_CORNER
   
   variable STA_DATA
@@ -41,6 +45,11 @@ proc parse_primetime_report {sta_group sta_mode sta_check sta_report_path sta_re
   variable MET_LIST
   variable WAV_LIST
   
+  if {[info exist STA_MODE_NAME($sta_mode)]} { 
+     set mode_name $STA_MODE_NAME($sta_mode)
+  } else {
+     set mode_name $sta_mnode
+  }
   if {![info exist STA_CORNER($sta_mode,$sta_check)]} {
      puts "INFO: STA_CORNER($sta_mode,$sta_check) is not defined..."
      return 
@@ -48,7 +57,7 @@ proc parse_primetime_report {sta_group sta_mode sta_check sta_report_path sta_re
   puts "INFO: Parsing Timing Report Files ($sta_check)..."
   file delete -force $sta_group/$sta_mode/$sta_check
   file mkdir $sta_group/$sta_mode
-  puts "INFO: $sta_group/$sta_mode"
+  puts "INFO: $sta_group/$sta_mode/$sta_check"
 
   set fdat [open "$sta_group/$sta_mode/$sta_check.nvp_wns.dat" w]
   puts $fdat "# $STA_CURR_RUN/$sta_group"

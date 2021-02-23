@@ -2,9 +2,9 @@
 #set verbose=1
 set prog = $0:t
 if (($1 == "") || ($1 == "-h") || ($1 == "--help")) then
-   echo "Usage: $prog [options] <run_dir> <report_path>"
+   echo "Usage: $prog [options] <run_dir> <report_path> <sta_group>"
    echo "       options:"
-   echo "          --STA_GROUP <sta_report_dir>"
+   echo "          --STA_DIR <sta_report_dir>"
    exit -1
 else
    echo "$prog $*"
@@ -18,13 +18,13 @@ endif
 setenv CSH_DIR $STA2HTM/csh
 setenv ETC_DIR $STA2HTM/etc
 
-if ($1 == "--STA_GROUP") then
+if ($1 == "--STA_DIR") then
    shift argv
-   set STA_GROUP = $1
+   set STA_DIR = $1
    shift argv
-   echo "# STA_GROUP := $STA_GROUP"
+   echo "# STA_DIR := $STA_DIR"
 else
-   set STA_GROUP = "uniq_end"
+   set STA_DIR = "STA"
 endif
 
 if ($1 != "") then
@@ -34,6 +34,9 @@ else
    set STA_RUN = "."
 endif
 echo "# STA_RUN := $STA_RUN"
+mkdir -p $STA_RUN/.sta
+cp -fr $ETC_DIR/make/sta2htm.make $STA_RUN/Makefile
+echo "STA_GROUP := " > $STA_RUN/Makefile.run
 
 if ($1 != "") then
    set STA_RPT = $1
@@ -41,16 +44,19 @@ if ($1 != "") then
 else
    set STA_RPT = $STA_RUN
 endif
-
 set STA_RPT = `realpath $STA_RPT`
 echo "# STA_RPT := $STA_RPT"
+cp -fr $STA_RPT/.sta/sta2htm.* $STA_RUN/.sta
+rm -f $STA_RUN/$STA_DIR
+ln -s $STA_RPT $STA_RUN/$STA_DIR
 
-mkdir -p $STA_RUN
-echo "STA_GROUP := $STA_GROUP" > $STA_RUN/Makefile.run
-cp -fr $ETC_DIR/make/sta2htm.make $STA_RUN/Makefile
-cp -fr $STA_RPT/.sta $STA_RUN/.sta
-rm -f $STA_RUN/STA
-ln -s $STA_RPT $STA_RUN/STA
+while ($1 != "")
+   echo "STA_GROUP += $1" >> $STA_RUN/Makefile.run   
+   set STA_GROUP = $1
+   shift argv
+end
+
+
 mkdir -p .javascript
 cp -fr $ETC_DIR/html/chartjs/Chart.bundle.min.js .javascript
 

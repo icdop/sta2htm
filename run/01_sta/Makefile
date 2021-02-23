@@ -12,16 +12,13 @@ help:
 
 
 $(STA_RUN):
-	sta_init_dir $@ $($@)
+	sta_init_dir $@ $(STA_RUN_REPORT.$@) $(STA_RUN_GROUPS.$@)
 
 
 init: $(STA_RUN)
 
-javascript:
-	mkdir -p javascript
-	cp -fr ../../etc/html/chartjs/Chart.bundle.min.js javascript
 
-run: $(STA_RUN) javascript
+run: $(STA_RUN)
 	@for i in $(STA_RUN); do ( \
 	  (cd $$i; make run) | tee run.$$i.log ; \
 	) ; done
@@ -45,5 +42,5 @@ diff: tree.log
 	diff -y tree.log logs/tree.log 
 
 clean:
-	rm -fr $(STA_RUN) *.log .trendchart .javascript index.htm
+	rm -fr $(STA_RUN) *.log .trendchart .javascript index.htm index.*.htm
 
