@@ -1,4 +1,4 @@
-# Static Timing Analysis Report Reviewer
+# Static Timing Analysis HTML Reviewer
 
 ## 0) System Requirements
 
@@ -165,10 +165,9 @@ set STA_CORNER(scan,hold)  "000 157 258"
 # $sta_group/$sta_mode/$sta_check.nvp_wns.dat
 # $sta_group/$sta_mode/$sta_corner/$sta_check.vio
 # $sta_group/$sta_mode/$sta_corner/$sta_check.clk
-# $sta_group/$sta_mode/$sta_corner/$sta_check.nvp+ <code> % make run </code>
-
+# $sta_group/$sta_mode/$sta_corner/$sta_check.nvp
 # $sta_group/$sta_mode/$sta_corner/$sta_check.sum
-</p>
+</pre>
 
 + <code> (GOLDEN-0122) sta_index_group -sta_group $sta_group </code>
 
@@ -180,7 +179,6 @@ set STA_CORNER(scan,hold)  "000 157 258"
 # $sta_group/$sta_mode/corner.htm
 ....
 </pre>
-
 
 ## 6) Genearte STA2HTM index page
 + <code> % make index </code>
