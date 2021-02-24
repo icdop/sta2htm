@@ -1,8 +1,7 @@
 # Static Timing Analysis Report Reviewer
 
-## 0) Pre-requirement
+## 0) System Requirements
 
-+ install sta2htm package
 + install <code>tree</code> packages.
 + install <code>gnuplot</code> packages.
 
@@ -58,29 +57,18 @@ H002    hold	scan01	000 -   157 -   258
 
 </pre>
 
+
+## 2) Specify STA report path
+
 + geneate STA reports from PrimeTime: 
+
   <code>$STA_RPT/$sta_mode/$sta_corner/$sta_check/violation.rpt</code>
 
-## 1) Specify HTML report dir name and STA report path
-
-+ <code> % cd 01-sta </code>
-<pre>
-01_sta
-├── Makefile
-├── README.md
-└── reports -> ../reports
-</pre>
 <pre>
 reports
 ├── apr0-0122
 ├── eco1-0123
 └── eco2-0124
-</pre>
-
-+ <code> % vi Makefile </code>
-<pre>
-STA_RUN  := GOLDEN-0122
-STA_RPT  := ../reports/apr0-0122
 </pre>
 
 The followin directory structure is recommeded for MMMC STA reports
@@ -108,24 +96,46 @@ apr0-0122/
         └── hold.rpt
 </pre>
 
-## 2) Initialize working directory environment
-
-+ <code> % sta_init GOLDEN-0122 ../reports/GOLDEN-0122</code>
+## 3) Initialize working directory environment
 
 <pre>
-Usage: sta_init_dir [$STA_RUN] [$STA_RPT]
+include Makefile.run
+
+$(STA_RUN):
+	sta_init_run $@ $(STA_RUN_DIR.$@) $(STA_RUN_GROUPS.$@)
+
+init: $(STA_RUN)
+
+run: init
+	@for i in $(STA_RUN); do ( \
+	  (cd $$i; make run) | tee run.$$i.log ; \
+	) ; done
+	sta_index_runset
+
+index: run
+	@for i in $(STA_RUN); do ( \
+	  cd $$i; make index ; \
+	) ; done
+	sta_index_runset
+	
 </pre>
 
-The follow csh commands will be executed by stat_init_dir
 <pre>
-# mkdir GOLDEN-0122
-# cd GOLDEN-0122
-# cp -fr  $(STA_RPT)/.sta .sta
-# cp $(ETC_DIR)/sta/Makefile Makefile
-# ln -s   $(STA_RPT)  STA
+STA_RUN     := GOLDEN-0122
+STA_RUN_DIR.GOLDEN-0122 := reports/apr0-0122
+STA_RUN_GROUPS.GOLDEN-0122 := detail uniq_end
 </pre>
 
-## 3) Modify timing signoff corner definition table
+
+<pre>
+Usage: sta_init_run [STA_RUN] [STA_RUN_DIR] [STA_RUN_GROUPS]...
+</pre>
+Example:
++ <code> % sta_init_dir GOLDEN-0122 reports/GOLDEN-0122  uniq_end reg2reg</code>
+
+
+
+## 4) Review timing signoff corner definition table
 
 + <code> % vi GOLDEN-0122/.sta/sta2htm.corner </code>
 
@@ -137,14 +147,14 @@ The follow csh commands will be executed by stat_init_dir
 258	258_WC
 </pre>
 
-## 4) Modify sta report filtering configuration file
+## 5) Review sta2htm configuration file
 
 + <code> % vi GOLDEN_0122/.sta/sta2htm.cfg </code>
 
 <pre>
 # STA report filename filter : $STA_RPT_PATH/$STA_RPT_FILE
-set STA_RPT_PATH {$sta_mode/$corner_name}
-set STA_RPT_FILE {$sta_check$sta_postfix.rpt*}
+set STA_RPT_PATH {STA}
+set STA_RPT_FILE {$sta_mode/$corner_name/$sta_check$sta_postfix.rpt*}
 
 # STA mode name list
 set STA_MODE_LIST "func scan"
@@ -156,35 +166,37 @@ set STA_CORNER(scan,setup) "000 157"
 set STA_CORNER(scan,hold)  "000 157 258"
 </pre>
 
-## 5) Generate HTML reports from Pretime STA timing reports
+## 6) Generate HTML Summary reports
 
 + <code> % cd GOLDEN-0122 </code>
-+ <code> % sta_rpt_uniq_end -sta_check setup </code>
-+ <code> % sta_rpt_uniq_end -sta_check hold </code>
+
++ <code> % make run </code>
+
++ <code> % sta_uniq_end -sta_group $sta_group </code>
 
 <pre>
-$STA_RPT_PATH/$STA_RPT_FILE (violation.rpt) : Primetime report
-
-# $STA_SUM_DIR/$sta_check.htm
-# $STA_SUM_DIR/$sta_mode/$sta_check.htm
-# $STA_SUM_DIR/$sta_mode/$sta_check.nvp_wns.dat
-# $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.vio
-# $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.clk
-# $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.nvp
-# $STA_SUM_DIR/$sta_mode/$sta_check/$corner_name.sum
+# $sta_group/$sta_check.htm
+# $sta_group/$sta_mode/$sta_check.htm
+# $sta_group/$sta_mode/$sta_check.nvp_wns.dat
+# $sta_group/$sta_mode/$sta_corner/$sta_check.vio
+# $sta_group/$sta_mode/$sta_corner/$sta_check.clk
+# $sta_group/$sta_mode/$sta_corner/$sta_check.nvp
+# $sta_group/$sta_mode/$sta_corner/$sta_check.sum
 </pre>
 
-## 6) Geneare STA2HM home page index file
-+ <code> % sta_gen_index </code>
++ <code> % sta_index_group -sta_group $sta_group </code>
 
 <pre>
-# $STA_SUM_DIR/index.htm
-# $STA_SUM_DIR/$sta_mode/index.htm
-# $STA_SUM_DIR/$sta_mode/mode.htm
-# $STA_SUM_DIR/$sta_mode/check.htm
-# $STA_SUM_DIR/$sta_mode/corner.htm
+# $sta_group/index.htm
+# $sta_group/$sta_mode/index.htm
+# $sta_group/$sta_mode/mode.htm
+# $sta_group/$sta_mode/check.htm
+# $sta_group/$sta_mode/corner.htm
 ...
 </pre>
+
++ <code> % sta_index_runset </code>
+
 
 ## 7) Review STA summary report through browser
 
@@ -199,36 +211,3 @@ $STA_RPT_PATH/$STA_RPT_FILE (violation.rpt) : Primetime report
 
 ![run/01_sta/screenshot/uniq_end_summary.png](./run/01_sta/screenshot/uniq_end_summary.png?raw=true)
 
-<pre>
-uniq_end/
-├── func
-│   ├── setup
-│   │   ├── 000_TT.blk.htm
-│   │   ├── 000_TT.clk.htm
-│   │   ├── 121_BC.blk.htm
-│   │   ├── 121_BC.clk.htm
-│   │   ├── 253_WC.blk.htm
-│   │   └── 253_WC.clk.htm
-│   ├── index.htm
-│   ├── setup.blk.htm
-│   ├── setup.clk.htm
-│   ├── setup.htm
-│   └── setup.uniq_end.htm
-├── scan
-│   ├── setup
-│   │   ├── 000_TT.blk.htm
-│   │   ├── 000_TT.clk.htm
-│   │   ├── 121_BC.blk.htm
-│   │   └── 121_BC.clk.htm
-│   ├── index.htm
-│   ├── setup.blk.htm
-│   ├── setup.clk.htm
-│   ├── setup.htm
-│   └── setup.uniq_end.htm
-├── corner.htm
-├── index.htm                   <-- (Summary Report Home Page)
-├── mode.htm
-├── setup.diff.htm
-├── setup.full.htm
-└── setup.htm
-</prev>
