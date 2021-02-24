@@ -168,6 +168,7 @@ set STA_CORNER(scan,hold)  "000 157 258"
 # $sta_group/$sta_mode/$sta_corner/$sta_check.nvp
 # $sta_group/$sta_mode/$sta_corner/$sta_check.sum
 </pre>
+![run/01_sta/screenshot/uniq_end_summary.png](./run/01_sta/screenshot/uniq_end_summary.png?raw=true)
 
 + <code> (GOLDEN-0122) sta_index_group -sta_group $sta_group </code>
 
@@ -179,17 +180,12 @@ set STA_CORNER(scan,hold)  "000 157 258"
 # $sta_group/$sta_mode/corner.htm
 ....
 </pre>
+![run/01_sta/screenshot/uniq_end_index.png](./run/01_sta/screenshot/uniq_end_index.png?raw=true)
+![run/01_sta/screenshot/uniq_end_mode.png](./run/01_sta/screenshot/uniq_end_mode.png?raw=true)
 
 ## 6) Genearte STA2HTM index page
 + <code> % make index </code>
-++ <code>   sta_index_runset </code>
++ <code> % sta_index_runset </code>
 
-+ <code> % make view </code>
-++ <code>    firefox index.htm </code>
 
-![run/01_sta/screenshot/uniq_end_index.png](./run/01_sta/screenshot/uniq_end_index.png?raw=true)
-
-![run/01_sta/screenshot/uniq_end_mode.png](./run/01_sta/screenshot/uniq_end_mode.png?raw=true)
-
-![run/01_sta/screenshot/uniq_end_summary.png](./run/01_sta/screenshot/uniq_end_summary.png?raw=true)
 
