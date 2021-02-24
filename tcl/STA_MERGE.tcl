@@ -36,7 +36,7 @@ proc unique_vio_endpoint {sta_group sta_mode sta_check {corner_list ""}} {
      return 
   }
   if {$corner_list==""} {set corner_list $STA_CORNER($sta_mode,$sta_check)}
-  puts "INFO($sta_mode): Merging slack files of multiple corners ..."
+  puts "\[$sta_mode\] INFO: Merging slack files of multiple corners ..."
   set WNS 0.0
   set TNS 0.0
   foreach sta_corner $corner_list {

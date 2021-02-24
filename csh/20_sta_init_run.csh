@@ -36,7 +36,7 @@ endif
 echo "# STA_RUN := $STA_RUN"
 mkdir -p $STA_RUN/.sta
 cp -fr $ETC_DIR/make/sta2htm.make $STA_RUN/Makefile
-echo "# STA_RUN := $STA_RUN" > $STA_RUN/Makefile.inc
+echo "# STA_RUN := $STA_RUN" > $STA_RUN/Makefile.run
 
 if ($1 != "") then
    set STA_RPT = $1

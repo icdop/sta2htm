@@ -9,11 +9,11 @@ help:
 	@echo	"  make clean  # clean all previous data"
 	@echo
 
-run:	$(STA_GROUP) 
-
 $(STA_GROUP):
 	mkdir -p $@
 	sta_uniq_end -sta_group $@ | tee $@.log
+
+run:	$(STA_GROUP)
 
 index: 
 	for i in $(STA_GROUP); do ( \

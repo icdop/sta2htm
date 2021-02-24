@@ -12,24 +12,23 @@ help:
 
 
 $(STA_RUN):
-	sta_init_dir $@ $(STA_RUN_REPORT.$@) $(STA_RUN_GROUPS.$@)
+	sta_init_run $@ $(STA_RUN_DIR.$@) $(STA_RUN_GROUPS.$@)
 
 
 init: $(STA_RUN)
 
 
-run: $(STA_RUN)
+run: init
 	@for i in $(STA_RUN); do ( \
 	  (cd $$i; make run) | tee run.$$i.log ; \
 	) ; done
-	make index
 
 
-index: $(STA_RUN)
+index: 
 	@for i in $(STA_RUN); do ( \
 	  cd $$i; make index ; \
 	) ; done
-	sta_index_trend
+	sta_index_runset
 	
 view:
 	firefox index.htm &

@@ -2,8 +2,62 @@
 
 ## 0) Pre-requirement
 
++ install sta2htm package
 + install <code>tree</code> packages.
 + install <code>gnuplot</code> packages.
+
+## 1) Edit Runset defintion file [sta2htm.run]
+
+<pre>
+#
+[VERSION]
+#STA_RUN	STA_RUN_DIR            STA_RUN_GROUPS
+#-------------	---------------------  ----------------
+GOLDEN-0122	reports/apr0-0120      uniq_end
+GOLDEN-0123	reports/eco1-0123      uniq_end
+GOLDEN-0124	reports/eco2-0124      uniq_end
+GOLDEN-0125	reports/eco2-0125      uniq_end
+;GOLDEN-0127	reports/eco3-0127      uniq_end
+
+[GROUP]
+#STA_GROUP   STA_GROUP_FILES
+#---------   -----------------------------------------------
+uniq_end     $sta_mode/$corner_name/$sta_check.rpt
+
+[CHECK]
+#STA_CHECK   STA_CHECK_DEF
+#----------- -------------------
+setup		WNS        
+hold            NVP
+
+[MODE]
+#STA_MODE     STA_MODE_NAME     STA_MODE_DEF
+#-----------  ----------------- -------------------
+func          functional        func_0210.sdc
+scan01        dc_shift          scan_0211.sdc
+scan02        ac_capture        scan_0221.sdc
+
+[CORNER]
+#STA_CORNER    STA_CORNER_NAME    STA_CORNER_DEF
+#------------  ---------------    ------------------------ ----------
+000            000_TT             TTT:0.80V:025C  RCtyp
+151            151_ML             FFG:0.88V:125C  Cmax
+157            157_BC             FFF:0.88V:-40C  Cmin
+231            231_WCL            SSG:0.72V:-40C  Cmax
+258            258_WC             SSG:0.72V:125C  Cmax
+
+[SCENARIO]
+#SID    CHECK   MODE	CORNERS
+#-----	------	------- --------------------
+S001    setup   func	000 -   157 231 258
+S002    setup	scan02	000 -   -   -   258
+H001    hold	func	000 151 157 -   258
+H002    hold	scan01	000 -   157 -   258
+
+
+
+</pre>
+
 + geneate STA reports from PrimeTime: 
   <code>$STA_RPT/$sta_mode/$sta_corner/$sta_check/violation.rpt</code>
 

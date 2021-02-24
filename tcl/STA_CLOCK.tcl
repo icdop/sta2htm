@@ -132,7 +132,7 @@ proc report_clock_table {sta_group sta_mode sta_check} {
   }
   array unset CLOCK_NVP
   array unset CLOCK_WNS
-  puts "INFO($sta_mode): Group slack files of multiple corners ..."
+  puts "\[$sta_mode\] INFO: Group slack files of multiple corners ..."
   foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
     if {[catch {glob $sta_group/$sta_mode/$sta_corner/$sta_check.vio} files]} continue;
     foreach fname $files {
@@ -272,7 +272,7 @@ proc report_index_clock {sta_group sta_mode sta_check {corner_list ""}} {
   extract_clock_list -
   assign_clock_gid
 
-  puts "INFO($sta_mode): $CLOCK_NUM Clocks"
+  puts "\[$sta_mode\] INFO: $CLOCK_NUM Clocks"
 
   set fout [open "$sta_group/$sta_mode/$sta_check.clk.htm" w]
   puts $fout "<html>"

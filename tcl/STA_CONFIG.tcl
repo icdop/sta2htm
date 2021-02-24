@@ -8,10 +8,10 @@
 puts "INFO: Loading 'STA_CONFIG.tcl'..."  
 namespace eval LIB_STA {
   variable STA_RUN_LIST     
-  variable STA_RUN_REPORT
+  variable STA_RUN_DIR
   variable STA_RUN_GROUPS
   variable STA_GROUP_LIST     
-  variable STA_GROUP_FILES
+  variable STA_GROUP_REPORT
   variable STA_BLOCK_LIST   
   variable STA_BLOCK_DEF
   variable STA_CHECK_LIST   
@@ -36,10 +36,10 @@ namespace eval LIB_STA {
 #
 proc reset_sta_config {} {
   variable STA_RUN_LIST
-  variable STA_RUN_REPORT
+  variable STA_RUN_DIR
   variable STA_RUN_GROUPS
   variable STA_GROUP_LIST
-  variable STA_GROUP_FILES
+  variable STA_GROUP_REPORT
   variable STA_BLOCK_LIST
   variable STA_BLOCK_DEF
   variable STA_CHECK_LIST
@@ -64,9 +64,9 @@ proc reset_sta_config {} {
   set STA_CORNER_LIST ""
   set STA_SCENARIO_LIST ""
   
-  array set STA_RUN_REPORT   {}
+  array set STA_RUN_DIR   {}
   array set STA_RUN_GROUPS   {}
-  array set STA_GROUP_FILES  {}
+  array set STA_GROUP_REPORT  {}
   array set STA_BLOCK_DEF    {}
   array set STA_CHECK_DQI    {}
   array set STA_CHECK_DEF    {}
@@ -119,10 +119,10 @@ proc sync_sta_config {} {
   variable STA_RPT_PATH
   variable STA_RPT_FILE
   variable STA_RUN_LIST
-  variable STA_RUN_REPORT
+  variable STA_RUN_DIR
   variable STA_RUN_GROUPS
   variable STA_GROUP_LIST
-  variable STA_GROUP_FILES
+  variable STA_GROUP_REPORT
 
   variable STA_BLOCK_LIST
   variable STA_BLOCK_DEF
@@ -142,13 +142,13 @@ proc sync_sta_config {} {
   set STA_CURR_RUN [file tail $env(PWD)]
   set STA_RUN_LIST $STA_CURR_RUN
   if {[catch {file readlink $STA_RPT_PATH} sta_run_report]} {
-     set STA_RUN_REPORT($STA_CURR_RUN) $STA_RPT_PATH
+     set STA_RUN_DIR($STA_CURR_RUN) $STA_RPT_PATH
   } else {
-     set STA_RUN_REPORT($STA_CURR_RUN) $sta_run_report
+     set STA_RUN_DIR($STA_CURR_RUN) $sta_run_report
   }
   set STA_RUN_GROUPS($STA_CURR_RUN) $STA_CURR_GROUP
   set STA_GROUP_LIST $STA_CURR_GROUP
-  set STA_GROUP_FILES($STA_CURR_GROUP) $STA_RPT_FILE
+  set STA_GROUP_REPORT($STA_CURR_GROUP) $STA_RPT_FILE
   
   foreach sta_block $STA_BLOCK_LIST {
     if ![info exist STA_BLOCK_DEF($sta_block)] {
@@ -268,10 +268,10 @@ proc read_sta_runset {{filename "sta2htm.run"}} {
 
 proc parse_runset_line {section line} {
   variable STA_RUN_LIST
-  variable STA_RUN_REPORT
+  variable STA_RUN_DIR
   variable STA_RUN_GROUPS
   variable STA_GROUP_LIST
-  variable STA_GROUP_FILES
+  variable STA_GROUP_REPORT
   variable STA_BLOCK_LIST
   variable STA_BLOCK_DEF
   variable STA_CHECK_LIST
@@ -292,16 +292,16 @@ proc parse_runset_line {section line} {
   switch -nocase $section {
     VERSION {
       set sta_run [lindex $line 0]
-      set STA_RUN_REPORT($sta_run) [lindex $line 1]
+      set STA_RUN_DIR($sta_run) [lindex $line 1]
       set STA_RUN_GROUPS($sta_run) [lrange $line 2 end]
       lappend STA_RUN_LIST $sta_run
-      puts $fp [format "%-12s %-20s %s" $sta_run $STA_RUN_REPORT($sta_run) $STA_RUN_GROUPS($sta_run)]
+      puts $fp [format "%-12s %-20s %s" $sta_run $STA_RUN_DIR($sta_run) $STA_RUN_GROUPS($sta_run)]
     }
     GROUP {
       set sta_group   [lindex $line 0]
-      set STA_GROUP_FILES($sta_group) [lrange $line 1 end]
+      set STA_GROUP_REPORT($sta_group) [lrange $line 1 end]
       lappend STA_GROUP_LIST $sta_group
-      puts $fp [format "%-12s %s" $sta_group $STA_GROUP_FILES($sta_group)]
+      puts $fp [format "%-12s %s" $sta_group $STA_GROUP_REPORT($sta_group)]
     }
     BLOCK {
       set sta_block   [lindex $line 0]
@@ -369,10 +369,10 @@ proc parse_runset_line {section line} {
 
 proc output_sta2htm_runset {filename} {
   variable STA_RUN_LIST
-  variable STA_RUN_REPORT
+  variable STA_RUN_DIR
   variable STA_RUN_GROUPS
   variable STA_GROUP_LIST
-  variable STA_GROUP_FILES
+  variable STA_GROUP_REPORT
   variable STA_BLOCK_LIST
   variable STA_BLOCK_DEF
   variable STA_CHECK_LIST
@@ -391,18 +391,18 @@ proc output_sta2htm_runset {filename} {
   puts "INFO: Writing configuration file '$filename'..."
   set fp [open $filename "w"]
   puts $fp {[VERSION]}
-  puts $fp "#STA_RUN    STA_RUN_REPORT        STA_RUN_GROUPS"
+  puts $fp "#STA_RUN    STA_RUN_DIR           STA_RUN_GROUPS"
   puts $fp "#---------- --------------------- -------------------------"
   foreach sta_run $STA_RUN_LIST {
-    puts $fp [format "%-12s %-20s %s" $sta_run $STA_RUN_REPORT($sta_run) $STA_RUN_GROUPS($sta_run)]
+    puts $fp [format "%-12s %-20s %s" $sta_run $STA_RUN_DIR($sta_run) $STA_RUN_GROUPS($sta_run)]
   }
   puts $fp ""
   puts $fp {[GROUP]}
-  puts $fp "#STA_GROUP   STA_GROUP_FILES"
+  puts $fp "#STA_GROUP   STA_GROUP_REPORT"
   puts $fp "#----------- -----------------------------------------------"
 
   foreach sta_group $STA_GROUP_LIST {
-    puts $fp [format "%-12s %s" $sta_group $STA_GROUP_FILES($sta_group)]
+    puts $fp [format "%-12s %s" $sta_group $STA_GROUP_REPORT($sta_group)]
   }
   puts $fp ""
   puts $fp {[BLOCK]}

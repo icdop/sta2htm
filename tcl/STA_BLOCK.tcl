@@ -149,7 +149,7 @@ proc report_block_table {sta_group sta_mode sta_check} {
   }
   array unset BLOCK_NVP
   array unset BLOCK_WNS
-  puts "INFO($sta_mode): Group slack files of multiple corners ..."
+  puts "\[$sta_mode\] INFO: Group slack files of multiple corners ..."
   foreach sta_corner $STA_CORNER($sta_mode,$sta_check) {
     if {[catch {glob $sta_group/$sta_mode/$sta_corner/$sta_check.vio} files]} continue;
     foreach fname $files {
@@ -287,7 +287,7 @@ proc report_index_block {sta_group sta_mode sta_check {corner_list ""}} {
   extract_block_list -
   assign_block_gid
 
-  puts "INFO($sta_mode): $BLOCK_NUM blocks"
+  puts "\[$sta_mode\] INFO: $BLOCK_NUM blocks"
 
   set fout [open "$sta_group/$sta_mode/$sta_check.blk.htm" w]
   puts $fout "<html>"

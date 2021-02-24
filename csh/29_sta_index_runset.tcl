@@ -7,4 +7,4 @@ source $STA2HTM/tcl/LIB_STA.tcl
 ::LIB_STA::read_sta_runset
 ::LIB_STA::report_index_runset
 
-puts "INFO: sta_run_index Done..."
+puts "INFO: sta_index_runset Done..."

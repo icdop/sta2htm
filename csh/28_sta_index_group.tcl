@@ -7,4 +7,4 @@ source $STA2HTM/tcl/LIB_STA.tcl
 ::LIB_STA::read_sta_config
 ::LIB_STA::report_group_index
 
-puts "INFO: sta_group_index Done..."
+puts "INFO: sta_index_group Done..."

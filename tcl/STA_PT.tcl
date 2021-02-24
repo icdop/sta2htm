@@ -93,7 +93,6 @@ proc parse_primetime_report {sta_group sta_mode sta_check sta_report_path sta_re
       puts "FILTER: $sta_report_path/$filter"
     
       if [catch {eval glob $sta_report_path/$filter} files] continue;
-      puts "INFO: $files"
       foreach fname [lsort -increasing -unique $files] {
         incr FID 
         set wns 0.0
@@ -107,7 +106,7 @@ proc parse_primetime_report {sta_group sta_mode sta_check sta_report_path sta_re
               set corner_name $path_name
            }
         } 
-        puts "($FID) $sta_corner\t$sta_corner\t$fname"
+        puts "($FID) $sta_corner\t$corner_name\t$fname"
         if [regsub {\.gz$} $fname "" n] {
            exec gunzip -c $fname > $sta_group/$sta_mode/$sta_corner/.unzip.rpt
            set fin [open $sta_group/$sta_mode/$sta_corner/.unzip.rpt r]

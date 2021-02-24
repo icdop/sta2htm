@@ -38,7 +38,7 @@ GOLDEN-0124	reports/eco2-0124      uniq_end
 ;GOLDEN-0127	reports/eco3-0127      uniq_end
 
 [GROUP]
-#STA_GROUP   STA_GROUP_REPORT
+#STA_GROUP   STA_GROUP_FILES
 #---------   -----------------------------------------------
 uniq_end     $sta_mode/$corner_name/$sta_check.rpt
 
