@@ -94,6 +94,13 @@ Usage: sta_init_run [STA_RUN] [STA_RUN_DIR] [STA_RUN_GROUPS]...
 Example:
 + <code> % sta_init_dir GOLDEN-0122 reports/GOLDEN-0122  uniq_end reg2reg</code>
 
+[Makefile.run]
+<pre>
+STA_RUN     := GOLDEN-0122
+STA_RUN_DIR.GOLDEN-0122 := reports/apr0-0122
+STA_RUN_GROUPS.GOLDEN-0122 := detail uniq_end
+</pre>
+
 [Makefile]
 <pre>
 include Makefile.run
@@ -117,27 +124,7 @@ index: run
 	
 </pre>
 
-[Makefile.run]
-<pre>
-STA_RUN     := GOLDEN-0122
-STA_RUN_DIR.GOLDEN-0122 := reports/apr0-0122
-STA_RUN_GROUPS.GOLDEN-0122 := detail uniq_end
-</pre>
-
-
-## 4) Review timing signoff corner definition table
-
-+ <code> % vi GOLDEN-0122/.sta/sta2htm.corner </code>
-
-<pre>
-000	000_TT
-151	151_ML
-157	157_BC
-231	231_WCL
-258	258_WC
-</pre>
-
-## 5) Review sta2htm configuration file
+## 4) Review sta2htm configuration file
 
 + <code> % vi GOLDEN_0122/.sta/sta2htm.cfg </code>
 
@@ -154,25 +141,36 @@ set STA_CORNER(scan,setup) "000 157"
 set STA_CORNER(scan,hold)  "000 157 258"
 </pre>
 
-## 6) Generate HTML Summary reports
-
-+ <code> % cd GOLDEN-0122 </code>
-
-+ <code> % make run </code>
-
-+ <code> % sta_uniq_end -sta_group $sta_group </code>
++ <code> % vi GOLDEN-0122/.sta/sta2htm.corner </code>
 
 <pre>
-# $sta_group/$sta_check.htm
+000	000_TT
+151	151_ML
+157	157_BC
+231	231_WCL
+258	258_WC
+</pre>
+
+
+## 5) Generate STA HTML Summary reports
+
++ <code> % cd GOLDEN-0122 </code>
++ <code> % make run </code>
+
++ <code> (GOLDEN-0122) sta_uniq_end -sta_group $sta_group </code>
+
+<pre>
+# $sta_group/$sta_cck.htm
 # $sta_group/$sta_mode/$sta_check.htm
 # $sta_group/$sta_mode/$sta_check.nvp_wns.dat
 # $sta_group/$sta_mode/$sta_corner/$sta_check.vio
 # $sta_group/$sta_mode/$sta_corner/$sta_check.clk
-# $sta_group/$sta_mode/$sta_corner/$sta_check.nvp
-# $sta_group/$sta_mode/$sta_corner/$sta_check.sum
-</pre>
+# $sta_group/$sta_mode/$sta_corner/$sta_check.nvp+ <code> % make run </code>
 
-+ <code> % sta_index_group -sta_group $sta_group </code>
+# $sta_group/$sta_mode/$sta_corner/$sta_check.sum
+</p>
+
++ <code> (GOLDEN-0122) sta_index_group -sta_group $sta_group </code>
 
 <pre>
 # $sta_group/index.htm
@@ -180,16 +178,16 @@ set STA_CORNER(scan,hold)  "000 157 258"
 # $sta_group/$sta_mode/mode.htm
 # $sta_group/$sta_mode/check.htm
 # $sta_group/$sta_mode/corner.htm
-...
+....
 </pre>
 
-+ <code> % sta_index_runset </code>
 
-
-## 7) Review STA summary report through browser
+## 6) Genearte STA2HTM index page
++ <code> % make index </code>
+++ <code>   sta_index_runset </code>
 
 + <code> % make view </code>
-+ <code> % firefox $(STA_RUN)/index.htm </code>
+++ <code>    firefox index.htm </code>
 
 ![run/01_sta/screenshot/uniq_end_index.png](./run/01_sta/screenshot/uniq_end_index.png?raw=true)
 
