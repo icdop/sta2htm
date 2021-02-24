@@ -52,9 +52,6 @@ S001    setup   func	000 -   157 231 258
 S002    setup	scan02	000 -   -   -   258
 H001    hold	func	000 151 157 -   258
 H002    hold	scan01	000 -   157 -   258
-
-
-
 </pre>
 
 
@@ -62,16 +59,8 @@ H002    hold	scan01	000 -   157 -   258
 
 + geneate STA reports from PrimeTime: 
 
-  <code>$STA_RPT/$sta_mode/$sta_corner/$sta_check/violation.rpt</code>
-
-<pre>
-reports
-├── apr0-0122
-├── eco1-0123
-└── eco2-0124
-</pre>
-
 The followin directory structure is recommeded for MMMC STA reports
+  <code>$STA_RPT/$sta_mode/$sta_corner/$sta_check/violation.rpt</code>
 <pre>
 apr0-0122/
 ├── func
@@ -99,6 +88,14 @@ apr0-0122/
 ## 3) Initialize working directory environment
 
 <pre>
+Usage: sta_init_run [STA_RUN] [STA_RUN_DIR] [STA_RUN_GROUPS]...
+</pre>
+
+Example:
++ <code> % sta_init_dir GOLDEN-0122 reports/GOLDEN-0122  uniq_end reg2reg</code>
+
+[Makefile]
+<pre>
 include Makefile.run
 
 $(STA_RUN):
@@ -120,19 +117,12 @@ index: run
 	
 </pre>
 
+[Makefile.run]
 <pre>
 STA_RUN     := GOLDEN-0122
 STA_RUN_DIR.GOLDEN-0122 := reports/apr0-0122
 STA_RUN_GROUPS.GOLDEN-0122 := detail uniq_end
 </pre>
-
-
-<pre>
-Usage: sta_init_run [STA_RUN] [STA_RUN_DIR] [STA_RUN_GROUPS]...
-</pre>
-Example:
-+ <code> % sta_init_dir GOLDEN-0122 reports/GOLDEN-0122  uniq_end reg2reg</code>
-
 
 
 ## 4) Review timing signoff corner definition table
@@ -152,9 +142,7 @@ Example:
 + <code> % vi GOLDEN_0122/.sta/sta2htm.cfg </code>
 
 <pre>
-# STA report filename filter : $STA_RPT_PATH/$STA_RPT_FILE
-set STA_RPT_PATH {STA}
-set STA_RPT_FILE {$sta_mode/$corner_name/$sta_check$sta_postfix.rpt*}
+set STA_RPT_FILE {$sta_mode/$corner_name/$sta_check.rpt*}
 
 # STA mode name list
 set STA_MODE_LIST "func scan"
@@ -206,8 +194,6 @@ set STA_CORNER(scan,hold)  "000 157 258"
 ![run/01_sta/screenshot/uniq_end_index.png](./run/01_sta/screenshot/uniq_end_index.png?raw=true)
 
 ![run/01_sta/screenshot/uniq_end_mode.png](./run/01_sta/screenshot/uniq_end_mode.png?raw=true)
-
-![run/01_sta/screenshot/uniq_end_corner.png](./run/01_sta/screenshot/uniq_end_corner.png?raw=true)
 
 ![run/01_sta/screenshot/uniq_end_summary.png](./run/01_sta/screenshot/uniq_end_summary.png?raw=true)
 
