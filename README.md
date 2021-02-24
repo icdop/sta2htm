@@ -6,9 +6,6 @@
 + install <code>gnuplot</code> packages.
 
 ## 1) Edit Runset defintion file [sta2htm.run]
-
-![run/02_trend/screenshot/sta2htm_runset.jpeg](./run/02_trend/screenshot/sta2htm_runset.jpeg?raw=true)
-
 <pre>
 #
 [VERSION]
@@ -55,6 +52,8 @@ S002    setup	scan02	000 -   -   -   258
 H001    hold	func	000 151 157 -   258
 H002    hold	scan01	000 -   157 -   258
 </pre>
+
+![run/02_trend/screenshot/sta2htm_runset.jpeg](./run/02_trend/screenshot/sta2htm_runset.jpeg?raw=true)
 
 
 ## 2) Specify STA report path
