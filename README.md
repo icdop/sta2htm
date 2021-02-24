@@ -186,6 +186,8 @@ set STA_CORNER(scan,hold)  "000 157 258"
 ## 6) Genearte STA2HTM index page
 + <code> % make index </code>
 + <code> % sta_index_runset </code>
+![run/02_trend/screenshot/sta2htm_runset.jpeg](./run/01_sta/screenshot/sta2htm_runset.jpeg?raw=true)
+![run/02_trend/screenshot/sta2htm_trendchart.jpeg](./run/01_sta/screenshot/sta2htm_trendchart.jpeg?raw=true)
 
 
 

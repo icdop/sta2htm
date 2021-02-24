@@ -22,6 +22,7 @@ run: init
 	@for i in $(STA_RUN); do ( \
 	  (cd $$i; make run) | tee run.$$i.log ; \
 	) ; done
+	sta_index_runset
 
 
 index: 
