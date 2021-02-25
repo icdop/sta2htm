@@ -3,9 +3,9 @@
 ## 0) System Requirements
 
 + install <code>tree</code> packages.
-+ install <code>gnuplot</code> packages.
++ install <code>gnuplot</code> packages. (optional)
 
-## 1) Edit Runset defintion file [sta2htm.run]
+## 1)  Prepare Runset defintion file [sta2htm.run]
 <pre>
 #
 [VERSION]
@@ -20,7 +20,8 @@ GOLDEN-0125	reports/eco2-0125      uniq_end
 [GROUP]
 #STA_GROUP   STA_GROUP_FILES
 #---------   -----------------------------------------------
-uniq_end     $sta_mode/$corner_name/$sta_check.rpt
+uniq_end     $sta_mode/$corner_name/$sta_check/RptConst.rpt
+reg2reg      $sta_mode/$corner_name/$sta_check/RptConst_reg2reg.rpt
 
 [CHECK]
 #STA_CHECK   STA_CHECK_DEF
@@ -56,12 +57,11 @@ H002    hold	scan01	000 -   157 -   258
 ![run/02_trend/screenshot/sta2htm_runset.jpeg](./run/02_trend/screenshot/sta2htm_runset.jpeg?raw=true)
 
 
-## 2) Specify STA report path
+## 2) Generate STA violation report (from PrimeTime)
 
-+ geneate STA reports from PrimeTime: 
-
-The followin directory structure is recommeded for MMMC STA reports
-  <code>$STA_RPT/$sta_mode/$sta_corner/$sta_check/violation.rpt</code>
+The following directory structure is recommeded for MMMC STA reports
+  <code>$STA_RUN_DIR/$sta_mode/$sta_corner/$sta_check/violation.rpt</code>
+  
 <pre>
 apr0-0122/
 ├── func
@@ -86,7 +86,7 @@ apr0-0122/
         └── hold.rpt
 </pre>
 
-## 3) Initialize working directory environment
+## 3) Initialize run directory 
 
 <pre>
 Usage: sta_init_run [STA_RUN] [STA_RUN_DIR] [STA_RUN_GROUPS]...
@@ -127,7 +127,17 @@ index: run
 
 ## 4) Review sta2htm configuration file
 
-+ <code> % vi GOLDEN_0122/.sta/sta2htm.cfg </code>
++ <code> % view GOLDEN-0122/.sta/sta2htm.corner </code>
+
+<pre>
+000	000_TT
+151	151_ML
+157	157_BC
+231	231_WCL
+258	258_WC
+</pre>
+
++ <code> % view GOLDEN_0122/.sta/sta2htm.cfg </code>
 
 <pre>
 set STA_RPT_FILE {$sta_mode/$corner_name/$sta_check.rpt*}
@@ -142,43 +152,33 @@ set STA_CORNER(scan,setup) "000 157"
 set STA_CORNER(scan,hold)  "000 157 258"
 </pre>
 
-+ <code> % vi GOLDEN-0122/.sta/sta2htm.corner </code>
 
-<pre>
-000	000_TT
-151	151_ML
-157	157_BC
-231	231_WCL
-258	258_WC
-</pre>
-
-
-## 5) Generate STA HTML Summary reports
+## 5) Generate STA Summary HTML files
 
 + <code> % cd GOLDEN-0122 </code>
-+ <code> % make run </code>
++ <code> (GOLDEN-0122) % make run </code>
 
-+ <code> (GOLDEN-0122) sta_uniq_end -sta_group $sta_group </code>
++ <code> (GOLDEN-0122) <CMD> sta_uniq_end -sta_group $sta_group </code>
 
 <pre>
-# $sta_group/$sta_cck.htm
-# $sta_group/$sta_mode/$sta_check.htm
-# $sta_group/$sta_mode/$sta_check.nvp_wns.dat
-# $sta_group/$sta_mode/$sta_corner/$sta_check.vio
-# $sta_group/$sta_mode/$sta_corner/$sta_check.clk
-# $sta_group/$sta_mode/$sta_corner/$sta_check.nvp
-# $sta_group/$sta_mode/$sta_corner/$sta_check.sum
+# $sta_run/$sta_group/$sta_cck.htm
+# $sta_run/$sta_group/$sta_mode/$sta_check.htm
+# $sta_run/$sta_group/$sta_mode/$sta_check.nvp_wns.dat
+# $sta_run/$sta_group/$sta_mode/$sta_corner/$sta_check.vio
+# $sta_run/$sta_group/$sta_mode/$sta_corner/$sta_check.clk
+# $sta_run/$sta_group/$sta_mode/$sta_corner/$sta_check.nvp
+# $sta_run/$sta_group/$sta_mode/$sta_corner/$sta_check.sum
 </pre>
 ![run/01_sta/screenshot/uniq_end_summary.png](./run/01_sta/screenshot/uniq_end_summary.png?raw=true)
 
-+ <code> (GOLDEN-0122) sta_index_group -sta_group $sta_group </code>
++ <code> (GOLDEN-0122) <CMD> sta_index_group -sta_group $sta_group </code>
 
 <pre>
-# $sta_group/index.htm
-# $sta_group/$sta_mode/index.htm
-# $sta_group/$sta_mode/mode.htm
-# $sta_group/$sta_mode/check.htm
-# $sta_group/$sta_mode/corner.htm
+# $sta_run/$sta_group/index.htm
+# $sta_run/$sta_group/$sta_mode/index.htm
+# $sta_run/$sta_group/$sta_mode/mode.htm
+# $sta_run/$sta_group/$sta_mode/check.htm
+# $sta_run/$sta_group/$sta_mode/corner.htm
 ....
 </pre>
 ![run/01_sta/screenshot/uniq_end_index.png](./run/01_sta/screenshot/uniq_end_index.png?raw=true)
@@ -186,8 +186,16 @@ set STA_CORNER(scan,hold)  "000 157 258"
 
 ## 6) Genearte STA2HTM index page
 + <code> % make index </code>
-+ <code> % sta_index_runset </code>
-![run/02_trend/screenshot/sta2htm_trendchart.jpeg](./run/02_trend/screenshot/sta2htm_trendchart.jpeg?raw=true)
++ <code> <CMD> sta_index_runset </code>....
+
+<pre>
+# index.htm
+# index.$sta_group.htm
+....
+# $sta_run/index.htm
+....
+</pre>
+![run/02_trend/screenshot/sta2htm_trendchart.jpeg](./run/02_trend/screenshot/sta2htm_trendchart.jpeg?rgroupue)
 
 
 
