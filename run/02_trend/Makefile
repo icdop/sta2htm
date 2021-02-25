@@ -1,7 +1,8 @@
 include Makefile.run
 
 #STA_RUN     := GOLDEN-0122
-#GOLDEN-0122 := reports/apr0-0122
+#STA_RUN_DIR.GOLDEN-0122 := reports/apr0-0122
+#STA_RUN_GROUPS.GOLDEN-0122 := unique
 
 help:
 	@echo	"Usage:"
@@ -23,6 +24,7 @@ run: init
 	  (cd $$i; make run) | tee run.$$i.log ; \
 	) ; done
 	sta_index_runset
+	tree --dirsfirst --prune -P index.htm . -o index.tree
 
 
 index: 
@@ -42,5 +44,5 @@ diff: tree.log
 	diff -y tree.log logs/tree.log 
 
 clean:
-	rm -fr $(STA_RUN) *.log .trendchart .javascript index.htm index.*.htm
+	rm -fr $(STA_RUN) *.log .trendchart .javascript index.*
 

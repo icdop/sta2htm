@@ -19,7 +19,7 @@ variable STA_CFG_PATH   "STA/.sta .sta ."
 variable STA_CURR_RUN	"."
 variable STA_CURR_GROUP ""
 variable STA_RPT_PATH   "STA"
-variable STA_RPT_FILE   ""
+variable STA_CURR_REPORT   ""
 
 
 variable STA_RUN_LIST    ""
@@ -89,28 +89,27 @@ proc init {} {
 
 proc parse_argv { {argv ""} } {
   variable STA_CFG_DIR
+  variable STA_CURR_RUN
   variable STA_CURR_GROUP 
-  variable STA_RPT_FILE
+  variable STA_CURR_REPORT
+  variable STA_GROUP_LIST
   variable STA_CORNER_LIST
   variable STA_MODE_LIST
   variable STA_CHECK_LIST
-  variable STA_CHECK
-  variable STA_POSTFIX
 
-  puts "INFO: Parsing Arguments.."
+  puts "INFO: Parsing Command Line Arguments.."
   set argc [llength $argv]
   set i 0
   while {$i<$argc} {
     set arg [lindex $argv $i]
     case $arg in {
+      -runset {
+         incr i 
+         read_sta_runset [lindex $argv $i]
+      }
       -config {
          incr i 
          read_sta_config [lindex $argv $i]
-      }
-      -cfg_dir {
-         incr i
-         set STA_CFG_DIR [lindex $argv $i]
-         puts "STA_CFG_DIR = $STA_CFG_DIR"
       }
       -sta_run {
          incr i
@@ -122,22 +121,37 @@ proc parse_argv { {argv ""} } {
          set STA_CURR_GROUP [lindex $argv $i]
          puts "STA_CURR_GROUP = $STA_CURR_GROUP"
       }
-      -sta_corner {
+      -sta_group_report {
+         incr i
+         set STA_CURR_REPORT [lindex $argv $i]
+         puts "STA_CURR_REPORT = $STA_CURR_REPORT"
+      }
+      -sta_group_list {
+         incr i
+         set STA_GROUP_LIST [lindex $argv $i]
+         puts "STA_GROUP_LIST = $STA_GROUP_LIST"
+      }
+      -sta_corner_list {
          incr i
          set STA_CORNER_LIST [lindex $argv $i]
          puts "STA_CORNER_LIST = $STA_CORNER_LIST"
       }
-      -sta_rpt_file {
+      -sta_mode_list {
          incr i
-         set STA_RPT_FILE [lindex $argv $i]
-         puts "STA_RPT_FILE = $STA_RPT_FILE"
+         set STA_MODE_LIST [lindex $argv $i]
+         puts "STA_MODE_LIST = $STA_MODE_LIST"
+      }
+      -sta_check_list {
+         incr i
+         set STA_CHECK_LIST [lindex $argv $i]
+         puts "STA_CHECK_LIST = $STA_CHECK_LIST"
       }
       -slack_offset {
          incr i
          read_slack_offset [lindex $argv $i]
       }
       default {
-         lappend STA_MODE_LIST $arg
+         puts "INFO: Unused parameter '$i'"
       }
     }
     incr i
@@ -156,7 +170,7 @@ proc parse_argv { {argv ""} } {
 #
 proc report_uniq_end {{sta_group ""} {sta_rpt_file ""}} {
   variable STA_RPT_PATH
-  variable STA_RPT_FILE
+  variable STA_CURR_REPORT
   variable STA_CURR_GROUP
   variable STA_GROUP_REPORT
   variable STA_MODE_LIST
@@ -166,7 +180,7 @@ proc report_uniq_end {{sta_group ""} {sta_rpt_file ""}} {
   if {$sta_group!=""} {
      set STA_CURR_GROUP $sta_group
      if [info exist STA_GROUP_REPORT($sta_group)] {
-        set STA_RPT_FILE $STA_GROUP_REPORT($sta_group)
+        set STA_CURR_REPORT $STA_GROUP_REPORT($sta_group)
      }
   } elseif {$STA_CURR_GROUP!=""} {
      set sta_group $STA_CURR_GROUP   
@@ -175,11 +189,11 @@ proc report_uniq_end {{sta_group ""} {sta_rpt_file ""}} {
      set STA_CURR_GROUP $sta_group
   }
   if {$sta_rpt_file!=""} {
-     set STA_RPT_FILE $sta_rpt_file
-  } elseif {$STA_RPT_FILE!=""} {
-     set sta_rpt_file $STA_RPT_FILE
+     set STA_CURR_REPORT $sta_rpt_file
+  } elseif {$STA_CURR_REPORT!=""} {
+     set sta_rpt_file $STA_CURR_REPORT
   } else {
-     set STA_RPT_FILE "$sta_mode/$corner_name/$sta_check.rpt*"
+     set STA_CURR_REPORT {$sta_mode/$corner_name/$sta_check.rpt*}
   }
 
   foreach sta_check $STA_CHECK_LIST {
@@ -190,7 +204,7 @@ proc report_uniq_end {{sta_group ""} {sta_rpt_file ""}} {
       }
       puts "\nMODE: $sta_mode $sta_check"
 
-      parse_primetime_report $sta_group $sta_mode $sta_check $STA_RPT_PATH $STA_RPT_FILE 
+      parse_primetime_report $sta_group $sta_mode $sta_check $STA_RPT_PATH $STA_CURR_REPORT 
 
     }
 
@@ -243,13 +257,22 @@ proc report_scenario_summary {sta_group sta_mode sta_check} {
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
+  puts $fo "<table border=0 width=1100 id='sta_tbl' bgcolor=#f0f0f0><tr>"
+  puts $fo "<td align=left>"
   puts $fo "\[<a href=../index.htm>\@Index</a>\]"
   puts $fo "\[<a href=../mode.htm>\@Mode</a>\]"
   puts $fo "\[<a href=../check.htm>\@Check</a>\]"
   puts $fo "\[<a href=../corner.htm>\@Corner</a>\]"
+  puts $fo "</td>"
+  puts $fo "<td width=250 align=right>"
+  puts $fo "<a href=http://www.lyg-semi.com/lyg_www/about.html>"
+  puts $fo "<img src=../../../$::STA_HTML::ICON(lyg_banner) width=250>"
+  puts $fo "</a>"
+  puts $fo "</td>"
+  puts $fo "</tr></table>"
   puts $fo "</head>"
   puts $fo "<body>"
-  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
+  puts $fo "<table border=1 width=1100 id='sta_tbl'>"
   puts $fo "<caption>"
   puts $fo "<h3 align=left>"
   puts $fo "$STA_CURR_RUN/$sta_group/$sta_mode/$sta_check"
@@ -361,15 +384,15 @@ proc report_scenario_summary {sta_group sta_mode sta_check} {
 # <Output>
 #   $sta_group/index.htm
 #
-proc report_group_index {{sta_group ""}} {
+proc report_index_group {{sta_group ""}} {
   variable STA_CURR_GROUP
 
   if {$sta_group==""} { set sta_group $STA_CURR_GROUP}
  
-  report_group_index_main $sta_group
-  report_group_index_mode $sta_group
-  report_group_index_check $sta_group
-  report_group_index_corner $sta_group
+  report_index_group_main $sta_group
+  report_index_group_mode $sta_group
+  report_index_group_check $sta_group
+  report_index_group_corner $sta_group
 }
 
 #
@@ -379,7 +402,7 @@ proc report_group_index {{sta_group ""}} {
 # <Output>
 #   $sta_group/index.htm
 #
-proc report_group_index_main {sta_group} {
+proc report_index_group_main {sta_group} {
   variable STA_CURR_RUN
   variable STA_CFG_FILE
   variable STA_MODE_LIST
@@ -394,19 +417,30 @@ proc report_group_index_main {sta_group} {
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
-  puts $fo "\[<a href=../../index.htm>\@Index</a>\]"
+  puts $fo "<table border=0 width=1000 id='sta_tbl' bgcolor=#f0f0f0><tr>"
+  puts $fo "<td align=left>"
+  puts $fo "\[<a href=../index.htm>$STA_CURR_RUN</a>\]"
   puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
   puts $fo "\[<a href=check.htm>\@Check</a>\]"
   puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "</td>"
+  puts $fo "<td width=250 align=right>"
+  puts $fo "<a href=http://www.lyg-semi.com/lyg_www/about.html>"
+  puts $fo "<img src=../$::STA_HTML::ICON(lyg_banner) width=250>"
+  puts $fo "</a>"
+  puts $fo "</td>"
+  puts $fo "</tr></table>"
   puts $fo "</head>"
   puts $fo "<body>"
-  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
+  puts $fo "<table border=1 width=1000 id='sta_tbl'>"
   puts $fo "<caption><h3 align=\"left\">"
   puts $fo "$STA_CURR_RUN/$sta_group/"
   puts $fo "</h3></caption>"
   puts $fo "<tr>"
-  puts $fo "<td colspan=6>$STA_CURR_RUN/$STA_CFG_FILE<hr>"
-  puts $fo "<iframe name=sta_config src='../$STA_CFG_FILE' width=100% height=200 scrolling=auto></iframe>"
+  puts $fo "<td colspan=6>"
+#  puts $fo "$STA_CURR_RUN/$STA_CFG_FILE<hr>"
+#  puts $fo "<iframe name=sta_config src='../$STA_CFG_FILE' width=100% height=200 scrolling=auto></iframe>"
+  puts $fo "<iframe name=sta_output src=sta2htm.log width=1000 height=420 scrolling=auto></iframe>"
   puts $fo "</td>"
   puts $fo "</tr>"
   foreach sta_check $STA_CHECK_LIST {
@@ -451,7 +485,7 @@ proc report_group_index_main {sta_group} {
                    }
                  }
                  close $fin
-                 puts $fo "<td align=left bgcolor=#f0f080><a href=$sta_mode/$sta_corner/$sta_check.vio> $corner_name </a></td>"
+                 puts $fo "<td align=left bgcolor=#f0f080><a href=$sta_mode/$sta_corner/$sta_check.vio target=sta_output> $corner_name </a></td>"
                  if {$nvp==0} {
                    puts $fo "<td align=right bgcolor=#80f080> . </td>"
                    puts $fo "<td align=right bgcolor=#80f080> $wns </td>"
@@ -507,7 +541,7 @@ proc report_group_index_main {sta_group} {
 # <Output>
 # $sta_group/mode.htm
 #
-proc report_group_index_mode {sta_group} {
+proc report_index_group_mode {sta_group} {
   variable STA_CURR_RUN
   variable STA_MODE_LIST
   variable STA_CHECK_LIST
@@ -519,14 +553,22 @@ proc report_group_index_mode {sta_group} {
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
+  puts $fo "<table border=0 width=1200 id='sta_tbl' bgcolor=#f0f0f0><tr>"
+  puts $fo "<td align=left>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
-#  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
   puts $fo "\[\@Mode\]"
   puts $fo "\[<a href=check.htm>\@Check</a>\]"
   puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "</td>"
+  puts $fo "<td width=250 align=right>"
+  puts $fo "<a href=http://www.lyg-semi.com/lyg_www/about.html>"
+  puts $fo "<img src=../$::STA_HTML::ICON(lyg_banner) width=250>"
+  puts $fo "</a>"
+  puts $fo "</td>"
+  puts $fo "</tr></table>"
   puts $fo "</head>"
   puts $fo "<body>"
-  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
+  puts $fo "<table border=1 id='sta_tbl'>"
   puts $fo "<caption><h3 align=\"left\">"
   puts $fo "$STA_CURR_RUN/$sta_group/</h3></caption>"
   puts $fo "<tr>"
@@ -570,7 +612,7 @@ proc report_group_index_mode {sta_group} {
 # <Output>
 # $sta_group/check.htm
 #
-proc report_group_index_check {sta_group} {
+proc report_index_group_check {sta_group} {
   variable STA_CURR_RUN
   variable STA_MODE_LIST
   variable STA_CHECK_LIST
@@ -582,14 +624,22 @@ proc report_group_index_check {sta_group} {
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
+  puts $fo "<table border=0 width=1000 id='sta_tbl' bgcolor=#f0f0f0><tr>"
+  puts $fo "<td align=left>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
   puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
-#  puts $fo "\[<a href=check.htm>\@Check</a>\]"
-  puts $fo "\[\@Check\]"
+  puts $fo "\[<a href=check.htm>\@Check</a>\]"
   puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "</td>"
+  puts $fo "<td width=250 align=right>"
+  puts $fo "<a href=http://www.lyg-semi.com/lyg_www/about.html>"
+  puts $fo "<img src=../$::STA_HTML::ICON(lyg_banner) width=250>"
+  puts $fo "</a>"
+  puts $fo "</td>"
+  puts $fo "</tr></table>"
   puts $fo "</head>"
   puts $fo "<body>"
-  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
+  puts $fo "<table border=1 width=1000 id='sta_tbl'>"
   puts $fo "<caption><h3 align=\"left\">"
   puts $fo "$STA_CURR_RUN/$sta_group/</h3></caption>"
   puts $fo "<tr>"
@@ -629,7 +679,7 @@ proc report_group_index_check {sta_group} {
 # <Output>
 # $sta_group/corner.htm
 #
-proc report_group_index_corner {sta_group} {
+proc report_index_group_corner {sta_group} {
   variable STA_CURR_RUN
   variable STA_MODE_LIST
   variable STA_CHECK_LIST
@@ -646,14 +696,22 @@ proc report_group_index_corner {sta_group} {
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
+  puts $fo "<table border=0 width=1000 id='sta_tbl' bgcolor=#f0f0f0><tr>"
+  puts $fo "<td align=left>"
   puts $fo "\[<a href=index.htm>\@Index</a>\]"
   puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
   puts $fo "\[<a href=check.htm>\@Check</a>\]"
-#  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
-  puts $fo "\[\@Corner\]"
+  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "</td>"
+  puts $fo "<td width=250 align=right>"
+  puts $fo "<a href=http://www.lyg-semi.com/lyg_www/about.html>"
+  puts $fo "<img src=../$::STA_HTML::ICON(lyg_banner) width=250>"
+  puts $fo "</a>"
+  puts $fo "</td>"
+  puts $fo "</tr></table>"
   puts $fo "</head>"
   puts $fo "<body>"
-  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
+  puts $fo "<table border=1 width=1000 id='sta_tbl'>"
   puts $fo "<caption><h3 align=\"left\">"
   puts $fo "$STA_CURR_RUN/$sta_group/"
   puts $fo "</h3></caption>"
@@ -750,13 +808,22 @@ proc report_mode_summary {sta_group sta_mode} {
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
+  puts $fo "<table border=0 width=1000 id='sta_tbl' bgcolor=#f0f0f0><tr>"
+  puts $fo "<td align=left>"
   puts $fo "\[<a href=../index.htm>\@Index</a>\]"
   puts $fo "\[<a href=../mode.htm>\@Mode</a>\]"
   puts $fo "\[<a href=../check.htm>\@Check</a>\]"
   puts $fo "\[<a href=../corner.htm>\@Corner</a>\]"
+  puts $fo "</td>"
+  puts $fo "<td width=250 align=right>"
+  puts $fo "<a href=http://www.lyg-semi.com/lyg_www/about.html>"
+  puts $fo "<img src=../../$::STA_HTML::ICON(lyg_banner) width=250>"
+  puts $fo "</a>"
+  puts $fo "</td>"
+  puts $fo "</tr></table>"
   puts $fo "</head>"
   puts $fo "<body>"
-  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
+  puts $fo "<table border=1 width=1000 id='sta_tbl'>"
   puts $fo "<caption><h3 align=\"left\">$STA_CURR_RUN/$sta_group/"
   foreach mode $STA_MODE_LIST {
     puts $fo "<a href=../$mode/index.htm>($mode)</a>"
@@ -824,13 +891,22 @@ proc report_check_summary {sta_group sta_check} {
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
-  puts $fo "\[<a href=index.htm>\@Index</a>\]"
-  puts $fo "\[<a href=mode.htm>\@Mode</a>\]"
-  puts $fo "\[<a href=check.htm>\@Check</a>\]"
-  puts $fo "\[<a href=corner.htm>\@Corner</a>\]"
+  puts $fo "<table border=0 width=1000 id='sta_tbl' bgcolor=#f0f0f0><tr>"
+  puts $fo "<td align=left>"
+  puts $fo "\[<a href=../index.htm>\@Index</a>\]"
+  puts $fo "\[<a href=../mode.htm>\@Mode</a>\]"
+  puts $fo "\[<a href=../check.htm>\@Check</a>\]"
+  puts $fo "\[<a href=../corner.htm>\@Corner</a>\]"
+  puts $fo "</td>"
+  puts $fo "<td width=250 align=right>"
+  puts $fo "<a href=http://www.lyg-semi.com/lyg_www/about.html>"
+  puts $fo "<img src=../../$::STA_HTML::ICON(lyg_banner) width=250>"
+  puts $fo "</a>"
+  puts $fo "</td>"
+  puts $fo "</tr></table>"
   puts $fo "</head>"
   puts $fo "<body>"
-  puts $fo "<table border=\"1\" id=\"sta_tbl\">"
+  puts $fo "<table border=1 width=1000 id='sta_tbl'>"
   puts $fo "<caption><h3 align=\"left\">"
   puts $fo "$STA_CURR_RUN/$sta_group/"
   foreach check $STA_CHECK_LIST {
@@ -1033,8 +1109,8 @@ proc report_endpoint_html {sta_group sta_mode sta_check {corner_list ""}} {
   puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fout "</head>"
   puts $fout "<body>"
-  puts $fout "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fout "<caption><h3 align=\"left\">"
+  puts $fout "<table border=1 id='sta_tbl'>"
+  puts $fout "<caption><h3 align=left>"
   puts $fout "<a href=$sta_check.htm>"
   puts $fout "$STA_CURR_RUN/$sta_group/$sta_mode/$sta_check"
   puts $fout "</a>"
@@ -1114,8 +1190,8 @@ proc report_wavpoint_html {sta_group sta_mode sta_check {corner_list ""}} {
   puts $fout $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fout "</head>"
   puts $fout "<body>"
-  puts $fout "<table border=\"1\" id=\"sta_tbl\">"
-  puts $fout "<caption><h3 align=\"left\">"
+  puts $fout "<table border=1 id='sta_tbl'>"
+  puts $fout "<caption><h3 align=left>"
   puts $fout "<a href=$sta_check.htm>"
   puts $fout "$STA_CURR_RUN/$sta_group/$sta_mode/$sta_check"
   puts $fout "</a>"

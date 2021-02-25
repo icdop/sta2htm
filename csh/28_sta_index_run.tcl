@@ -5,6 +5,6 @@ source $STA2HTM/tcl/LIB_STA.tcl
 
 ::LIB_STA::parse_argv $argv
 ::LIB_STA::read_sta_config
-::LIB_STA::report_index_group
+::LIB_STA::report_index_run
 
-puts "INFO: sta_index_group Done..."
+puts "INFO: sta_index_run Done..."

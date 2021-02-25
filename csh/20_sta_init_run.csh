@@ -36,7 +36,9 @@ endif
 echo "# STA_RUN := $STA_RUN"
 mkdir -p $STA_RUN/.sta
 cp -fr $ETC_DIR/make/sta2htm.make $STA_RUN/Makefile
-echo "# STA_RUN := $STA_RUN" > $STA_RUN/Makefile.run
+mkdir -p $STA_RUN/.icon
+cp -fr $ETC_DIR/icon/* $STA_RUN/.icon/
+echo "# STA_RUN := $STA_RUN" > $STA_RUN/Makefile.group
 
 if ($1 != "") then
    set STA_RPT = $1
@@ -46,23 +48,23 @@ else
 endif
 set STA_RPT = `realpath $STA_RPT`
 echo "# STA_RPT := $STA_RPT"
-echo "# STA_RPT := $STA_RPT" >> $STA_RUN/Makefile.run
+echo "# STA_RPT := $STA_RPT" >> $STA_RUN/Makefile.group
 cp -fr $STA_RPT/.sta/sta2htm.* $STA_RUN/.sta
 rm -f $STA_RUN/$STA_DIR
 ln -s $STA_RPT $STA_RUN/$STA_DIR
 
 if ($1 == "") then
-echo "STA_GROUP := uniq_end" >> $STA_RUN/Makefile.run
+echo "STA_GROUP := uniq_end" >> $STA_RUN/Makefile.group
 else
 while ($1 != "")
-   echo "STA_GROUP += $1" >> $STA_RUN/Makefile.run   
+   echo "STA_GROUP += $1" >> $STA_RUN/Makefile.group
    set STA_GROUP = $1
    shift argv
 end
 endif
 
 mkdir -p .javascript
-cp -fr $ETC_DIR/html/chartjs/Chart.bundle.min.js .javascript
+cp -fr $ETC_DIR/html/chartjs/Chart.bundle.min.js .javascript/
 
 echo "TIME: @`date +%Y%m%d_%H%M%S` END   $prog"
 echo "======================================================="

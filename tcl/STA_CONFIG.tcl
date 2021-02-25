@@ -85,7 +85,7 @@ proc reset_sta_config {} {
 proc read_sta_config {{filename "sta2htm.cfg"}} {
   variable STA_CFG_PATH
   variable STA_CFG_FILE
-  variable STA_RPT_FILE
+  variable STA_CURR_REPORT
   
   variable STA_CHECK_LIST
   variable STA_CHECK_DEF
@@ -117,7 +117,7 @@ proc sync_sta_config {} {
   variable STA_CURR_RUN
   variable STA_CURR_GROUP
   variable STA_RPT_PATH
-  variable STA_RPT_FILE
+  variable STA_CURR_REPORT
   variable STA_RUN_LIST
   variable STA_RUN_DIR
   variable STA_RUN_GROUPS
@@ -146,9 +146,13 @@ proc sync_sta_config {} {
   } else {
      set STA_RUN_DIR($STA_CURR_RUN) $sta_run_report
   }
-  set STA_RUN_GROUPS($STA_CURR_RUN) $STA_CURR_GROUP
-  set STA_GROUP_LIST $STA_CURR_GROUP
-  set STA_GROUP_REPORT($STA_CURR_GROUP) $STA_RPT_FILE
+  if {$STA_CURR_GROUP!=""} {
+     set STA_RUN_GROUPS($STA_CURR_RUN) $STA_CURR_GROUP
+     set STA_GROUP_REPORT($STA_CURR_GROUP) $STA_CURR_REPORT
+     if {[lsearch $STA_GROUP_LIST $STA_CURR_GROUP]<0} {
+       lappend STA_GROUP_LIST $STA_CURR_GROUP
+     }
+  }
   
   foreach sta_block $STA_BLOCK_LIST {
     if ![info exist STA_BLOCK_DEF($sta_block)] {

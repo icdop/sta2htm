@@ -47,9 +47,25 @@ proc report_index_runset {{plot_dir ".trendchart"}} {
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
-#  puts $fo "\[<a href=$STA_RUN_FILE target=sta_output>\@RUNSET</a>\]"
+  puts $fo "<table border=0 width=1000 id='sta_tbl'><tr>"
+  puts $fo "<th>"
+  puts $fo "LYG STA2HTM Timing Report Reviewer ... "
+  puts $fo "</th>"
+  puts $fo "<td width=50 align=right bgcolor=#f0f080>"
+  puts $fo "@<a href=http://gitee.com/icdop/sta2htm>gitee</a>"
+  puts $fo "</td>"
+  puts $fo "<td width=50 align=right bgcolor=#f0f080>"
+  puts $fo "@<a href=http://github.com/icdop/sta2htm>github</a>"
+  puts $fo "</td>"
+  puts $fo "<td width=250 align=right bgcolor=#c0c0ff>"
+  puts $fo "<a href=http://www.lyg-semi.com/lyg_www/about.html>"
+  puts $fo "<img src=$::STA_HTML::ICON(lyg_banner) width=250>"
+  puts $fo "</a>"
+  puts $fo "</td>"
+  puts $fo "</tr></table>"
   puts $fo "</head>"
   puts $fo "<body>"
+  puts $fo "<iframe name=sta_output src=$STA_RUN_FILE width=1000 height=420 scrolling=auto></iframe>"
   puts $fo "<table border=1 width=1000 id=sta_tbl>"
   puts $fo "<caption bgcolor=#f0f080> VERSION </caption>"
   puts $fo "<tr>"
@@ -60,7 +76,6 @@ proc report_index_runset {{plot_dir ".trendchart"}} {
   puts $fo "<th>STA_RUN_GROUPS</th>"
   puts $fo "</tr>"
   foreach sta_run $STA_RUN_LIST {
-    report_trend_run $plot_dir $sta_run
     puts $fo "<tr>"
     puts $fo "<td>"
     puts $fo "<a href='$sta_run/index.htm'>"
@@ -78,14 +93,16 @@ proc report_index_runset {{plot_dir ".trendchart"}} {
     puts $fo "</tr>"
   }
   puts $fo "</table>"
+  
   puts $fo "<br>"
-  puts $fo "<table border=1 width=1000 id=sta_tbl  bgcolor=#f0f080>"
-  puts $fo "<caption bgcolor=#f0f080> <hr>GROUP </caption>"
+  
+  puts $fo "<table border=1 width=1000 id=sta_tbl>"
+  puts $fo "<caption> <hr>GROUP </caption>"
   puts $fo "<tr>"
   puts $fo "</tr>"
   puts $fo "<tr>"
   puts $fo "<th>STA_GROUP</th>"
-  puts $fo "<th>STA_GROUP_FILE</th>"
+  puts $fo "<th>STA_GROUP_REPORT</th>"
   puts $fo "</tr>"
   foreach sta_group $STA_GROUP_LIST {
     report_trend_group $plot_dir $sta_group
@@ -118,7 +135,7 @@ proc report_index_runset {{plot_dir ".trendchart"}} {
 # <Output>
 #   $sta_run/index.htm
 #
-proc report_trend_run {{plot_dir ".trendchart"} {sta_run ""}} {
+proc report_index_run {{plot_dir ".trendchart"} {sta_run "."}} {
   variable STA_CURR_RUN
   variable STA_DQI_LIST 
   variable STA_CFG_FILE
@@ -145,15 +162,26 @@ proc report_trend_run {{plot_dir ".trendchart"} {sta_run ""}} {
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
+  puts $fo "<table border=0 width=1000 id='sta_tbl' bgcolor=#f0f0f0><tr>"
+  puts $fo "<td align=left >"
   puts $fo "\[<a href='../index.htm'>\@RUNSET</a>\]"
+  foreach sta_group $STA_GROUP_LIST {
+    puts $fo "\[<a href='$sta_group/index.htm'>$sta_group</a>\]"
+  }
+  puts $fo "</td>"
+  puts $fo "<td width=250 align=right>"
+  puts $fo "<a href=http://www.lyg-semi.com/lyg_www/about.html>"
+  puts $fo "<img src=$::STA_HTML::ICON(lyg_banner) width=250>"
+  puts $fo "</a>"
+  puts $fo "</td>"
+  puts $fo "</tr></table>"
   puts $fo "</head>"
   puts $fo "<body>"
-  
-  puts $fo "<table border=\"1\" width=1000 id=\"sta_tbl\">"
-  puts $fo "<caption> $sta_run </caption>"
+  puts $fo "<table border=1 width=1000 id='sta_tbl'>"
+  puts $fo "<caption> $STA_CURR_RUN </caption>"
   puts $fo "<tr>"
   puts $fo "<td colspan=$num_col>"
-  puts $fo "<iframe name=sta_output  width=100% height=420 scrolling=auto></iframe>"
+  puts $fo "<iframe name=sta_output src=sta2htm.log width=100% height=420 scrolling=auto></iframe>"
   puts $fo "</td>"
   puts $fo "</tr>"
   foreach sta_check $STA_CHECK_LIST {
@@ -189,6 +217,7 @@ proc report_trend_run {{plot_dir ".trendchart"} {sta_run ""}} {
          puts $fo "</tr>"
          foreach sta_group $STA_GROUP_LIST {
             puts $fo "<tr>"
+            exec ls -al $sta_run/$sta_group/$sta_mode/.dqi/520-STA/$sta_check
             if {[file exist $sta_run/$sta_group/$sta_mode/.dqi/520-STA/$sta_check]} {
               puts $fo "<td align=left><a href='$sta_group/$sta_mode/$sta_check.htm'>$sta_group</a></td>"
               foreach sta_dqi $STA_DQI_LIST  {

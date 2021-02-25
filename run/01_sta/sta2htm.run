@@ -2,7 +2,7 @@
 [VERSION]
 #STA_RUN	STA_RUN_REPORT         STA_RUN_GROUPS
 #-------------	---------------------  ----------------
-GOLDEN-0122	reports/apr0-0120      unique detail
+GOLDEN-0122	reports/apr0-0120      uniq_end detail
 
 [GROUP]
 #STA_GROUP   STA_GROUP_REPORT

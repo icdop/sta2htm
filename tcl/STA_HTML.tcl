@@ -9,8 +9,19 @@
 puts "INFO: Loading 'STA_HTML.tcl'..."  
 namespace eval STA_HTML {
 
-variable TABLE_CSS
+variable ICON
+set ICON(lyg_logo)   {.icon/lyg_logo.png}
+set ICON(lyg_banner) {.icon/lyg_banner.png}
 
+variable BANNER
+set BANNER(lyg-semi) {
+  <a href=http://www.lyg-semi.com/lyg_www/about.html>
+  <img src=.icon/lyg_banner.png width=250>
+  </a>
+  <br>
+}
+
+variable TABLE_CSS
 set TABLE_CSS(sta_tbl) {
     <style>
     #sta_tbl {

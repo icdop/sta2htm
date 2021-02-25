@@ -23,6 +23,7 @@ run: init
 	  (cd $$i; make run) | tee run.$$i.log ; \
 	) ; done
 	sta_index_runset
+	tree --dirsfirst --prune -P index.htm . -o index.tree
 
 
 index: run
@@ -30,6 +31,8 @@ index: run
 	  cd $$i; make index ; \
 	) ; done
 	sta_index_runset
+	tree --dirsfirst --prune -P index.htm . -o index.tree
+
 	
 view:
 	firefox index.htm &
@@ -42,5 +45,5 @@ diff: tree.log
 	diff -y tree.log logs/tree.log 
 
 clean:
-	rm -fr $(STA_RUN) *.log .trendchart .javascript index.htm index.*.htm
+	rm -fr $(STA_RUN) *.log .trendchart .javascript index.*
 

@@ -1,6 +1,6 @@
 #
 [VERSION]
-#STA_RUN	STA_RUN_REPORT         STA_RUN_GROUPS
+#STA_RUN	STA_RUN_DIR            STA_RUN_GROUPS
 #-------------	---------------------  ----------------
 GOLDEN-0122	reports/apr0-0120      uniq_end
 GOLDEN-0123	reports/eco1-0123      uniq_end
