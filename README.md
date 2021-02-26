@@ -11,14 +11,14 @@
 [VERSION]
 #STA_RUN	STA_RUN_DIR            STA_RUN_GROUPS
 #-------------	---------------------  ----------------
-GOLDEN-0122	reports/apr0-0120      uniq_end
+GOLDEN-0122	reports/apr0-0120      uniq_end reg2reg
 GOLDEN-0123	reports/eco1-0123      uniq_end
 GOLDEN-0124	reports/eco2-0124      uniq_end
 GOLDEN-0125	reports/eco2-0125      uniq_end
 ;GOLDEN-0127	reports/eco3-0127      uniq_end
 
 [GROUP]
-#STA_GROUP   STA_GROUP_FILES
+#STA_GROUP   STA_GROUP_REPORT
 #---------   -----------------------------------------------
 uniq_end     $sta_mode/$corner_name/$sta_check/RptConst.rpt
 reg2reg      $sta_mode/$corner_name/$sta_check/RptConst_reg2reg.rpt
@@ -55,6 +55,31 @@ H002    hold	scan01	000 -   157 -   258
 </pre>
 
 ![run/02_trend/screenshot/sta2htm_runset.jpeg](./run/02_trend/screenshot/sta2htm_runset.jpeg?raw=true)
+
+[Makefile.run]
+<pre>
+STA_RUN     += GOLDEN-0122
+STA_RUN_DIR.GOLDEN-0122 := reports/apr0-0122
+STA_RUN_GROUPS.GOLDEN-0122 := detail uniq_end
+</pre>
+
+![etc/make/runset.make]./etc/make/runset.make?raw=true)
+[Makefile] 
+<pre>
+include Makefile.run
+
+$(STA_RUN):
+	sta_init_run $@ $(STA_RUN_DIR.$@) $(STA_RUN_GROUPS.$@)
+
+init: $(STA_RUN)
+
+run: init
+	@for i in $(STA_RUN); do ( \
+	  (cd $$i; make run) | tee run.$$i.log ; \
+	) ; done
+	sta_index_runset
+
+</pre>
 
 
 ## 2) Generate STA violation report (from PrimeTime)
@@ -95,35 +120,6 @@ Usage: sta_init_run [STA_RUN] [STA_RUN_DIR] [STA_RUN_GROUPS]...
 Example:
 + <code> % sta_init_dir GOLDEN-0122 reports/GOLDEN-0122  uniq_end reg2reg</code>
 
-[Makefile.run]
-<pre>
-STA_RUN     := GOLDEN-0122
-STA_RUN_DIR.GOLDEN-0122 := reports/apr0-0122
-STA_RUN_GROUPS.GOLDEN-0122 := detail uniq_end
-</pre>
-
-[Makefile]
-<pre>
-include Makefile.run
-
-$(STA_RUN):
-	sta_init_run $@ $(STA_RUN_DIR.$@) $(STA_RUN_GROUPS.$@)
-
-init: $(STA_RUN)
-
-run: init
-	@for i in $(STA_RUN); do ( \
-	  (cd $$i; make run) | tee run.$$i.log ; \
-	) ; done
-	sta_index_runset
-
-index: run
-	@for i in $(STA_RUN); do ( \
-	  cd $$i; make index ; \
-	) ; done
-	sta_index_runset
-	
-</pre>
 
 ## 4) Review sta2htm configuration file
 

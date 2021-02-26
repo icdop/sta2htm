@@ -34,11 +34,13 @@ else
    set STA_RUN = "."
 endif
 echo "# STA_RUN := $STA_RUN"
-mkdir -p $STA_RUN/.sta
+mkdir -p $STA_RUN
 cp -fr $ETC_DIR/make/sta2htm.make $STA_RUN/Makefile
+echo "# STA_RUN := $STA_RUN" > $STA_RUN/Makefile.group
 mkdir -p $STA_RUN/.icon
 cp -fr $ETC_DIR/icon/* $STA_RUN/.icon/
-echo "# STA_RUN := $STA_RUN" > $STA_RUN/Makefile.group
+mkdir -p $STA_RUN/.javascript
+cp -fr $ETC_DIR/html/chartjs/Chart.bundle.min.js $STA_RUN/.javascript/
 
 if ($1 != "") then
    set STA_RPT = $1
@@ -49,6 +51,7 @@ endif
 set STA_RPT = `realpath $STA_RPT`
 echo "# STA_RPT := $STA_RPT"
 echo "# STA_RPT := $STA_RPT" >> $STA_RUN/Makefile.group
+mkdir -p $STA_RUN/.sta
 cp -fr $STA_RPT/.sta/sta2htm.* $STA_RUN/.sta
 rm -f $STA_RUN/$STA_DIR
 ln -s $STA_RPT $STA_RUN/$STA_DIR
@@ -63,8 +66,9 @@ while ($1 != "")
 end
 endif
 
-mkdir -p .javascript
+mkdir -p .javascript .icon
 cp -fr $ETC_DIR/html/chartjs/Chart.bundle.min.js .javascript/
+cp -fr $ETC_DIR/icon/lyg_banner.png .icon/logo_banner.png
 
 echo "TIME: @`date +%Y%m%d_%H%M%S` END   $prog"
 echo "======================================================="

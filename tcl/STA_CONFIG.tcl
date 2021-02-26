@@ -68,7 +68,6 @@ proc reset_sta_config {} {
   array set STA_RUN_GROUPS   {}
   array set STA_GROUP_REPORT  {}
   array set STA_BLOCK_DEF    {}
-  array set STA_CHECK_DQI    {}
   array set STA_CHECK_DEF    {}
   array set STA_MODE_NAME    {}
   array set STA_MODE_DEF     {}
@@ -161,7 +160,7 @@ proc sync_sta_config {} {
   }
   foreach sta_check $STA_CHECK_LIST {
     if ![info exist STA_CHECK_DEF($sta_check)] { 
-      set STA_CHECK_DEF($sta_check) $sta_check
+      set STA_CHECK_DEF($sta_check) NVP
     }
   }
   foreach sta_mode $STA_MODE_LIST {
