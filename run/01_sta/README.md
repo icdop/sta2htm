@@ -95,10 +95,10 @@ reports/
 └── index.htm
 </pre>
 <pre> Index </pre>
-![run/01_sta/screenshot/uniq_end_index.png](./run/01_sta/screenshot/uniq_end_index.png?raw=true)
+![screenshot/uniq_end_index.png](./screenshot/uniq_end_index.png?raw=true)
 <pre> Mode </pre>
-![run/01_sta/screenshot/uniq_end_mode.png](./run/01_sta/screenshot/uniq_end_mode.png?raw=true)
+![screenshot/uniq_end_mode.png](./screenshot/uniq_end_mode.png?raw=true)
 <pre> Corner </pre>
-![run/01_sta/screenshot/uniq_end_corner.png](./run/01_sta/screenshot/uniq_end_corner.png?raw=true)
+![screenshot/uniq_end_corner.png](./screenshot/uniq_end_corner.png?raw=true)
 <pre> Summary </pre>
-![run/01_sta/screenshot/uniq_end_summary.png](./run/01_sta/screenshot/uniq_end_summary.png?raw=true)
+![screenshot/uniq_end_summary.png](./screenshot/uniq_end_summary.png?raw=true)
