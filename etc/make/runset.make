@@ -1,8 +1,8 @@
 include Makefile.run
 
-#STA_RUN     += GOLDEN-0122
-#STA_RUN_DIR.GOLDEN-0122 := reports/apr0-0122
-#STA_RUN_GROUPS.GOLDEN-0122 := unique
+#STA_RUN     := GOLDEN-0122
+#STA_RUN_DIR.GOLDEN-0122    := reports/apr0-0122
+#STA_RUN_GROUPS.GOLDEN-0122 := uniq_end reg2reg in2reg reg2out
 
 help:
 	@echo	"Usage:"
@@ -24,25 +24,26 @@ run: init
 	  (cd $$i; make run) | tee run.$$i.log ; \
 	) ; done
 	sta_index_runset
-	tree --dirsfirst --prune -P index.htm . -o index.tree
 
 
-index: 
+index: run
 	@for i in $(STA_RUN); do ( \
 	  cd $$i; make index ; \
 	) ; done
 	sta_index_runset
+
 	
 view:
 	firefox index.htm &
 
 tree: tree.log
-tree.log:
-	tree $(STA_RUN) | tee tree.log
+	tree --dirsfirst --prune -P index.htm . -o index.tree
+	tree --dirsfirst --prune -P \*.htm . -o html.tree
+	tree --dirsfirst --prune  $(STA_RUN) -o tee tree.log
 
 diff: tree.log
 	diff -y tree.log logs/tree.log 
 
 clean:
-	rm -fr $(STA_RUN) *.log .trendchart .javascript index.*
+	rm -fr $(STA_RUN) *.log *.tree index.* .trendchart .javascript .icon
 

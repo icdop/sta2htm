@@ -49,7 +49,7 @@ proc report_index_runset {{plot_dir ".trendchart"}} {
   puts $fo "<head>"
   puts $fo "<table border=0 width=1000 id='sta_tbl'><tr>"
   puts $fo "<th>"
-  puts $fo "LYG STA2HTM Timing Report Reviewer ... "
+  puts $fo "STA2HTM MMMC Timing Report Reviewer V2021.02 "
   puts $fo "</th>"
   puts $fo "<td width=50 align=right bgcolor=#f0f080>"
   puts $fo "@<a href=http://gitee.com/icdop/sta2htm>gitee</a>"

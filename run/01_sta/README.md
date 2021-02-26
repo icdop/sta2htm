@@ -4,35 +4,27 @@
 
 + <code> % make run </code>
 
+### Makefile.run
+<pre>
+STA_RUN     := GOLDEN-0122
+STA_RUN_DIR.GOLDEN-0122    := reports/apr0-0122
+STA_RUN_GROUPS.GOLDEN-0122 := uniq_end reg2reg in2reg reg2out
+</pre>
+
 ### Makefile
 <pre>
-STA_DIR := reports
-STA_RUN := GOLDEN-0122
-STA_RPT := $(STA_DIR)/apr0-0122
+include Makefile.run
 
 $(STA_RUN):
-	sta_init_dir $(STA_RUN) $(STA_RPT)
+	sta_init_run $@ $(STA_RUN_DIR.$@) $(STA_RUN_GROUPS.$@)
 
-run: $(STA_RUN)
-	(cd $(STA_RUN); sta_rpt_uniq_end )| tee run.log
-	make htm | tee tree.log
+init: $(STA_RUN)
 
-view:
-	firefox $(STA_RUN)/uniq_end/index.htm &
-
-htm:
-	tree -P *.htm $(STA_RUN) 
-
-diff:
-	diff run.log logs/run.log 
-	diff tree.log logs/tree.log 
-	diff $(STA_RUN)/uniq_end/setup.log logs/setup.log
-	diff $(STA_RUN)/uniq_end/hold.log logs/hold.log
-
-clean:
-	rm -fr $(STA_RUN) *.log
-
-
+run: init
+	@for i in $(STA_RUN); do ( \
+	  (cd $$i; make run) | tee run.$$i.log ; \
+	) ; done
+	sta_index_runset
 
 </pre>
 
@@ -60,82 +52,53 @@ reports/
         │   └── hold.rpt
         └── 157_BC
             └── setup.rpt
-
-10 directories, 11 files
 </pre>
 
-### STA Summary Directory
-<pre>
- GOLDEN-0122/
-├── STA -> ../reports/GOLDEN-0122
-└── uniq_end
-    ├── func
-    │   ├── hold
-    │   └── setup
-    └── scan
-        ├── hold
-        └── setup
-
-9 directories
-</pre>
 
 ### STA Summary HTML Files
-
 <pre>
-GOLDEN-0122/
-└── uniq_end
-    ├── index.htm
-    ├── mode.htm
-    ├── check.htm
-    ├── corner.htm
-    ├── setup.htm
-    ├── hold.htm
-    ├── func
-    │   ├── hold
-    │   │   ├── 000_TT.blk.htm
-    │   │   ├── 000_TT.clk.htm
-    │   │   ├── 151_ML.blk.htm
-    │   │   ├── 151_ML.clk.htm
-    │   │   ├── 157_BC.blk.htm
-    │   │   ├── 157_BC.clk.htm
-    │   │   ├── 258_WC.blk.htm
-    │   │   └── 258_WC.clk.htm
-    │   ├── hold.blk.htm
-    │   ├── hold.clk.htm
-    │   ├── hold.htm
-    │   ├── hold.uniq_end.htm
-    │   ├── index.htm
-    │   ├── setup
-    │   │   ├── 000_TT.blk.htm
-    │   │   ├── 000_TT.clk.htm
-    │   │   ├── 157_BC.blk.htm
-    │   │   ├── 157_BC.clk.htm
-    │   │   ├── 258_WC.blk.htm
-    │   │   └── 258_WC.clk.htm
-    │   ├── setup.blk.htm
-    │   ├── setup.clk.htm
-    │   ├── setup.htm
-    │   └── setup.uniq_end.htm
-    ├── scan
-    │   ├── hold
-    │   │   ├── 000_TT.blk.htm
-    │   │   ├── 000_TT.clk.htm
-    │   │   ├── 151_ML.blk.htm
-    │   │   └── 151_ML.clk.htm
-    │   ├── hold.blk.htm
-    │   ├── hold.clk.htm
-    │   ├── hold.htm
-    │   ├── hold.uniq_end.htm
-    │   ├── index.htm
-    │   ├── setup
-    │   │   ├── 000_TT.blk.htm
-    │   │   ├── 000_TT.clk.htm
-    │   │   ├── 157_BC.blk.htm
-    │   │   └── 157_BC.clk.htm
-    │   ├── setup.blk.htm
-    │   ├── setup.clk.htm
-    │   ├── setup.htm
-    │   └── setup.uniq_end.htm
-    └── 
-
+.
+├── GOLDEN-0122
+│   ├── in2reg
+│   │   ├── func
+│   │   │   └── index.htm
+│   │   ├── scan01
+│   │   │   └── index.htm
+│   │   ├── scan02
+│   │   │   └── index.htm
+│   │   └── index.htm
+│   ├── reg2out
+│   │   ├── func
+│   │   │   └── index.htm
+│   │   ├── scan01
+│   │   │   └── index.htm
+│   │   ├── scan02
+│   │   │   └── index.htm
+│   │   └── index.htm
+│   ├── reg2reg
+│   │   ├── func
+│   │   │   └── index.htm
+│   │   ├── scan01
+│   │   │   └── index.htm
+│   │   ├── scan02
+│   │   │   └── index.htm
+│   │   └── index.htm
+│   ├── uniq_end
+│   │   ├── func
+│   │   │   └── index.htm
+│   │   ├── scan01
+│   │   │   └── index.htm
+│   │   ├── scan02
+│   │   │   └── index.htm
+│   │   └── index.htm
+│   └── index.htm
+└── index.htm
 </pre>
+<pre> Index </pre>
+![run/01_sta/screenshot/uniq_end_index.png](./run/01_sta/screenshot/uniq_end_index.png?raw=true)
+<pre> Mode </pre>
+![run/01_sta/screenshot/uniq_end_mode.png](./run/01_sta/screenshot/uniq_end_mode.png?raw=true)
+<pre> Corner </pre>
+![run/01_sta/screenshot/uniq_end_corner.png](./run/01_sta/screenshot/uniq_end_corner.png?raw=true)
+<pre> Summary </pre>
+![run/01_sta/screenshot/uniq_end_summary.png](./run/01_sta/screenshot/uniq_end_summary.png?raw=true)

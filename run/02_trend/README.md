@@ -4,28 +4,39 @@
 
 + <code> % make run </code>
 
+### Makefile.run
+<pre>
+STA_RUN += GOLDEN-0122 
+STA_RUN_DIR.GOLDEN-0122 := reports/apr0-0122
+
+STA_RUN += GOLDEN-0123
+STA_RUN_DIR.GOLDEN-0123 = reports/eco1-0123
+
+STA_RUN += GOLDEN-0124
+STA_RUN_DIR.GOLDEN-0124 = reports/eco2-0124
+
+STA_RUN += GOLDEN-0125
+STA_RUN_DIR.GOLDEN-0125 = reports/eco3-0125
+
 ### Makefile
 <pre>
-RPT_DIR := reports
-STA_RUN_LIST := GOLDEN-0122 GOLDEN-0123 GOLDEN-0124
-GOLDEN-0122 := $(RPT_DIR)/apr0-0122
-GOLDEN-0123 := $(RPT_DIR)/eco1-0123
-GOLDEN-0124 := $(RPT_DIR)/eco2-0124
+include Makefile.run
 
-run: $(STA_RUN_LIST)
-	make index
-
-$(STA_RUN_LIST):
-	sta_init_dir $@ $($@)
-	(cd $@; make run) | tee run.$@.log
-
-index: $(STA_RUN_LIST)
-	sta_run_index
+$(STA_RUN):
+	sta_init_run $@ $(STA_RUN_DIR.$@) $(STA_RUN_GROUPS.$@)
 
 
+init: $(STA_RUN)
+
+
+run: init
+	@for i in $(STA_RUN); do ( \
+	  (cd $$i; make run) | tee run.$$i.log ; \
+	) ; done
+	sta_index_runset
 </pre>
 
-### STA Configuration Runset File
+### STA Runset File
 <pre>
 #
 [VERSION]
@@ -38,15 +49,15 @@ GOLDEN-0124	reports/eco2-0124      uniq_end
 ;GOLDEN-0127	reports/eco3-0127      uniq_end
 
 [GROUP]
-#STA_GROUP   STA_GROUP_FILES
+#STA_GROUP   STA_GROUP_REPORT
 #---------   -----------------------------------------------
 uniq_end     $sta_mode/$corner_name/$sta_check.rpt
 
 [CHECK]
 #<sta_check> STA_CHECK_DEF
 #----------- -------------------
-setup        
-hold         
+setup        WNS
+hold         NVP
 
 [MODE]
 #<sta_mode>   STA_MODE_NAME     STA_MODE_DEF
@@ -66,10 +77,10 @@ scan          dc_capture        scan_0211.sdc
 [SCENARIO]
 #SID    CHECK   MODE	CORNERS
 #-----	------	------- --------------------
-S001    setup   func	000 -   157 231 258
-;S002   setup	scan	000 -   157 -   -
-H001    hold	func	000 151 157 -   258
-H002    hold	scan	000 -   157 -   258
+S001    setup   func    000 -   157 231 258
+S002    setup   scan    000 -   157 -   -
+H001    hold    func    000 151 157 -   258
+H002    hold    scan    000 -   157 -   258
 </pre>
 
 ### STA Report File
@@ -142,70 +153,6 @@ reports/
 30 directories, 33 files
 </pre>
 
-### STA Summary Directory
+![run/02_trend/screenshot/sta2htm_runset.jpeg](./run/02_trend/screenshot/sta2htm_runset.jpeg?raw=true)
 
-<pre>
-GOLDEN-0122
-└── uniq_end
-    ├── func
-    │   ├── hold
-    │   │   ├── 000_TT
-    │   │   ├── 151_ML
-    │   │   ├── 157_BC
-    │   │   └── 258_WC
-    │   ├── index.htm
-    │   └── setup
-    │       ├── 000_TT
-    │       ├── 157_BC
-    │       ├── 231_WCL
-    │       └── 258_WC
-    ├── index.htm
-    └── scan
-        ├── hold
-        │   ├── 000_TT
-        │   └── 157_BC
-        └── index.htm
-GOLDEN-0123
-└── uniq_end
-    ├── func
-    │   ├── hold
-    │   │   ├── 000_TT
-    │   │   ├── 151_ML
-    │   │   ├── 157_BC
-    │   │   └── 258_WC
-    │   ├── index.htm
-    │   └── setup
-    │       ├── 000_TT
-    │       ├── 157_BC
-    │       ├── 231_WCL
-    │       └── 258_WC
-    ├── index.htm
-    └── scan
-        ├── hold
-        │   ├── 000_TT
-        │   └── 157_BC
-        └── index.htm
-GOLDEN-0124
-└── uniq_end
-    ├── func
-    │   ├── hold
-    │   │   ├── 000_TT
-    │   │   ├── 151_ML
-    │   │   ├── 157_BC
-    │   │   └── 258_WC
-    │   ├── index.htm
-    │   └── setup
-    │       ├── 000_TT
-    │       ├── 157_BC
-    │       ├── 231_WCL
-    │       └── 258_WC
-    ├── index.htm
-    └── scan
-        ├── hold
-        │   ├── 000_TT
-        │   └── 157_BC
-        └── index.htm
-
-48 directories, 9 files
-
-</pre>
+![run/02_trend/screenshot/sta2htm_trendchart.jpeg](./run/02_trend/screenshot/sta2htm_trendchart.jpeg?rgroupue)
