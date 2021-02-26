@@ -17,6 +17,7 @@ STA_RUN_DIR.GOLDEN-0124 = reports/eco2-0124
 
 STA_RUN += GOLDEN-0125
 STA_RUN_DIR.GOLDEN-0125 = reports/eco3-0125
+</pre>
 
 ### Makefile
 <pre>
