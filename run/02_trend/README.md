@@ -149,10 +149,8 @@ reports/
         │   └── setup.rpt
         └── 157_BC
             └── hold.rpt
-
-30 directories, 33 files
 </pre>
 
-![run/02_trend/screenshot/sta2htm_runset.jpeg](./run/02_trend/screenshot/sta2htm_runset.jpeg?raw=true)
+![screenshot/sta2htm_runset.jpeg](./screenshot/sta2htm_runset.jpeg?raw=true)
 
-![run/02_trend/screenshot/sta2htm_trendchart.jpeg](./run/02_trend/screenshot/sta2htm_trendchart.jpeg?rgroupue)
+![screenshot/sta2htm_trendchart.jpeg](./screenshot/sta2htm_trendchart.jpeg?rgroupue)
