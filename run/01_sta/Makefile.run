@@ -1,3 +1,4 @@
 STA_RUN     := GOLDEN-0122
 STA_RUN_DIR.GOLDEN-0122    := reports/apr0-0122
-STA_RUN_GROUPS.GOLDEN-0122 := detail uniq_end
+STA_RUN_GROUPS.GOLDEN-0122 := uniq_end reg2reg in2reg reg2out
+

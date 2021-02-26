@@ -1,14 +1,16 @@
 #
 [VERSION]
 #STA_RUN	STA_RUN_REPORT         STA_RUN_GROUPS
-#-------------	---------------------  ----------------
-GOLDEN-0122	reports/apr0-0120      uniq_end detail
+#-------------	---------------------  --------------------------------------
+GOLDEN-0122	reports/apr0-0120      uniq_end reg2reg in2reg reg2out
 
 [GROUP]
 #STA_GROUP   STA_GROUP_REPORT
 #---------   -----------------------------------------------
 uniq_end     $sta_mode/$corner_name/$sta_check.rpt
-detail       $sta_mode/$corner_name/$sta_check.rpt
+reg2reg      $sta_mode/$corner_name/$sta_check.rpt
+in2reg       $sta_mode/$corner_name/$sta_check.rpt
+reg2out      $sta_mode/$corner_name/$sta_check.rpt
 
 [CHECK]
 #<sta_check> STA_CHECK_DEF

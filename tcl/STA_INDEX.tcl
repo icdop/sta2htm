@@ -773,15 +773,16 @@ proc report_trend_group {{plot_dir ".trendchart"} {sta_group ""}} {
          foreach sta_run $STA_RUN_LIST {
             puts $fo "<tr>"
             if {[file exist $sta_run/$sta_group/$sta_mode/.dqi/520-STA/$sta_check]} {
-              puts $fo "<td align=left><a href='../../$sta_run/$sta_group/$sta_mode/$sta_check.htm'>$sta_run</a></td>"
+#              puts $fo "<td align=left><a href='../../$sta_run/$sta_group/$sta_mode/$sta_check.htm'>$sta_run</a></td>"
+#              puts $fo "<td align=right><a href='../../$sta_run/$sta_group/$sta_mode/$sta_check.nvp_wns.png' target=sta_output> $sta_run </a> </td>"
+              puts $fo "<td align=right><a href='../../$sta_run/$sta_group/$sta_mode/$sta_check.nvp_wns.htm' target=sta_output> $sta_run </a> </td>"
               foreach sta_dqi $STA_DQI_LIST  {
                 if {[catch {exec cat $sta_run/$sta_group/$sta_mode/.dqi/520-STA/$sta_check/$sta_dqi} dqi_value]} {
                   set STA_DQI($sta_dqi) "-"
                   puts $fo "<td align=right> - </td>"
                 } else {
                   set STA_DQI($sta_dqi) $dqi_value
-#                  puts $fo "<td align=right><a href='../../$sta_run/$sta_group/$sta_mode/$sta_check.nvp_wns.png' target=sta_output> $dqi_value</a> </td>"
-                  puts $fo "<td align=right><a href='../../$sta_run/$sta_group/$sta_mode/$sta_check.nvp_wns.htm' target=sta_output> $dqi_value</a> </td>"
+                  puts $fo "<td align=right>$dqi_value</td>"
                 }
               }
               foreach sta_corner $STA_CORNER_LIST {

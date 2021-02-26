@@ -23,7 +23,6 @@ run: init
 	  (cd $$i; make run) | tee run.$$i.log ; \
 	) ; done
 	sta_index_runset
-	tree --dirsfirst --prune -P index.htm . -o index.tree
 
 
 index: run
@@ -39,6 +38,7 @@ view:
 
 tree: tree.log
 tree.log:
+	tree --dirsfirst --prune -P index.htm . -o index.tree
 	tree $(STA_RUN) | tee tree.log
 
 diff: tree.log
