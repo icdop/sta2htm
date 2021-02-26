@@ -68,8 +68,8 @@ proc report_index_runset {{plot_dir ".trendchart"}} {
   puts $fo "<iframe name=sta_output src=$STA_RUN_FILE width=1000 height=420 scrolling=auto></iframe>"
 
   puts $fo "<table border=1 width=1000 id=sta_tbl>"
-  puts $fo "<caption> <hr>GROUP </caption>"
-  puts $fo "<tr><hr>"
+  puts $fo "<caption><hr> GROUP <hr></caption>"
+  puts $fo "<tr>"
   puts $fo "</tr>"
   puts $fo "<tr>"
   puts $fo "<th>STA_GROUP</th>"
@@ -94,8 +94,8 @@ proc report_index_runset {{plot_dir ".trendchart"}} {
   puts $fo "<br>"
 
   puts $fo "<table border=1 width=1000 id=sta_tbl>"
-  puts $fo "<caption bgcolor=#f0f080> VERSION </caption>"
-  puts $fo "<tr><hr>"
+  puts $fo "<caption bgcolor=#f0f080><hr> VERSION <hr></caption>"
+  puts $fo "<tr>"
   puts $fo "</tr>"
   puts $fo "<tr>"
   puts $fo "<th>STA_RUN</th>"
