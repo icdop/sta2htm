@@ -66,9 +66,36 @@ proc report_index_runset {{plot_dir ".trendchart"}} {
   puts $fo "</head>"
   puts $fo "<body>"
   puts $fo "<iframe name=sta_output src=$STA_RUN_FILE width=1000 height=420 scrolling=auto></iframe>"
+
+  puts $fo "<table border=1 width=1000 id=sta_tbl>"
+  puts $fo "<caption> <hr>GROUP </caption>"
+  puts $fo "<tr><hr>"
+  puts $fo "</tr>"
+  puts $fo "<tr>"
+  puts $fo "<th>STA_GROUP</th>"
+  puts $fo "<th>STA_GROUP_REPORT</th>"
+  puts $fo "</tr>"
+  foreach sta_group $STA_GROUP_LIST {
+    report_trend_group $plot_dir $sta_group
+    puts $fo "<tr>"
+    puts $fo "<td>"
+    puts $fo "<a href='$plot_dir/$sta_group/index.htm'>"
+    puts $fo "$sta_group"
+    puts $fo "</a>"
+    puts $fo "</td>"
+    puts $fo "<td>"
+    foreach file $STA_GROUP_REPORT($sta_group) {
+      puts $fo "$file<br>"
+    }
+    puts $fo "</td>"
+    puts $fo "</tr>"
+  }
+  puts $fo "</table>"
+  puts $fo "<br>"
+
   puts $fo "<table border=1 width=1000 id=sta_tbl>"
   puts $fo "<caption bgcolor=#f0f080> VERSION </caption>"
-  puts $fo "<tr>"
+  puts $fo "<tr><hr>"
   puts $fo "</tr>"
   puts $fo "<tr>"
   puts $fo "<th>STA_RUN</th>"
@@ -96,30 +123,6 @@ proc report_index_runset {{plot_dir ".trendchart"}} {
   
   puts $fo "<br>"
   
-  puts $fo "<table border=1 width=1000 id=sta_tbl>"
-  puts $fo "<caption> <hr>GROUP </caption>"
-  puts $fo "<tr>"
-  puts $fo "</tr>"
-  puts $fo "<tr>"
-  puts $fo "<th>STA_GROUP</th>"
-  puts $fo "<th>STA_GROUP_REPORT</th>"
-  puts $fo "</tr>"
-  foreach sta_group $STA_GROUP_LIST {
-    report_trend_group $plot_dir $sta_group
-    puts $fo "<tr>"
-    puts $fo "<td>"
-    puts $fo "<a href='$plot_dir/$sta_group/index.htm'>"
-    puts $fo "$sta_group"
-    puts $fo "</a>"
-    puts $fo "</td>"
-    puts $fo "<td>"
-    foreach file $STA_GROUP_REPORT($sta_group) {
-      puts $fo "$file<br>"
-    }
-    puts $fo "</td>"
-    puts $fo "</tr>"
-  }
-  puts $fo "</table>"
   puts $fo "</body>"
   puts $fo "</html>"
   close $fo
@@ -716,7 +719,16 @@ proc report_trend_group {{plot_dir ".trendchart"} {sta_group ""}} {
   puts $fo "<html>"
   puts $fo $::STA_HTML::TABLE_CSS(sta_tbl)
   puts $fo "<head>"
-  puts $fo "\[<a href='index.htm'>\@RUNSET</a>\]"
+  puts $fo "<table border=0 width=1000 id='sta_tbl' bgcolor=#f0f0f0><tr>"
+  puts $fo "<td align=left>"
+  puts $fo "\[<a href='../../index.htm'>\@RUNSET</a>\]"
+  puts $fo "</td>"
+  puts $fo "<td width=250 align=right>"
+  puts $fo "<a href=$::STA_HTML::LINK(logo_banner)>"
+  puts $fo "<img src=../../$::STA_HTML::ICON(logo_banner) width=250 height=40>"
+  puts $fo "</a>"
+  puts $fo "</td>"
+  puts $fo "</tr></table>"
   puts $fo "</head>"
   puts $fo "<body>"
   
