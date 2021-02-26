@@ -1,4 +1,4 @@
-# Static Timing Analysis Report Reviewer V2021.02
+# STA MMMC Report Reviewer V2021.02
 
 ![run/02_trend/screenshot/sta2htm_trendchart.jpeg](./run/02_trend/screenshot/sta2htm_trendchart.jpeg?rgroupue)
 
