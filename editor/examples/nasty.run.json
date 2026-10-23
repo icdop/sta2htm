@@ -1,0 +1,41 @@
+{
+  "$schema": "sta2htm.run/1",
+  "generator": "sta2htm_run_json.tcl/1.0",
+  "source": "nasty.run",
+  "sectionOrder": ["VERSION", "CHECK", "GROUP", "MODE", "CORNER", "SCENARIO"],
+  "preamble": ["# runset for edge testing"],
+  "sections": {
+  "VERSION": [
+      { "run": "GOLDEN-0001", "dir": "reports/v1", "groups": ["uniq_end", "dup_g"] },
+      { "run": "GOLDEN-0001", "dir": "reports/v2", "groups": ["uniq_end"] },
+      { "run": "GOLDEN-0002", "dir": "reports/disabled", "groups": ["uniq_end"], "disabled": true },
+      { "run": "GOLDEN-0003", "dir": "", "groups": [] }
+    ],
+  "CHECK": [
+      { "check": "setup", "def": ["WNS"] },
+      { "check": "hold", "def": ["NVP", "TNS"] }
+    ],
+  "GROUP": [
+      { "group": "uniq_end", "pattern": ["$sta_mode/$corner_name/$sta_check.rpt"] },
+      { "group": "dup_g", "pattern": ["a.rpt", "b.rpt"] },
+      { "group": "g_quoted", "pattern": ["quoted pattern with space.rpt"] }
+    ],
+  "MODE": [
+      { "mode": "func", "name": "functional", "def": ["func.sdc"] },
+      { "mode": "scan01", "name": "dc_shift", "def": [] }
+    ],
+  "CORNER": [
+      { "corner": "000", "name": "000_TT", "def": ["TTT:0.8V:25C", "RCtyp"] },
+      { "corner": "157", "name": "157_BC", "def": ["FFF:0.88V:-40C", "Cmin"] }
+    ],
+  "SCENARIO": [
+      { "id": "S1", "check": "setup", "mode": "func", "corners": ["000", "-"] },
+      { "id": "S2", "check": "hold", "mode": "scan01", "corners": ["000", "157"] },
+      { "id": "S3", "check": "hold", "mode": "scan01", "corners": ["000", "-", "999"] }
+    ]
+  },
+  "ignored": [
+    { "section": "", "line": " ; single token after semicolon = comment" },
+    { "section": "MYSPEC", "line": "foo bar baz" }
+  ]
+}

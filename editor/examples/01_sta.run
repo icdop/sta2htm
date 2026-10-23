@@ -1,0 +1,46 @@
+#
+[VERSION]
+#STA_RUN	STA_RUN_REPORT         STA_RUN_GROUPS
+#-------------	---------------------  --------------------------------------
+GOLDEN-0122	reports/apr0-0120      uniq_end reg2reg in2reg reg2out
+
+[GROUP]
+#STA_GROUP   STA_GROUP_REPORT
+#---------   -----------------------------------------------
+uniq_end     $sta_mode/$corner_name/$sta_check.rpt
+reg2reg      $sta_mode/$corner_name/$sta_check.rpt
+in2reg       $sta_mode/$corner_name/$sta_check.rpt
+reg2out      $sta_mode/$corner_name/$sta_check.rpt
+
+[CHECK]
+#<sta_check> STA_CHECK_DEF
+#----------- -------------------
+setup		WNS        
+hold            NVP
+
+[MODE]
+#<sta_mode>   STA_MODE_NAME     STA_MODE_DEF
+#-----------  ----------------- -------------------
+func          functional        func_0210.sdc
+scan01        dc_shift          scan_0211.sdc
+scan02        ac_capture        scan_0221.sdc
+
+[CORNER]
+#<sta_corner>  <corner_name>    Lib_corner	RC_corner   LibFiles
+#------------  -------------    --------------  ---------- ----------
+000            000_TT           TTT:0.80V:025C  RCtyp
+151            151_ML           FFG:0.88V:125C  Cmax
+157            157_BC           FFF:0.88V:-40C  Cmin
+237            237_WCL          SSG:0.72V:-40C  Cmax
+231            231_WC           SSG:0.72V:125C  Cmax
+
+[SCENARIO]
+#SID    CHECK   MODE	CORNERS
+#-----	------	------- --------------------
+S001    setup   func	000 -   157 237 231
+S002    setup	scan02	000 -   -   -   231
+H001    hold	func	000 151 157 -   231
+H002    hold	scan01	000 -   157 -   231
+
+
+

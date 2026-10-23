@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STA2HTM Run Editor — sta2htm.run ⇄ JSON</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><span class="dot"></span> STA2HTM <b>Run</b> Editor
+    <small>sta2htm.run ⇄ sta2htm.json（schema: sta2htm.run/1）</small></div>
+  <div class="toolbar">
+    <select id="examples" title="載入範例">
+      <option value="">載入範例…</option>
+      <option value="01_sta.run">demo 01_sta（單一 GOLDEN）</option>
+      <option value="02_trend.run">demo 02_trend（4 版 + 停用列）</option>
+      <option value="03_tempus.run">demo 03_tempus（Tempus）</option>
+      <option value="nasty.run">edge cases（含警告）</option>
+    </select>
+    <label class="btn" for="file">開啟 .run / .json</label>
+    <input type="file" id="file" accept=".run,.json,.txt" hidden>
+    <button class="btn" id="dlRun">下載 .run</button>
+    <button class="btn ghost" id="dlJson">下載 .json</button>
+    <button class="btn ghost" id="srvCheck">伺服器端 Tcl 驗證</button>
+    <span id="health" class="badge" title="tclsh 轉換器狀態">檢查中…</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="form" class="on">表格編輯</button>
+  <button data-tab="run">Run 文字</button>
+  <button data-tab="json">JSON</button>
+  <button data-tab="grammar">語法 / Schema</button>
+</nav>
+
+<main>
+  <section id="tab-form" class="tab on">
+    <div id="sheets"></div>
+    <div class="addsec">
+      新增區塊：<span id="addSecBtns"></span>
+      <button class="btn tiny ghost" id="newFile">✕ 清空為新檔</button>
+    </div>
+  </section>
+
+  <section id="tab-run" class="tab">
+    <div class="rowhead">
+      <b>sta2htm.run 原始文字</b>
+      <button class="btn tiny" id="applyRun">套用到表格</button>
+      <span class="hint">`;` 開頭＝停用整列（匯入後變成 ☑停用）；# 註解需在第 0 欄；欄位以空白分隔</span>
+    </div>
+    <textarea id="runText" spellcheck="false"></textarea>
+  </section>
+
+  <section id="tab-json" class="tab">
+    <div class="rowhead">
+      <b>sta2htm.json</b>
+      <button class="btn tiny" id="applyJson">套用到表格</button>
+      <span class="hint">schema = sta2htm.run/1；sections.* 為陣列（順序有意義）；disabled 對應行首 <code>;</code></span>
+    </div>
+    <textarea id="jsonText" spellcheck="false"></textarea>
+  </section>
+
+  <section id="tab-grammar" class="tab"><article id="gramDoc"></article></section>
+</main>
+
+<aside id="problems">
+  <div class="phead">驗證 <span id="pcount" class="pill">0</span>
+    <button id="ptoggle" class="tiny ghost">▾</button></div>
+  <ul id="plist"></ul>
+</aside>
+
+<footer>
+  <span id="meta">尚未載入檔案</span>
+  <span class="right">權威轉換器 = bin/sta2htm_run_json.tcl（Tcl）· 前端引擎 engine.js 與其位元組級對齊（diff_harness 測試）</span>
+</footer>
+
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

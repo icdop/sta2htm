@@ -1,0 +1,41 @@
+{
+  "$schema": "sta2htm.run/1",
+  "generator": "sta2htm_run_json.tcl/1.0",
+  "source": "02_trend.run",
+  "sectionOrder": ["VERSION", "GROUP", "CHECK", "MODE", "CORNER", "SCENARIO"],
+  "preamble": ["#"],
+  "sections": {
+  "VERSION": [
+      { "run": "GOLDEN-0122", "dir": "reports/apr0-0120", "groups": ["uniq_end"] },
+      { "run": "GOLDEN-0123", "dir": "reports/eco1-0123", "groups": ["uniq_end"] },
+      { "run": "GOLDEN-0124", "dir": "reports/eco2-0124", "groups": ["uniq_end"] },
+      { "run": "GOLDEN-0125", "dir": "reports/eco2-0125", "groups": ["uniq_end"] },
+      { "run": "GOLDEN-0127", "dir": "reports/eco3-0127", "groups": ["uniq_end"], "disabled": true }
+    ],
+  "GROUP": [
+      { "group": "uniq_end", "pattern": ["$sta_mode/$corner_name/$sta_check.rpt"] }
+    ],
+  "CHECK": [
+      { "check": "setup", "def": ["WNS"] },
+      { "check": "hold", "def": ["NVP"] }
+    ],
+  "MODE": [
+      { "mode": "func", "name": "functional", "def": ["func_0210.sdc"] },
+      { "mode": "scan01", "name": "dc_shift", "def": ["scan_0211.sdc"] },
+      { "mode": "scan02", "name": "ac_capture", "def": ["scan_0221.sdc"] }
+    ],
+  "CORNER": [
+      { "corner": "000", "name": "000_TT", "def": ["TTT:0.80V:025C", "RCtyp"] },
+      { "corner": "151", "name": "151_ML", "def": ["FFG:0.88V:125C", "Cmax"] },
+      { "corner": "157", "name": "157_BC", "def": ["FFF:0.88V:-40C", "Cmin"] },
+      { "corner": "237", "name": "237_WCL", "def": ["SSG:0.72V:-40C", "Cmax"] },
+      { "corner": "231", "name": "231_WC", "def": ["SSG:0.72V:125C", "Cmax"] }
+    ],
+  "SCENARIO": [
+      { "id": "S001", "check": "setup", "mode": "func", "corners": ["000", "-", "157", "237", "231"] },
+      { "id": "S002", "check": "setup", "mode": "scan02", "corners": ["000", "-", "-", "-", "231"] },
+      { "id": "H001", "check": "hold", "mode": "func", "corners": ["000", "151", "157", "-", "231"] },
+      { "id": "H002", "check": "hold", "mode": "scan01", "corners": ["000", "-", "157", "-", "231"] }
+    ]
+  }
+}
