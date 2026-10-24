@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STA Config Editor — sta2htm.run 三檔編輯器</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><span class="dot"></span> STA <b>Config</b> Editor
+    <small>sta_runset.ini ｜ sta_mmmc.ini ｜ sta_block.ini ⇄ sta2htm.run / .json</small></div>
+  <div class="toolbar">
+    <label class="btn" for="file">開啟 .run / .json / .ini</label>
+    <input type="file" id="file" accept=".run,.json,.ini,.txt" hidden>
+    <button class="btn ghost" id="dlRun">下載 sta2htm.run</button>
+    <button class="btn ghost" id="dlJson">下載 sta2htm.json</button>
+    <span id="health" class="badge">檢查中…</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="runset" class="on">RUNSET <small>sta_runset.ini</small></button>
+  <button data-tab="mmmc">MMMC <small>sta_mmmc.ini</small></button>
+  <button data-tab="block">BLOCK <small>sta_block.ini</small></button>
+  <button data-tab="viewer">VIEWER <small>HTML 報告</small></button>
+</nav>
+
+<main>
+  <section id="tab-runset" class="tab on">
+    <div class="toolbar sub" id="tb-runset">
+      <button class="btn" data-act="init">init</button>
+      <button class="btn" data-act="load">load</button>
+      <button class="btn" data-act="save">save sta_runset.ini</button>
+      <span class="sep"></span>
+      <button class="btn accent" data-act="build">build（sta2htm.run + Makefile）</button>
+      <button class="btn accent" data-act="run">run…</button>
+      <button class="btn" data-act="viewer">viewer</button>
+      <button class="btn ghost" data-act="release">release（打包報告）</button>
+      <span class="filelbl" id="fl-runset"></span>
+    </div>
+    <div class="split"><div class="cards" id="cards-runset"></div>
+      <div class="textpane"><div class="rowhead"><b>sta_runset.ini</b>
+        <span class="hint">VERSION ＋ GROUP（# 開頭＝範例註解，會一併保存）</span></div>
+      <textarea id="ta-runset" spellcheck="false" class="mono"></textarea></div></div>
+  </section>
+
+  <section id="tab-mmmc" class="tab">
+    <div class="toolbar sub" id="tb-mmmc">
+      <button class="btn" data-act="init">init</button>
+      <button class="btn" data-act="load">load</button>
+      <button class="btn" data-act="save">save sta_mmmc.ini</button>
+      <span class="sep"></span>
+      <button class="btn accent" data-act="build">build（MMMC 目錄 + Makefile + run_sta.tcl）</button>
+      <span class="filelbl" id="fl-mmmc"></span>
+    </div>
+    <div class="split"><div class="cards" id="cards-mmmc"></div>
+      <div class="textpane"><div class="rowhead"><b>sta_mmmc.ini</b>
+        <span class="hint">CHECK ＋ MODE ＋ CORNER ＋ SCENARIO（製程級可重用；只改 MODE/SDC 綁定）</span></div>
+      <textarea id="ta-mmmc" spellcheck="false" class="mono"></textarea></div></div>
+  </section>
+
+  <section id="tab-block" class="tab">
+    <div class="toolbar sub" id="tb-block">
+      <button class="btn" data-act="init">init</button>
+      <button class="btn" data-act="load">load</button>
+      <button class="btn" data-act="save">save sta_block.ini</button>
+      <span class="filelbl" id="fl-block"></span>
+    </div>
+    <div class="split"><div class="cards" id="cards-block"></div>
+      <div class="textpane"><div class="rowhead"><b>sta_block.ini</b>
+        <span class="hint">BLOCK 別名 → 匹配前綴（選配；供 .blk 跨區塊頁）</span></div>
+      <textarea id="ta-block" spellcheck="false" class="mono"></textarea></div></div>
+  </section>
+
+  <section id="tab-viewer" class="tab">
+    <div class="toolbar sub">
+      <button class="btn" id="vReload">重新整理</button>
+      <a class="btn ghost" id="vNew" href="/viewer/" target="_blank">在新視窗開啟</a>
+      <span class="hint" id="vPath"></span>
+    </div>
+    <iframe id="vFrame" src="/viewer/"></iframe>
+  </section>
+</main>
+
+<div id="runModal" class="modal hidden">
+  <div class="mbox">
+    <h3>Run Versions <span class="hint">Makefile（runset 層）</span></h3>
+    <div id="runList" class="runlist"></div>
+    <div class="mrow">
+      <label style="font:12px var(--mono)"><input type="checkbox" id="demoCk" class="ck"> STA_DEMO=1（產生示範報告，不需簽核工具）</label>
+      <button class="btn accent" id="runSel">執行勾選版本</button>
+      <button class="btn" id="runAll">run all（make run）</button>
+      <button class="btn ghost" id="runClose">關閉</button>
+    </div>
+    <pre id="runLog" class="mono log">尚未執行。</pre>
+    <div class="mrow"><a class="btn" href="/viewer/" target="_blank">完成後開 VIEWER ↗</a></div>
+  </div>
+</div>
+
+<aside id="problems">
+  <div class="phead">驗證 <span id="pcount" class="pill">0</span>
+    <button id="ptoggle" class="btn tiny ghost">▾</button></div>
+  <ul id="plist"></ul>
+</aside>
+
+<div id="toast" class="toast hidden"></div>
+
+<footer>
+  <span id="meta"></span>
+  <span class="right">engine.js v2 ｜ bin/sta2htm_run_json.tcl（權威轉換）｜ workspace 由 server 指定</span>
+</footer>
+
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

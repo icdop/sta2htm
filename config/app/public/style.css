@@ -1,0 +1,94 @@
+/* STA Config Editor — 色系/字體對齊 sta2htm HTML 報告（STA_HTML.tcl）：
+   表頭綠 #4CAF50 白字、斑馬列 #f2f2f2、框線 #ddd、UI 字體 Trebuchet MS/Arial、
+   設定檔內容一律系統固定寬度字體。 */
+:root{
+  --green:#4CAF50; --green-d:#3d8b40; --hdr:#2e7d32;
+  --bg:#fafafa; --card:#ffffff; --line:#ddd; --zebra:#f2f2f2;
+  --ink:#222; --mut:#777; --amb:#b26a00; --red:#c62828;
+  --mono:"Consolas","Menlo","Courier New","Noto Sans Mono CJK TC",monospace;
+  --ui:"Trebuchet MS","Microsoft JhengHei","PingFang TC",Arial,Helvetica,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 var(--ui);display:flex;flex-direction:column}
+.mono,textarea,pre,code{font-family:var(--mono)}
+
+header{display:flex;align-items:center;gap:16px;background:var(--green);color:#fff;padding:9px 18px;flex-wrap:wrap}
+.brand{font-size:17px;display:flex;align-items:center;gap:8px}
+.brand small{opacity:.92;font-size:11px;font-family:var(--mono);margin-left:10px}
+.dot{width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 8px #fff}
+.toolbar{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{background:#fff;color:var(--hdr);border:1px solid var(--line);padding:5px 12px;border-radius:6px;font:12.5px var(--ui);cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{border-color:var(--green-d);background:#f4fbf4}
+.btn.accent{background:var(--hdr);color:#fff;border-color:var(--hdr)}
+.btn.accent:hover{background:var(--green-d)}
+.btn.ghost{background:transparent;color:inherit;border-color:rgba(255,255,255,.5)}
+main .btn.ghost{color:var(--mut)}
+.badge{font-size:11px;color:#fff;border:1px dashed rgba(255,255,255,.6);border-radius:20px;padding:3px 10px;font-family:var(--mono)}
+
+.tabs{display:flex;gap:2px;background:#eee;border-bottom:1px solid var(--line);padding:0 14px}
+.tabs button{background:none;border:none;padding:10px 20px;font:13.5px var(--ui);color:var(--mut);cursor:pointer;border-bottom:3px solid transparent}
+.tabs button small{display:block;font:10px var(--mono);opacity:.8}
+.tabs button.on{color:var(--hdr);border-bottom-color:var(--green);font-weight:600}
+
+main{flex:1;overflow:auto;padding:12px 16px 56px}
+.tab{display:none}.tab.on{display:block}
+.toolbar.sub{margin-bottom:10px;gap:8px;align-items:center}
+.toolbar .sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+.filelbl{color:var(--mut);font:11.5px var(--mono)}
+.rowhead{display:flex;gap:12px;align-items:baseline;margin-bottom:6px}
+.rowhead b{color:var(--hdr)}
+.hint{color:var(--mut);font-size:11.5px}
+
+.split{display:grid;grid-template-columns:minmax(430px,46%) 1fr;gap:14px;align-items:start}
+@media(max-width:1100px){.split{grid-template-columns:1fr}}
+.cards{display:flex;flex-direction:column;gap:12px}
+.sheet{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.sheet>h3{margin:0;padding:7px 12px;font:600 13px var(--mono);color:#fff;background:var(--green);display:flex;gap:10px;align-items:center}
+.sheet>h3 .cnt{font-weight:400;font-size:11px;opacity:.9}
+.sheet>h3 .rm{margin-left:auto;cursor:pointer;font-size:11px;opacity:.9}
+.sheet>h3 .rm:hover{color:#ffe0e0}
+table.grid{border-collapse:collapse;width:100%;font-size:12px}
+table.grid th{background:var(--zebra);color:#333;font:600 11px var(--mono);text-align:left;padding:5px 8px;border-bottom:1px solid var(--line)}
+table.grid td{padding:2px 6px;border-bottom:1px dashed #e8e8e8}
+table.grid tr:nth-child(even) td{background:var(--zebra)}
+table.grid tr:hover td{background:#e6f4e7}
+table.grid input[type=text],table.grid select{width:100%;border:1px solid transparent;background:transparent;color:var(--ink);padding:3px 5px;border-radius:4px;font:12px var(--mono)}
+table.grid input:hover,table.grid select:hover{border-color:var(--line)}
+table.grid input:focus,table.grid select:focus{outline:none;border-color:var(--green);background:#fff}
+tr.dis td:not(.op){opacity:.4;text-decoration:line-through}
+td.op{white-space:nowrap;text-align:right}
+td.op a{cursor:pointer;margin-left:6px;color:var(--mut);text-decoration:none;font-size:11.5px}
+td.op a:hover{color:var(--hdr)}
+.ck{accent-color:var(--green)}
+.addrow{padding:6px 10px}
+
+.textpane textarea{width:100%;min-height:56vh;background:#fff;color:#111;border:1px solid var(--line);border-radius:8px;padding:12px;font-size:12.5px;line-height:1.5;white-space:pre;resize:vertical}
+.textpane textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 2px #4caf5033}
+
+#tab-viewer iframe{width:100%;height:72vh;border:1px solid var(--line);border-radius:8px;background:#fff}
+
+.modal{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;z-index:80}
+.modal.hidden,.toast.hidden{display:none}
+.mbox{background:#fff;border-radius:10px;width:min(760px,94vw);max-height:88vh;overflow:auto;padding:16px 18px;box-shadow:0 10px 40px #0006}
+.mbox h3{margin:0 0 10px;color:var(--hdr)}
+.runlist{max-height:200px;overflow:auto;border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin-bottom:10px;background:var(--zebra)}
+.runlist label{display:block;font:12.5px var(--mono);padding:3px 0}
+.mrow{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}
+.log{background:#1e2430;color:#d7e0ea;padding:10px;border-radius:6px;max-height:260px;overflow:auto;font-size:11.5px;white-space:pre-wrap}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:56px;background:#2e7d32;color:#fff;padding:9px 18px;border-radius:24px;font-size:13px;box-shadow:0 6px 20px #0005;z-index:90}
+.toast.warn{background:var(--amb)}
+
+#problems{position:fixed;right:14px;bottom:14px;width:430px;max-height:42vh;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 24px #0003;font-size:11.8px;z-index:60}
+.phead{padding:7px 12px;color:var(--hdr);border-bottom:1px solid var(--line);font-weight:600;display:flex;gap:8px;align-items:center;background:var(--zebra);position:sticky;top:0}
+.pill{background:var(--red);color:#fff;border-radius:12px;padding:0 8px;font-size:11px}
+.pill.zero{background:var(--green)}
+#plist{margin:0;padding:4px 24px 10px 26px}
+#plist li{margin:4px 0;color:var(--amb)}
+#plist li.err{color:var(--red)}
+#plist li.ok{color:var(--green)}
+#problems.min{max-height:36px;overflow:hidden}
+
+footer{border-top:1px solid var(--line);background:#fff;color:var(--mut);font-size:11px;padding:5px 16px;display:flex;gap:18px}
+footer .right{margin-left:auto;font-family:var(--mono)}
